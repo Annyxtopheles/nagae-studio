@@ -77,7 +77,7 @@ function NavDrawer({
         <nav className="flex-1 py-3 overflow-y-auto">
           {navItems.map(item => (
             <button key={item.id} onClick={() => { onNavigate(item.id); onClose(); }}
-              className={`w-full flex items-center gap-3 px-5 py-4 text-left transition-colors ${activeSection === item.id ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#1A1A1A] hover:bg-[#F5F5F5]"}`}>
+              className={`w-full flex items-center gap-3 px-5 py-4 text-left transition-colors ${activeSection === item.id ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}>
               <item.icon size={18} className={activeSection === item.id ? "text-[#FFFFFF]" : "text-[#1A1A1A]"} />
               <span className={`font-['Red_Hat_Display'] font-semibold text-[13px] uppercase tracking-wider ${activeSection === item.id ? "text-[#FFFFFF]" : "text-[#1A1A1A]"}`}>{item.label}</span>
             </button>
@@ -286,8 +286,8 @@ function UILabel({ children, className = "" }: { children: React.ReactNode; clas
 
 function Badge({ label, variant = "default" }: { label: string; variant?: "default" | "new" | "custom" | "bestseller" }) {
   const styles: Record<string, string> = {
-    default: "bg-[#F5F5F5] text-[#1A1A1A]",
-    new: "bg-[#F5F5F5] text-[#1A1A1A]",
+    default: "bg-[#F4F8FC] text-[#1A1A1A]",
+    new: "bg-[#F4F8FC] text-[#1A1A1A]",
     custom: "bg-[#FFFFFF] border border-[#E5E5E5] text-[#1A1A1A]",
     bestseller: "bg-[#1A1A1A] text-[#FFFFFF]",
   };
@@ -311,7 +311,7 @@ function ProductCard({
   };
   return (
     <div className="bg-white border border-[#E5E5E5] hover:border-[#1A1A1A] transition-all cursor-pointer group" onClick={onClick}>
-      <div className="bg-[#F5F5F5] aspect-[3/4] flex items-center justify-center relative border-b border-[#E5E5E5]/50 overflow-hidden">
+      <div className="bg-[#F4F8FC] aspect-[3/4] flex items-center justify-center relative border-b border-[#E5E5E5]/50 overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center opacity-25 group-hover:scale-105 transition-transform duration-300">
           <ShoppingBag size={48} className="text-[#1A1A1A]" />
         </div>
@@ -496,7 +496,7 @@ function HomeDashboard({
             <DisplayText size="medium" className="text-[26px]">Sarah Mitchell</DisplayText>
             <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px] mt-0.5">Grace & Lace · NAGAE Expert Level 3</p>
           </div>
-          <div className="bg-[#F5F5F5] px-3 py-1 text-right">
+          <div className="bg-[#F4F8FC] px-3 py-1 text-right">
             <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[18px]">{userPoints.toLocaleString()}</p>
             <p className="font-['Red_Hat_Display'] text-[#737373] text-[9px] uppercase tracking-wider">Points</p>
           </div>
@@ -520,10 +520,10 @@ function HomeDashboard({
           <Label className="text-[#1A1A1A] mb-3 block">Quick Access</Label>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: Search, label: "Search Products", screen: "catalog", color: "bg-[#F5F5F5]", light: false },
+              { icon: Search, label: "Search Products", screen: "catalog", color: "bg-[#F4F8FC]", light: false },
               { icon: MessageSquare, label: "Ask NAGAE AI", screen: "ai", color: "bg-[#1A1A1A]", light: true },
-              { icon: BookOpen, label: "Training Center", screen: "training", color: "bg-[#F5F5F5]", light: false },
-              { icon: Folder, label: "Resources", screen: "resources", color: "bg-[#F5F5F5]", light: false },
+              { icon: BookOpen, label: "Training Center", screen: "training", color: "bg-[#F4F8FC]", light: false },
+              { icon: Folder, label: "Resources", screen: "resources", color: "bg-[#F4F8FC]", light: false },
             ].map(tile => (
               <button
                 key={tile.label}
@@ -541,7 +541,7 @@ function HomeDashboard({
         <div>
           <Label className="text-[#1A1A1A] mb-3 block">Dress of the Week</Label>
           <div className="bg-white border border-[#E5E5E5] flex gap-4 p-4 hover:border-[#1A1A1A] transition-colors">
-            <div className="bg-[#F5F5F5] w-20 h-24 flex items-center justify-center shrink-0">
+            <div className="bg-[#F4F8FC] w-20 h-24 flex items-center justify-center shrink-0">
               <ShoppingBag size={28} className="text-[#1A1A1A]" />
             </div>
             <div className="flex-1 flex flex-col justify-between">
@@ -823,7 +823,7 @@ function ProductDetail({
 
       <div className="flex-1 overflow-y-auto">
         {/* Interactive Gallery */}
-        <div className="bg-[#F5F5F5] aspect-square flex flex-col items-center justify-center relative border-b border-[#E5E5E5]">
+        <div className="bg-[#F4F8FC] aspect-square flex flex-col items-center justify-center relative border-b border-[#E5E5E5]">
           <ShoppingBag size={64} className="text-[#1A1A1A] opacity-30" />
           <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] uppercase tracking-widest mt-2">{angles[imageAngle]}</p>
 
@@ -867,7 +867,7 @@ function ProductDetail({
               { label: "Silhouette", value: product.silhouette.join(", ") },
               { label: "Neckline", value: product.neckline },
             ].map(stat => (
-              <div key={stat.label} className="bg-[#F5F5F5] p-3 border border-[#E5E5E5]/40">
+              <div key={stat.label} className="bg-[#F4F8FC] p-3 border border-[#E5E5E5]/40">
                 <Label className="text-[#737373] text-[8px]">{stat.label}</Label>
                 <p className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[11px] mt-1 uppercase tracking-wide truncate">{stat.value}</p>
               </div>
@@ -895,7 +895,7 @@ function ProductDetail({
           {activeTab === "Overview" && (
             <div className="flex flex-col gap-4">
               <p className="font-['Inter'] text-[#1A1A1A] text-[14px] leading-relaxed">{product.desc}</p>
-              <div className="bg-[#F5F5F5] p-4 border border-[#E5E5E5]">
+              <div className="bg-[#F4F8FC] p-4 border border-[#E5E5E5]">
                 <p className="font-['Red_Hat_Display'] font-semibold text-[11px] text-[#1A1A1A] uppercase tracking-wider">Stylist Pro Tip</p>
                 <p className="font-['Inter'] text-[#737373] text-[12px] mt-1">Order showroom fabric ring swatches to show brides the light catch on our Mikado weave.</p>
               </div>
@@ -916,7 +916,7 @@ function ProductDetail({
                     <div
                       key={i}
                       onClick={() => toggleMod(mod)}
-                      className="flex items-center justify-between p-3.5 hover:bg-[#F5F5F5] transition-colors cursor-pointer select-none"
+                      className="flex items-center justify-between p-3.5 hover:bg-[#F4F8FC] transition-colors cursor-pointer select-none"
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-4 h-4 border flex items-center justify-center transition-colors ${checked ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5]"}`}>
@@ -947,7 +947,7 @@ function ProductDetail({
                 <div
                   key={i}
                   onClick={() => onSelectSimilar(name)}
-                  className="flex items-center justify-between bg-[#F5F5F5] border border-[#E5E5E5] p-4 hover:border-[#1A1A1A] transition-colors cursor-pointer group"
+                  className="flex items-center justify-between bg-[#F4F8FC] border border-[#E5E5E5] p-4 hover:border-[#1A1A1A] transition-colors cursor-pointer group"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-white border border-[#E5E5E5] flex items-center justify-center">
@@ -988,7 +988,7 @@ function ProductDetail({
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleCopyLink}
-                className="w-full h-11 border border-[#1A1A1A] flex items-center justify-center gap-2 font-['Red_Hat_Display'] font-semibold text-[12px] uppercase tracking-wider hover:bg-[#F5F5F5] cursor-pointer"
+                className="w-full h-11 border border-[#1A1A1A] flex items-center justify-center gap-2 font-['Red_Hat_Display'] font-semibold text-[12px] uppercase tracking-wider hover:bg-[#F4F8FC] cursor-pointer"
               >
                 <Copy size={15} />Copy Style Link
               </button>
@@ -1064,7 +1064,7 @@ function ProductDetail({
                 />
               </div>
 
-              <div className="bg-[#F5F5F5] p-3 text-[12px] flex justify-between font-['Red_Hat_Display']">
+              <div className="bg-[#F4F8FC] p-3 text-[12px] flex justify-between font-['Red_Hat_Display']">
                 <span className="text-[#737373]">Estimated Total:</span>
                 <span className="font-bold text-[#1A1A1A]">${(totalPrice + (timeline.includes("Priority") ? 350 : 0)).toLocaleString()}</span>
               </div>
@@ -1125,8 +1125,8 @@ function AskAI({ initialPrompt = "" }: { initialPrompt?: string }) {
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="bg-white border-b border-[#E5E5E5] px-5 h-14 flex items-center justify-between sticky top-0 z-10">
         <CardTitle className="text-[18px] uppercase tracking-wide">Ask NAGAE AI</CardTitle>
-        <div className="flex items-center gap-2 bg-[#F5F5F5] px-2.5 py-1">
-          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="flex items-center gap-2 bg-[#F4F8FC] px-2.5 py-1">
+          <div className="w-2 h-2 rounded-full bg-[#E58C9F] animate-pulse" />
           <UILabel className="text-[9px] text-[#1A1A1A]">Online Assistant</UILabel>
         </div>
       </div>
@@ -1240,7 +1240,7 @@ function TrainingLibrary({
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="bg-white border-b border-[#E5E5E5] px-5 h-14 flex items-center justify-between sticky top-0 z-10">
         <CardTitle className="text-[18px] uppercase tracking-wide">Training Center</CardTitle>
-        <div className="bg-[#F5F5F5] px-2.5 py-1">
+        <div className="bg-[#F4F8FC] px-2.5 py-1">
           <UILabel className="text-[9px] text-[#1A1A1A]">{modules.filter(m => m.completed).length}/{modules.length} Completed</UILabel>
         </div>
       </div>
@@ -1286,7 +1286,7 @@ function TrainingLibrary({
             <p className="font-['Inter'] text-[#737373] text-[12px] mt-1 line-clamp-2">{m.description}</p>
             <div className="mt-3 pt-3 border-t border-[#E5E5E5] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-24 h-1.5 bg-[#F5F5F5] overflow-hidden">
+                <div className="w-24 h-1.5 bg-[#F4F8FC] overflow-hidden">
                   <div className="h-full bg-[#1A1A1A] transition-all" style={{ width: `${m.progress}%` }} />
                 </div>
                 <span className="font-['Red_Hat_Display'] font-bold text-[10px] text-[#1A1A1A]">{m.progress}%</span>
@@ -1382,7 +1382,7 @@ function TrainingModule({
                   <div
                     key={i}
                     onClick={() => toggleTakeaway(i)}
-                    className={`flex items-start gap-3 p-3 border transition-colors cursor-pointer select-none ${checked ? "bg-[#F5F5F5] border-[#1A1A1A]" : "bg-white border-[#E5E5E5]"}`}
+                    className={`flex items-start gap-3 p-3 border transition-colors cursor-pointer select-none ${checked ? "bg-[#F4F8FC] border-[#1A1A1A]" : "bg-white border-[#E5E5E5]"}`}
                   >
                     <div className={`w-4 h-4 mt-0.5 border flex items-center justify-center shrink-0 ${checked ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5]"}`}>
                       {checked && <Check size={11} className="text-[#FFFFFF]" />}
@@ -1394,7 +1394,7 @@ function TrainingModule({
             </div>
           </div>
 
-          <div className="flex items-center justify-between bg-[#F5F5F5] p-4 border border-[#E5E5E5]">
+          <div className="flex items-center justify-between bg-[#F4F8FC] p-4 border border-[#E5E5E5]">
             <div className="flex items-center gap-2">
               <Zap size={18} className="text-[#1A1A1A]" />
               <p className="font-['Red_Hat_Display'] font-bold text-[#1A1A1A] text-[13px]">+{module.points} points on completion</p>
@@ -1462,14 +1462,14 @@ function QuizScreen({
           <div className="w-6" />
         </div>
         <div className="flex-1 overflow-y-auto flex flex-col items-center px-5 py-8 gap-5">
-          <div className="w-28 h-28 border border-[#1A1A1A] flex items-center justify-center bg-[#F5F5F5]">
+          <div className="w-28 h-28 border border-[#1A1A1A] flex items-center justify-center bg-[#F4F8FC]">
             <span className="font-['Instrument_Serif'] text-[#1A1A1A] text-[48px]">{pct}%</span>
           </div>
           <div className="text-center">
             <CardTitle className="text-[26px]">{passed ? "Mastery Achieved!" : "Keep Practicing"}</CardTitle>
             <p className="font-['Red_Hat_Display'] text-[#737373] text-[13px] mt-1">{score} of {QUIZ_QUESTIONS.length} correct</p>
           </div>
-          <div className="bg-[#F5F5F5] border border-[#E5E5E5] w-full p-4 text-center">
+          <div className="bg-[#F4F8FC] border border-[#E5E5E5] w-full p-4 text-center">
             <span className="text-3xl">{passed ? "💎" : "📚"}</span>
             <CardTitle className="text-[18px] mt-1">{passed ? "+Points Credited!" : "Review Module Notes"}</CardTitle>
             <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px] mt-1">
@@ -1497,7 +1497,7 @@ function QuizScreen({
 
       <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-6">
         {/* Progress bar */}
-        <div className="h-1.5 bg-[#F5F5F5] w-full">
+        <div className="h-1.5 bg-[#F4F8FC] w-full">
           <div className="h-full bg-[#1A1A1A] transition-all" style={{ width: `${((current + 1) / QUIZ_QUESTIONS.length) * 100}%` }} />
         </div>
 
@@ -1603,7 +1603,7 @@ function ProfilePoints({
             <Label className="text-[#1A1A1A]">Progress to Expert Level 4</Label>
             <Label className="text-[#737373]">{userPoints.toLocaleString()} / 4,000</Label>
           </div>
-          <div className="h-2 bg-[#F5F5F5] border border-[#E5E5E5]">
+          <div className="h-2 bg-[#F4F8FC] border border-[#E5E5E5]">
             <div className="h-full bg-[#1A1A1A] transition-all" style={{ width: `${Math.min(100, Math.round((userPoints / 4000) * 100))}%` }} />
           </div>
           <div className="flex justify-between items-center mt-3">
@@ -1629,7 +1629,7 @@ function ProfilePoints({
           </div>
           <div className="grid grid-cols-4 gap-2">
             {INITIAL_BADGES.slice(0, 4).map(badge => (
-              <div key={badge.id} className={`flex flex-col items-center gap-1 p-2 border border-[#E5E5E5] ${badge.earned ? "bg-[#F5F5F5]" : "opacity-40"}`}>
+              <div key={badge.id} className={`flex flex-col items-center gap-1 p-2 border border-[#E5E5E5] ${badge.earned ? "bg-[#F4F8FC]" : "opacity-40"}`}>
                 <span className="text-2xl">{badge.emoji}</span>
                 <UILabel className="text-[8px] text-center leading-tight text-[#1A1A1A] truncate w-full">{badge.title}</UILabel>
               </div>
@@ -1647,7 +1647,7 @@ function ProfilePoints({
           </div>
           <div className="border border-[#E5E5E5] divide-y divide-[#E5E5E5]">
             {LEADERBOARD.slice(0, 3).map(entry => (
-              <div key={entry.rank} className={`flex items-center gap-3 p-3 ${entry.isYou ? "bg-[#F5F5F5]" : "bg-white"}`}>
+              <div key={entry.rank} className={`flex items-center gap-3 p-3 ${entry.isYou ? "bg-[#F4F8FC]" : "bg-white"}`}>
                 <span className="font-['Instrument_Serif'] text-[#1A1A1A] text-[18px] w-6 text-center">{entry.rank}</span>
                 <span className="text-lg">{entry.badge}</span>
                 <div className="flex-1">
@@ -1678,7 +1678,7 @@ function ProfilePoints({
                   <div>
                     <div className="flex justify-between items-start">
                       <p className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[13px]">{r.title}</p>
-                      <span className="bg-[#F5F5F5] font-['Red_Hat_Display'] font-bold text-[11px] text-[#1A1A1A] px-2 py-0.5">{r.cost} pts</span>
+                      <span className="bg-[#F4F8FC] font-['Red_Hat_Display'] font-bold text-[11px] text-[#1A1A1A] px-2 py-0.5">{r.cost} pts</span>
                     </div>
                     <p className="font-['Inter'] text-[#737373] text-[11px] mt-1">{r.desc}</p>
                   </div>
@@ -1706,7 +1706,7 @@ function ProfilePoints({
             </div>
             <div className="flex flex-col gap-3">
               {INITIAL_BADGES.map(b => (
-                <div key={b.id} className={`p-3 border flex items-center gap-3 ${b.earned ? "bg-[#F5F5F5] border-[#1A1A1A]" : "border-[#E5E5E5] opacity-50"}`}>
+                <div key={b.id} className={`p-3 border flex items-center gap-3 ${b.earned ? "bg-[#F4F8FC] border-[#1A1A1A]" : "border-[#E5E5E5] opacity-50"}`}>
                   <span className="text-3xl">{b.emoji}</span>
                   <div className="flex-1">
                     <p className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[13px]">{b.title}</p>
@@ -1731,7 +1731,7 @@ function ProfilePoints({
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <Label className="text-[#1A1A1A]">Store Location</Label>
-                <input disabled value="Grace & Lace (Chicago, IL)" className="border border-[#E5E5E5] p-2.5 bg-[#F5F5F5] text-[12px] font-['Red_Hat_Display']" />
+                <input disabled value="Grace & Lace (Chicago, IL)" className="border border-[#E5E5E5] p-2.5 bg-[#F4F8FC] text-[12px] font-['Red_Hat_Display']" />
               </div>
 
               <div className="flex flex-col gap-2 pt-2 border-t border-[#E5E5E5]">
@@ -1784,7 +1784,7 @@ function LeaderboardScreen({ onBack }: { onBack: () => void }) {
       <div className="flex-1 overflow-y-auto px-5 py-4">
         <div className="border border-[#E5E5E5] divide-y divide-[#E5E5E5] bg-white">
           {LEADERBOARD.map(entry => (
-            <div key={entry.rank} className={`flex items-center gap-4 p-4 ${entry.isYou ? "bg-[#F5F5F5]" : "bg-white"}`}>
+            <div key={entry.rank} className={`flex items-center gap-4 p-4 ${entry.isYou ? "bg-[#F4F8FC]" : "bg-white"}`}>
               <span className="font-['Instrument_Serif'] text-[#1A1A1A] text-[22px] w-8 text-center">{entry.rank}</span>
               <span className="text-xl">{entry.badge}</span>
               <div className="flex-1 min-w-0">
@@ -1819,7 +1819,7 @@ function NotificationsScreen({
         <div className="flex items-center gap-2">
           <button
             onClick={onMarkAllRead}
-            className="p-1.5 hover:bg-[#F5F5F5] rounded transition-colors cursor-pointer"
+            className="p-1.5 hover:bg-[#F4F8FC] rounded transition-colors cursor-pointer"
             title="Mark all as read"
           >
             <Check size={18} className="text-[#1A1A1A]" />
@@ -1827,7 +1827,7 @@ function NotificationsScreen({
           {notifications.length > 0 && (
             <button
               onClick={onClearAll}
-              className="p-1.5 hover:bg-[#F5F5F5] rounded transition-colors cursor-pointer"
+              className="p-1.5 hover:bg-[#F4F8FC] rounded transition-colors cursor-pointer"
               title="Clear all"
             >
               <Trash2 size={16} className="text-[#737373]" />
@@ -1847,7 +1847,7 @@ function NotificationsScreen({
               <div
                 key={n.id}
                 onClick={() => onMarkRead(n.id)}
-                className={`w-full flex items-start gap-4 px-5 py-4 text-left hover:bg-[#F5F5F5] transition-colors cursor-pointer ${!n.read ? "bg-white" : "bg-[#F5F5F5]/40"}`}
+                className={`w-full flex items-start gap-4 px-5 py-4 text-left hover:bg-[#F4F8FC] transition-colors cursor-pointer ${!n.read ? "bg-white" : "bg-[#F4F8FC]/40"}`}
               >
                 <span className="text-xl shrink-0 mt-0.5">{n.emoji}</span>
                 <div className="flex-1 min-w-0">
@@ -1929,7 +1929,7 @@ function ResourcesLibrary({ onBack, onToast }: { onBack?: () => void; onToast: (
             <div>
               <div className="flex justify-between items-start">
                 <span className="font-['Red_Hat_Display'] text-[10px] font-bold uppercase text-[#737373]">{r.category}</span>
-                <span className="bg-[#F5F5F5] font-['Red_Hat_Display'] text-[9px] px-2 py-0.5 font-bold uppercase text-[#1A1A1A]">{r.type} · {r.size}</span>
+                <span className="bg-[#F4F8FC] font-['Red_Hat_Display'] text-[9px] px-2 py-0.5 font-bold uppercase text-[#1A1A1A]">{r.type} · {r.size}</span>
               </div>
               <CardTitle className="text-[17px] mt-1">{r.title}</CardTitle>
               <p className="font-['Inter'] text-[#737373] text-[12px] mt-1 leading-relaxed">{r.desc}</p>
@@ -2326,7 +2326,7 @@ function AdminProducts({
             </select>
           </div>
 
-          <div className="border border-dashed border-[#E5E5E5] p-6 flex flex-col items-center gap-2 bg-[#F5F5F5]/40">
+          <div className="border border-dashed border-[#E5E5E5] p-6 flex flex-col items-center gap-2 bg-[#F4F8FC]/40">
             <Upload size={22} className="text-[#737373]" />
             <p className="font-['Red_Hat_Display'] text-[12px] text-[#737373]">Product Imagery Preview Ready (Auto-linked)</p>
           </div>
@@ -2370,15 +2370,15 @@ function AdminProducts({
 
       {/* Desktop Table */}
       <div className="bg-white border border-[#E5E5E5]">
-        <div className="grid grid-cols-[60px_1.5fr_1.5fr_100px_100px_90px] border-b border-[#E5E5E5] px-4 py-3 bg-[#F5F5F5]/30">
+        <div className="grid grid-cols-[60px_1.5fr_1.5fr_100px_100px_90px] border-b border-[#E5E5E5] px-4 py-3 bg-[#F4F8FC]/30">
           {["", "Style Name", "Fabric & Silhouette", "Price", "Badge", "Actions"].map(h => (
             <p key={h} className="font-['Red_Hat_Display'] font-bold text-[#737373] text-[10px] uppercase tracking-wider">{h}</p>
           ))}
         </div>
         <div className="divide-y divide-[#E5E5E5]">
           {filtered.map(p => (
-            <div key={p.id} className="grid grid-cols-[60px_1.5fr_1.5fr_100px_100px_90px] px-4 py-3.5 items-center hover:bg-[#F5F5F5]/30 transition-colors">
-              <div className="w-9 h-11 bg-[#F5F5F5] border border-[#E5E5E5] flex items-center justify-center">
+            <div key={p.id} className="grid grid-cols-[60px_1.5fr_1.5fr_100px_100px_90px] px-4 py-3.5 items-center hover:bg-[#F4F8FC]/30 transition-colors">
+              <div className="w-9 h-11 bg-[#F4F8FC] border border-[#E5E5E5] flex items-center justify-center">
                 <ShoppingBag size={14} className="text-[#737373]" />
               </div>
               <div>
@@ -2391,7 +2391,7 @@ function AdminProducts({
               <div className="flex gap-1">
                 <button
                   onClick={() => setEditProduct(p)}
-                  className="p-1.5 hover:bg-[#F5F5F5] text-[#1A1A1A] transition-colors cursor-pointer"
+                  className="p-1.5 hover:bg-[#F4F8FC] text-[#1A1A1A] transition-colors cursor-pointer"
                   title="Edit style"
                 >
                   <Edit2 size={14} />
@@ -2403,7 +2403,7 @@ function AdminProducts({
                       onToast(`Removed "${p.name}" from catalog.`);
                     }
                   }}
-                  className="p-1.5 hover:bg-[#F5F5F5] text-red-500 transition-colors cursor-pointer"
+                  className="p-1.5 hover:bg-[#F4F8FC] text-red-500 transition-colors cursor-pointer"
                   title="Delete style"
                 >
                   <Trash2 size={14} />
@@ -2534,14 +2534,14 @@ function AdminTraining({
       </div>
 
       <div className="bg-white border border-[#E5E5E5]">
-        <div className="grid grid-cols-[1fr_150px_90px_120px_90px_90px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F5F5F5]/30">
+        <div className="grid grid-cols-[1fr_150px_90px_120px_90px_90px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F4F8FC]/30">
           {["Module Title", "Category", "Duration", "Stylist Progress", "Status", "Actions"].map(h => (
             <p key={h} className="font-['Red_Hat_Display'] font-bold text-[#737373] text-[10px] uppercase tracking-wider">{h}</p>
           ))}
         </div>
         <div className="divide-y divide-[#E5E5E5]">
           {modules.map(m => (
-            <div key={m.id} className="grid grid-cols-[1fr_150px_90px_120px_90px_90px] px-5 py-4 items-center hover:bg-[#F5F5F5]/30 transition-colors">
+            <div key={m.id} className="grid grid-cols-[1fr_150px_90px_120px_90px_90px] px-5 py-4 items-center hover:bg-[#F4F8FC]/30 transition-colors">
               <div>
                 <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[16px]">{m.title}</p>
                 <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px] mt-0.5">+{m.points} points awarded</p>
@@ -2549,18 +2549,18 @@ function AdminTraining({
               <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px]">{m.category}</p>
               <p className="font-['Red_Hat_Display'] text-[#1A1A1A] text-[12px]">{m.duration}</p>
               <div className="flex flex-col gap-1 pr-4">
-                <div className="h-1.5 bg-[#F5F5F5] w-full overflow-hidden">
+                <div className="h-1.5 bg-[#F4F8FC] w-full overflow-hidden">
                   <div className="h-full bg-[#1A1A1A]" style={{ width: `${m.progress}%` }} />
                 </div>
                 <p className="font-['Red_Hat_Display'] text-[10px] text-[#737373]">{m.progress}% complete</p>
               </div>
               <div>
-                <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${m.completed ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F5F5F5] text-[#1A1A1A]"}`}>
+                <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${m.completed ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F4F8FC] text-[#1A1A1A]"}`}>
                   {m.completed ? "Active" : "Published"}
                 </span>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => setEditModule(m)} className="p-1.5 hover:bg-[#F5F5F5] text-[#1A1A1A] cursor-pointer" title="Edit">
+                <button onClick={() => setEditModule(m)} className="p-1.5 hover:bg-[#F4F8FC] text-[#1A1A1A] cursor-pointer" title="Edit">
                   <Edit2 size={14} />
                 </button>
                 <button
@@ -2570,7 +2570,7 @@ function AdminTraining({
                       onToast(`Deleted module "${m.title}".`);
                     }
                   }}
-                  className="p-1.5 hover:bg-[#F5F5F5] text-red-500 cursor-pointer"
+                  className="p-1.5 hover:bg-[#F4F8FC] text-red-500 cursor-pointer"
                   title="Delete"
                 >
                   <Trash2 size={14} />
@@ -2708,6 +2708,34 @@ function AdminTraining({
   );
 }
 
+
+// ─── ANALYTICS & INTELLIGENCE CHART DATASETS ──────────────────────────────────
+const analyticsLineData = [
+  { month: "Jan", users: 45, logins: 180 },
+  { month: "Feb", users: 58, logins: 220 },
+  { month: "Mar", users: 72, logins: 290 },
+  { month: "Apr", users: 84, logins: 340 },
+  { month: "May", users: 95, logins: 360 },
+  { month: "Jun", users: 104, logins: 387 },
+];
+
+const productViewData = [
+  { name: "Sloan Mikado", views: 1240 },
+  { name: "Ophelia Tulle", views: 980 },
+  { name: "Sloan Fitted", views: 820 },
+  { name: "Peyton Mixed", views: 710 },
+  { name: "Gemma Crepe", views: 640 },
+  { name: "Kaia Bias Cut", views: 530 },
+];
+
+const aiQuestionData = [
+  { name: "Modifications", count: 184 },
+  { name: "Lead Times", count: 142 },
+  { name: "Fabric Care", count: 96 },
+  { name: "Split Sizing", count: 88 },
+  { name: "Veil Pairings", count: 54 },
+];
+
 function AdminAnalytics({ onToast }: { onToast: (msg: string) => void }) {
   const [range, setRange] = useState<"7D" | "30D" | "90D" | "1Y">("30D");
 
@@ -2772,7 +2800,7 @@ function AdminAnalytics({ onToast }: { onToast: (msg: string) => void }) {
               <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ border: "1px solid #E5E5E5", borderRadius: 0, fontFamily: "Red Hat Display", fontSize: 12 }} />
-              <Line type="monotone" dataKey="users" stroke="#1A1A1A" strokeWidth={2} dot={{ fill: "#1A1A1A", r: 3 }} name="Active Stylists" />
+              <Line type="monotone" dataKey="users" stroke="#E58C9F" strokeWidth={2} dot={{ fill: "#E58C9F", r: 3 }} name="Active Stylists" />
               <Line type="monotone" dataKey="logins" stroke="#737373" strokeWidth={1.5} dot={false} name="Logins" />
             </LineChart>
           </ResponsiveContainer>
@@ -2785,7 +2813,7 @@ function AdminAnalytics({ onToast }: { onToast: (msg: string) => void }) {
               <XAxis type="number" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
               <YAxis dataKey="name" type="category" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#1A1A1A" }} axisLine={false} tickLine={false} width={110} />
               <Tooltip contentStyle={{ border: "1px solid #E5E5E5", borderRadius: 0, fontFamily: "Red Hat Display", fontSize: 12 }} />
-              <Bar dataKey="views" fill="#1A1A1A" barSize={16} />
+              <Bar dataKey="views" fill="#E58C9F" barSize={16} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -2876,14 +2904,14 @@ function AdminUsers({
       </div>
 
       <div className="bg-white border border-[#E5E5E5]">
-        <div className="grid grid-cols-[1.5fr_1.5fr_100px_90px_100px_100px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F5F5F5]/30">
+        <div className="grid grid-cols-[1.5fr_1.5fr_100px_90px_100px_100px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F4F8FC]/30">
           {["User / Email", "Store Location", "Role", "Status", "Points", "Actions"].map(h => (
             <p key={h} className="font-['Red_Hat_Display'] font-bold text-[#737373] text-[10px] uppercase tracking-wider">{h}</p>
           ))}
         </div>
         <div className="divide-y divide-[#E5E5E5]">
           {filtered.map(u => (
-            <div key={u.id} className="grid grid-cols-[1.5fr_1.5fr_100px_90px_100px_100px] px-5 py-3.5 items-center hover:bg-[#F5F5F5]/30 transition-colors">
+            <div key={u.id} className="grid grid-cols-[1.5fr_1.5fr_100px_90px_100px_100px] px-5 py-3.5 items-center hover:bg-[#F4F8FC]/30 transition-colors">
               <div>
                 <p className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[13px]">{u.name}</p>
                 <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px]">{u.email}</p>
@@ -2893,14 +2921,14 @@ function AdminUsers({
               <div>
                 <button
                   onClick={() => toggleStatus(u)}
-                  className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase transition-colors cursor-pointer ${u.status === "Active" ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F5F5F5] text-[#737373]"}`}
+                  className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase transition-colors cursor-pointer ${u.status === "Active" ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F4F8FC] text-[#737373]"}`}
                 >
                   {u.status}
                 </button>
               </div>
               <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[16px]">{u.points.toLocaleString()} pts</p>
               <div className="flex gap-2">
-                <button onClick={() => setEditUser(u)} className="p-1 hover:bg-[#F5F5F5] text-[#1A1A1A] cursor-pointer" title="Edit">
+                <button onClick={() => setEditUser(u)} className="p-1 hover:bg-[#F4F8FC] text-[#1A1A1A] cursor-pointer" title="Edit">
                   <Edit2 size={14} />
                 </button>
               </div>
@@ -3101,7 +3129,7 @@ function AdminIntelligence() {
             <XAxis dataKey="name" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={{ border: "1px solid #E5E5E5", borderRadius: 0, fontFamily: "Red Hat Display", fontSize: 12 }} />
-            <Bar dataKey="count" fill="#1A1A1A" barSize={36} />
+            <Bar dataKey="count" fill="#E58C9F" barSize={36} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -3206,7 +3234,7 @@ function AdminPortal({
               <button
                 key={item.id}
                 onClick={() => setTab(item.id)}
-                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F5F5F5]"}`}
+                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
               >
                 <item.icon size={16} />
                 {item.label}
@@ -3298,15 +3326,15 @@ function HealthDots({ score }: { score: number }) {
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     "High Growth": "bg-[#1A1A1A] text-[#FFFFFF]",
-    "Stable": "bg-[#F5F5F5] text-[#1A1A1A]",
+    "Stable": "bg-[#F4F8FC] text-[#1A1A1A]",
     "At Risk": "bg-red-50 text-red-600 border border-red-200",
     "Expansion Opportunity": "bg-[#1A1A1A] text-[#FFFFFF]",
     "Prospecting": "border border-[#E5E5E5] text-[#737373]",
-    "Sample Sent": "bg-[#F5F5F5] text-[#1A1A1A]",
+    "Sample Sent": "bg-[#F4F8FC] text-[#1A1A1A]",
     "Negotiating": "bg-[#1A1A1A] text-[#FFFFFF]",
   };
   return (
-    <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider ${styles[status] ?? "bg-[#F5F5F5] text-[#1A1A1A]"}`}>
+    <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider ${styles[status] ?? "bg-[#F4F8FC] text-[#1A1A1A]"}`}>
       {status}
     </span>
   );
@@ -3418,7 +3446,7 @@ function AccountList({
 
       {/* Table */}
       <div className="bg-white border border-[#E5E5E5]">
-        <div className="grid grid-cols-[1.5fr_120px_130px_90px_110px_90px_60px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F5F5F5]/30">
+        <div className="grid grid-cols-[1.5fr_120px_130px_90px_110px_90px_60px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F4F8FC]/30">
           {["Store / Boutique", "Territory", "Status", "Health", "Last Contact", "YTD Sales", ""].map(h => (
             <p key={h} className="font-['Red_Hat_Display'] font-bold text-[#737373] text-[10px] uppercase tracking-wider">{h}</p>
           ))}
@@ -3428,7 +3456,7 @@ function AccountList({
             <div
               key={a.id}
               onClick={() => onSelectAccount(a)}
-              className="grid grid-cols-[1.5fr_120px_130px_90px_110px_90px_60px] px-5 py-3.5 items-center hover:bg-[#F5F5F5]/40 transition-colors cursor-pointer group"
+              className="grid grid-cols-[1.5fr_120px_130px_90px_110px_90px_60px] px-5 py-3.5 items-center hover:bg-[#F4F8FC]/40 transition-colors cursor-pointer group"
             >
               <div>
                 <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[16px] group-hover:underline">{a.name}</p>
@@ -3648,7 +3676,7 @@ function AccountDetail({
                   <div
                     key={c.id}
                     onClick={() => toggleCommitment(c.id)}
-                    className="p-4 flex items-center justify-between hover:bg-[#F5F5F5] transition-colors cursor-pointer select-none"
+                    className="p-4 flex items-center justify-between hover:bg-[#F4F8FC] transition-colors cursor-pointer select-none"
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-4 h-4 border flex items-center justify-center ${isDone ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5]"}`}>
@@ -3661,7 +3689,7 @@ function AccountDetail({
                         <p className="font-['Red_Hat_Display'] text-[10px] text-[#737373]">Due: {c.due}</p>
                       </div>
                     </div>
-                    <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${isDone ? "bg-[#F5F5F5] text-[#1A1A1A]" : "bg-[#1A1A1A] text-[#FFFFFF]"}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${isDone ? "bg-[#F4F8FC] text-[#1A1A1A]" : "bg-[#1A1A1A] text-[#FFFFFF]"}`}>
                       {c.status}
                     </span>
                   </div>
@@ -3974,7 +4002,7 @@ function CRMTasks({
             <div
               key={t.id}
               onClick={() => onToggleTask(t.id)}
-              className={`border p-4 flex items-center gap-4 bg-white transition-all cursor-pointer select-none hover:border-[#1A1A1A] ${t.completed ? "border-[#E5E5E5] bg-[#F5F5F5]/30 opacity-60" : t.due === "Today" ? "border-[#1A1A1A]" : "border-[#E5E5E5]"}`}
+              className={`border p-4 flex items-center gap-4 bg-white transition-all cursor-pointer select-none hover:border-[#1A1A1A] ${t.completed ? "border-[#E5E5E5] bg-[#F4F8FC]/30 opacity-60" : t.due === "Today" ? "border-[#1A1A1A]" : "border-[#E5E5E5]"}`}
             >
               <div className={`w-5 h-5 border flex items-center justify-center shrink-0 ${t.completed ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5]"}`}>
                 {t.completed && <Check size={12} className="text-[#FFFFFF]" />}
@@ -3984,7 +4012,7 @@ function CRMTasks({
                 <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px] mt-0.5">{t.account} · Assigned: {t.assigned}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className={`font-['Red_Hat_Display'] font-bold text-[10px] uppercase px-2 py-0.5 ${t.due === "Today" ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F5F5F5] text-[#1A1A1A]"}`}>{t.due}</span>
+                <span className={`font-['Red_Hat_Display'] font-bold text-[10px] uppercase px-2 py-0.5 ${t.due === "Today" ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F4F8FC] text-[#1A1A1A]"}`}>{t.due}</span>
                 <span className="font-['Red_Hat_Display'] text-[#737373] text-[10px] uppercase px-2 py-0.5 border border-[#E5E5E5]">{t.priority}</span>
               </div>
             </div>
@@ -4000,7 +4028,7 @@ function CRMTasks({
             {Array.from({ length: 31 }, (_, i) => i + 1).map(d => {
               const hasTask = d === 1 || d === 3 || d === 5 || d === 7;
               return (
-                <div key={d} className={`h-16 border border-[#E5E5E5] p-1.5 flex flex-col justify-between ${hasTask ? "bg-[#F5F5F5]" : ""}`}>
+                <div key={d} className={`h-16 border border-[#E5E5E5] p-1.5 flex flex-col justify-between ${hasTask ? "bg-[#F4F8FC]" : ""}`}>
                   <span className="font-['Red_Hat_Display'] text-[10px] text-[#737373]">{d}</span>
                   {hasTask && <div className="w-full bg-[#1A1A1A] text-[#FFFFFF] text-[8px] font-['Red_Hat_Display'] p-0.5 truncate">Follow-up</div>}
                 </div>
@@ -4109,7 +4137,7 @@ function CRMIntegrations({ onToast }: { onToast: (msg: string) => void }) {
                   <span className="text-2xl">{int.icon}</span>
                   <div>
                     <CardTitle className="text-[18px]">{int.name}</CardTitle>
-                    <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${int.connected ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F5F5F5] text-[#737373]"}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${int.connected ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F4F8FC] text-[#737373]"}`}>
                       {int.status}
                     </span>
                   </div>
@@ -4167,7 +4195,7 @@ function CRMPortal() {
               <button
                 key={item.id}
                 onClick={() => { setSelectedAccount(null); setTab(item.id); }}
-                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id && !selectedAccount ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F5F5F5]"}`}
+                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id && !selectedAccount ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
               >
                 <item.icon size={16} />
                 {item.label}
@@ -4244,8 +4272,8 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-[#E5E5E5] bg-[#F5F5F5] font-['Red_Hat_Display'] text-[9px] uppercase tracking-wider font-semibold text-[#1A1A1A]">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-[#E5E5E5] bg-[#F4F8FC] font-['Red_Hat_Display'] text-[9px] uppercase tracking-wider font-semibold text-[#1A1A1A]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E58C9F] animate-pulse"></span>
             Production Blueprint
           </span>
         </div>
@@ -4427,7 +4455,7 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
         </div>
 
         {/* SECTION 4: INTEGRATIONS & FUTURE CONNECTIONS (Contained Block) */}
-        <div className="w-full bg-[#F5F5F5] border border-[#E5E5E5] p-7 mb-10">
+        <div className="w-full bg-[#F4F8FC] border border-[#E5E5E5] p-7 mb-10">
           <div className="font-['Red_Hat_Display'] text-[10px] font-bold uppercase tracking-[0.25em] text-[#737373] mb-5">
             INTEGRATIONS & FUTURE CONNECTIONS
           </div>
@@ -4473,7 +4501,7 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
                   CRM email timeline integration
                 </div>
               </div>
-              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F5F5F5] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F4F8FC] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
                 COMING SOON
               </span>
             </div>
@@ -4503,7 +4531,7 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
                   Training module hosting
                 </div>
               </div>
-              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F5F5F5] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F4F8FC] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
                 COMING SOON
               </span>
             </div>
@@ -4518,7 +4546,7 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
                   Retailer feedback collection
                 </div>
               </div>
-              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F5F5F5] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F4F8FC] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
                 COMING SOON
               </span>
             </div>
@@ -4645,13 +4673,13 @@ export default function App() {
               {/* Stylist App */}
               <button
                 onClick={() => setMode("stylist")}
-                className="group bg-white border border-[#E5E5E5] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] hover:bg-[#F5F5F5] transition-all cursor-pointer"
+                className="group bg-white border border-[#E5E5E5] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] hover:bg-[#F4F8FC] transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start">
                   <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center">
                     <ShoppingBag size={22} className="text-[#FFFFFF]" />
                   </div>
-                  <span className="bg-[#F5F5F5] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Mobile · 393px</span>
+                  <span className="bg-[#F4F8FC] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Mobile · 393px</span>
                 </div>
                 <div>
                   <CardTitle className="text-[22px]">Stylist App</CardTitle>
@@ -4659,7 +4687,7 @@ export default function App() {
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-1">
                   {["Catalog", "Ask NAGAE AI", "Training", "Quiz", "Points", "Notifications", "Resources"].map(tag => (
-                    <span key={tag} className="bg-[#F5F5F5] px-2 py-0.5 font-['Red_Hat_Display'] font-semibold text-[9px] uppercase tracking-wider text-[#1A1A1A]">{tag}</span>
+                    <span key={tag} className="bg-[#F4F8FC] px-2 py-0.5 font-['Red_Hat_Display'] font-semibold text-[9px] uppercase tracking-wider text-[#1A1A1A]">{tag}</span>
                   ))}
                 </div>
               </button>
@@ -4689,7 +4717,7 @@ export default function App() {
               {/* CRM System */}
               <button
                 onClick={() => setMode("crm")}
-                className="group bg-[#F5F5F5] border border-[#E5E5E5] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] transition-all cursor-pointer"
+                className="group bg-[#F4F8FC] border border-[#E5E5E5] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start">
                   <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center">
@@ -4717,7 +4745,7 @@ export default function App() {
                   <div className="w-12 h-12 bg-[#FFFFFF] border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
                     <Layers size={22} className="text-[#1A1A1A]" />
                   </div>
-                  <span className="bg-[#F5F5F5] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Technical Architecture</span>
+                  <span className="bg-[#F4F8FC] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Technical Architecture</span>
                 </div>
                 <div>
                   <CardTitle className="text-[22px]">System Architecture</CardTitle>
@@ -4725,7 +4753,7 @@ export default function App() {
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-1">
                   {["2 Databases", "API Layer", "Integrations", "Scalable"].map(tag => (
-                    <span key={tag} className="bg-[#F5F5F5] px-2 py-0.5 font-['Red_Hat_Display'] font-semibold text-[9px] uppercase tracking-wider text-[#1A1A1A]">{tag}</span>
+                    <span key={tag} className="bg-[#F4F8FC] px-2 py-0.5 font-['Red_Hat_Display'] font-semibold text-[9px] uppercase tracking-wider text-[#1A1A1A]">{tag}</span>
                   ))}
                 </div>
               </button>
@@ -4750,7 +4778,7 @@ export default function App() {
 
           <div className="flex-1 overflow-hidden">
             {mode === "stylist" ? (
-              <div className="size-full flex items-center justify-center bg-[#F5F5F5]">
+              <div className="size-full flex items-center justify-center bg-[#F4F8FC]">
                 <div className="w-[393px] h-full max-h-[844px] shadow-2xl overflow-hidden flex flex-col relative border border-[#E5E5E5]">
                   <StylistApp
                     products={products}
