@@ -1986,10 +1986,9 @@ function StylistApp({
 
   const navItems = [
     { id: "home", icon: Home, label: "Home" },
-    { id: "catalog", icon: Grid, label: "Catalog" },
+    { id: "catalog", icon: Search, label: "Search" },
     { id: "ai", icon: MessageSquare, label: "Ask NAGAE" },
     { id: "training", icon: BookOpen, label: "Training" },
-    { id: "resources", icon: Folder, label: "Resources" },
     { id: "profile", icon: User, label: "Profile" },
   ];
 
@@ -2111,28 +2110,21 @@ function StylistApp({
         ) : null}
       </div>
 
-      {/* Bottom Tab Bar */}
-      <div className="h-16 bg-white border-t border-[#E5E5E5] flex items-center justify-around shrink-0 z-20">
+      {/* Bottom Tab Bar (5 Clean Original Tabs) */}
+      <div className="h-16 bg-white border-t border-[#E5E5E5] flex items-center shrink-0 z-20">
         {navItems.map(tab => {
           const isActive = screen === tab.id && !selectedProduct && !selectedModule && !quizModule;
           return (
             <button
               key={tab.id}
               onClick={() => navigateTo(tab.id)}
-              className={`flex flex-col items-center justify-center gap-1 w-14 h-full cursor-pointer transition-colors ${isActive ? "text-[#1A1A1A]" : "text-[#737373] hover:text-[#1A1A1A]"}`}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 h-full cursor-pointer transition-colors ${isActive ? "text-[#1A1A1A]" : "text-[#737373] hover:text-[#1A1A1A]"}`}
             >
-              <tab.icon size={18} strokeWidth={isActive ? 2.2 : 1.6} />
+              <tab.icon size={19} strokeWidth={isActive ? 2.2 : 1.6} />
               <span className={`font-['Red_Hat_Display'] text-[9px] uppercase tracking-wider ${isActive ? "font-bold" : "font-medium"}`}>{tab.label}</span>
             </button>
           );
         })}
-        <button
-          onClick={() => setDrawerOpen(true)}
-          className="flex flex-col items-center justify-center gap-1 w-12 h-full text-[#737373] hover:text-[#1A1A1A] cursor-pointer"
-        >
-          <Menu size={18} />
-          <span className="font-['Red_Hat_Display'] text-[9px] uppercase tracking-wider font-medium">Menu</span>
-        </button>
       </div>
     </div>
   );
@@ -4656,7 +4648,7 @@ export default function App() {
   };
 
   return (
-    <div className="size-full overflow-hidden flex flex-col font-['Red_Hat_Display']">
+    <div className="w-screen h-screen overflow-hidden flex flex-col font-['Red_Hat_Display']">
       {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
 
       {mode === null ? (
@@ -4765,7 +4757,7 @@ export default function App() {
           </div>
         </div>
       ) : (
-        <div className="size-full flex flex-col overflow-hidden">
+        <div className="w-full flex-1 flex flex-col overflow-hidden">
           {/* Top Bar for Navigating Back */}
           <div className="bg-white border-b border-[#E5E5E5] h-10 flex items-center px-4 shrink-0 z-50">
             <button
