@@ -6,7 +6,8 @@ import {
   BarChart2, Users, Settings, Package, Megaphone, PlusCircle, Edit2,
   Trash2, Upload, Download, X, Check, AlertCircle, TrendingUp, Activity,
   Zap, Gift, LogIn, Lock, Mail, Eye, EyeOff, Send, Clock, Tag,
-  Layers, Info, ShoppingBag, LayoutDashboard, RefreshCw, Copy, ExternalLink, Calendar
+  Layers, Info, ShoppingBag, LayoutDashboard, RefreshCw, Copy, ExternalLink, Calendar,
+  Database, Smartphone, LayoutGrid, ArrowRight
 } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
@@ -4220,42 +4221,354 @@ function CRMPortal() {
 // ─── ARCHITECTURE DIAGRAM ─────────────────────────────────────────────────────
 
 function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  const portalTables = ["PRODUCTS", "USERS", "TRAINING", "QUIZZES", "BADGES", "NOTIFICATIONS", "ANALYTICS"];
+  const crmTables = ["ACCOUNTS", "CONTACTS", "COMMUNICATIONS", "MEETINGS", "TASKS", "SURVEYS", "SALES_DATA"];
+
   return (
-    <div className="h-full flex flex-col bg-white overflow-y-auto p-8">
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <button onClick={onBack} className="flex items-center gap-2 font-['Red_Hat_Display'] text-[11px] uppercase tracking-wider text-[#737373] hover:text-[#1A1A1A] mb-2 cursor-pointer">
-            <ArrowLeft size={14} />Back to Modes
+    <div className="min-h-full bg-[#FFFFFF] text-[#1A1A1A] overflow-y-auto pb-24 selection:bg-[#1A1A1A] selection:text-white">
+      {/* Top Navigation Bar */}
+      <div className="border-b border-[#E5E5E5] px-8 py-3.5 flex items-center justify-between sticky top-0 bg-[#FFFFFF]/95 backdrop-blur-sm z-30">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="h-7 px-3 border border-[#E5E5E5] flex items-center gap-2 hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all cursor-pointer font-['Red_Hat_Display'] text-[10px] uppercase tracking-wider font-semibold"
+            title="Back to System Modes"
+          >
+            <ArrowLeft size={12} />
+            <span>Modes</span>
           </button>
-          <DisplayText size="medium" className="text-[28px]">NAGAE Studio System Architecture</DisplayText>
+          <span className="font-['Red_Hat_Display'] text-[11px] uppercase tracking-[0.2em] text-[#737373] font-medium">
+            SYSTEM ARCHITECTURE
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-[#E5E5E5] bg-[#F5F5F5] font-['Red_Hat_Display'] text-[9px] uppercase tracking-wider font-semibold text-[#1A1A1A]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Production Blueprint
+          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6 max-w-5xl">
-        <div className="border border-[#E5E5E5] p-5 bg-[#F5F5F5]/30">
-          <Label className="text-[#1A1A1A] mb-2 block">1. Retailer Portal (Client DB)</Label>
-          <p className="font-['Inter'] text-[#737373] text-[13px] leading-relaxed">
-            Houses showroom catalog, stylist education progress, gamification badges, and instant AI product assistant.
+      {/* Main Diagram Canvas */}
+      <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col items-center">
+        
+        {/* Title & Subtitle */}
+        <div className="text-center mb-10">
+          <h1 className="font-['Instrument_Serif'] italic text-[44px] sm:text-[52px] leading-tight text-[#1A1A1A] tracking-tight">
+            Platform Architecture
+          </h1>
+          <p className="font-['Red_Hat_Display'] text-[11px] uppercase tracking-[0.25em] text-[#737373] mt-2 font-semibold">
+            ONE PLATFORM · TWO SYSTEMS · MOBILE-FIRST · SCALABLE
           </p>
         </div>
-        <div className="border border-[#E5E5E5] p-5 bg-[#F5F5F5]/30">
-          <Label className="text-[#1A1A1A] mb-2 block">2. Sales Intelligence CRM (Internal DB)</Label>
-          <p className="font-['Inter'] text-[#737373] text-[13px] leading-relaxed">
-            Encrypted sales pipelines, boutique account health scores, meeting transcripts, and territory performance.
-          </p>
+
+        {/* SECTION 1: TWO ISOLATED DATABASES */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-3">
+          {/* Left: Portal Database (Dark Charcoal Primary Container) */}
+          <div className="bg-[#1A1A1A] text-white p-7 border border-[#1A1A1A] shadow-sm flex flex-col justify-between relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 pointer-events-none rounded-bl-full transition-transform group-hover:scale-110"></div>
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Database size={13} className="text-[#A3A3A3]" />
+                <span className="font-['Red_Hat_Display'] text-[10px] uppercase tracking-[0.2em] text-[#A3A3A3] font-bold">
+                  POSTGRESQL
+                </span>
+              </div>
+              <h2 className="font-['Instrument_Serif'] italic text-[30px] text-white tracking-wide mb-6">
+                Portal Database
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {portalTables.map(tbl => (
+                <span
+                  key={tbl}
+                  onClick={() => setActiveTab(tbl === activeTab ? null : tbl)}
+                  className={`px-3 py-1 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
+                    activeTab === tbl ? "bg-white text-[#1A1A1A]" : "bg-white/10 hover:bg-white/20 text-[#E5E5E5] border border-white/10"
+                  }`}
+                >
+                  {tbl}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: CRM Database (Clean Light Container) */}
+          <div className="bg-[#F9F9F9] text-[#1A1A1A] p-7 border border-[#E5E5E5] shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-[#1A1A1A] transition-colors">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Database size={13} className="text-[#737373]" />
+                <span className="font-['Red_Hat_Display'] text-[10px] uppercase tracking-[0.2em] text-[#737373] font-bold">
+                  POSTGRESQL
+                </span>
+              </div>
+              <h2 className="font-['Instrument_Serif'] italic text-[30px] text-[#1A1A1A] tracking-wide mb-6">
+                CRM Database
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {crmTables.map(tbl => (
+                <span
+                  key={tbl}
+                  onClick={() => setActiveTab(tbl === activeTab ? null : tbl)}
+                  className={`px-3 py-1 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
+                    activeTab === tbl ? "bg-[#1A1A1A] text-white" : "bg-white hover:bg-[#E5E5E5] text-[#1A1A1A] border border-[#E5E5E5]"
+                  }`}
+                >
+                  {tbl}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="border border-[#E5E5E5] p-5 bg-[#F5F5F5]/30">
-          <Label className="text-[#1A1A1A] mb-2 block">3. Synchronization & AI Layer</Label>
-          <p className="font-['Inter'] text-[#737373] text-[13px] leading-relaxed">
-            Asynchronous background worker syncing Google Sheets, CRM activity feeds, and Claude/OpenAI vector knowledge.
-          </p>
+
+        {/* Dynamic Schema Inspector Popup if table clicked */}
+        {activeTab && (
+          <div className="w-full mb-3 p-4 bg-[#FFFFFF] border-2 border-[#1A1A1A] text-[12px] font-['Red_Hat_Display'] flex items-center justify-between animate-in fade-in duration-150">
+            <div className="flex items-center gap-3">
+              <span className="font-mono font-bold bg-[#1A1A1A] text-white px-2 py-0.5 text-[10px]">TABLE: {activeTab}</span>
+              <span className="text-[#737373]">PostgreSQL relational table schema with indexed primary keys, foreign constraints, and audit timestamps.</span>
+            </div>
+            <button onClick={() => setActiveTab(null)} className="text-[11px] font-bold uppercase underline hover:text-[#737373] cursor-pointer">Close</button>
+          </div>
+        )}
+
+        {/* CONNECTOR LINE */}
+        <div className="w-px h-5 bg-[#E5E5E5] my-0.5"></div>
+
+        {/* SECTION 2: API LAYER (Horizontal Banner) */}
+        <div className="w-full bg-[#E5E5E5]/70 border border-[#E5E5E5] py-3.5 px-6 text-center mb-3 relative group hover:border-[#1A1A1A] transition-colors">
+          <div className="font-['Red_Hat_Display'] text-[11px] font-bold uppercase tracking-[0.25em] text-[#1A1A1A]">
+            API LAYER
+          </div>
+          <div className="font-['Red_Hat_Display'] text-[11px] text-[#525252] tracking-wider mt-0.5 font-medium">
+            REST + Auth · Rate Limiting · Caching
+          </div>
         </div>
+
+        {/* CONNECTOR LINE */}
+        <div className="w-px h-5 bg-[#E5E5E5] my-0.5"></div>
+
+        {/* SECTION 3: FRONTEND SURFACES (3 Columns) */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-7">
+          {/* Surface 1: Stylist App */}
+          <div className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] transition-all group flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-8 h-8 border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
+                  <Smartphone size={16} className="text-[#1A1A1A]" />
+                </div>
+                <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
+                  LIVE
+                </span>
+              </div>
+              <h3 className="font-['Instrument_Serif'] italic text-[24px] text-[#1A1A1A] mb-1">
+                Stylist App
+              </h3>
+              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] leading-relaxed">
+                React · Mobile-First · PWA-ready · 375px base
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[11px] text-[#737373]">
+              <span>Retailer / In-Store</span>
+              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Surface 2: Admin Portal */}
+          <div className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] transition-all group flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-8 h-8 border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
+                  <LayoutGrid size={16} className="text-[#1A1A1A]" />
+                </div>
+                <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
+                  LIVE
+                </span>
+              </div>
+              <h3 className="font-['Instrument_Serif'] italic text-[24px] text-[#1A1A1A] mb-1">
+                Admin Portal
+              </h3>
+              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] leading-relaxed">
+                React · Desktop · 1440px · Management Interface
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[11px] text-[#737373]">
+              <span>Brand HQ Operations</span>
+              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Surface 3: CRM System */}
+          <div className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] transition-all group flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-8 h-8 border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
+                  <BarChart2 size={16} className="text-[#1A1A1A]" />
+                </div>
+                <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
+                  LIVE
+                </span>
+              </div>
+              <h3 className="font-['Instrument_Serif'] italic text-[24px] text-[#1A1A1A] mb-1">
+                CRM System
+              </h3>
+              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] leading-relaxed">
+                React · Desktop · 1440px · Sales Intelligence
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[11px] text-[#737373]">
+              <span>Boutique Relations & Pipeline</span>
+              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 4: INTEGRATIONS & FUTURE CONNECTIONS (Contained Block) */}
+        <div className="w-full bg-[#F5F5F5] border border-[#E5E5E5] p-7 mb-10">
+          <div className="font-['Red_Hat_Display'] text-[10px] font-bold uppercase tracking-[0.25em] text-[#737373] mb-5">
+            INTEGRATIONS & FUTURE CONNECTIONS
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Google Sheets */}
+            <div className="bg-white border border-[#E5E5E5] p-4 flex items-center justify-between hover:border-[#1A1A1A] transition-colors">
+              <div>
+                <div className="font-['Red_Hat_Display'] font-bold text-[13px] text-[#1A1A1A]">
+                  Google Sheets
+                </div>
+                <div className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                  Sales data sync for CRM
+                </div>
+              </div>
+              <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+                CONNECTED
+              </span>
+            </div>
+
+            {/* Push Notifications */}
+            <div className="bg-white border border-[#E5E5E5] p-4 flex items-center justify-between hover:border-[#1A1A1A] transition-colors">
+              <div>
+                <div className="font-['Red_Hat_Display'] font-bold text-[13px] text-[#1A1A1A]">
+                  Push Notifications
+                </div>
+                <div className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                  Stylist engagement & alerts
+                </div>
+              </div>
+              <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+                ACTIVE
+              </span>
+            </div>
+
+            {/* Front (Email) */}
+            <div className="bg-white border border-[#E5E5E5] p-4 flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
+              <div>
+                <div className="font-['Red_Hat_Display'] font-bold text-[13px] text-[#1A1A1A]">
+                  Front (Email)
+                </div>
+                <div className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                  CRM email timeline integration
+                </div>
+              </div>
+              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F5F5F5] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+                COMING SOON
+              </span>
+            </div>
+
+            {/* AI Service (Claude) */}
+            <div className="bg-white border border-[#E5E5E5] p-4 flex items-center justify-between hover:border-[#1A1A1A] transition-colors">
+              <div>
+                <div className="font-['Red_Hat_Display'] font-bold text-[13px] text-[#1A1A1A]">
+                  AI Service (Claude)
+                </div>
+                <div className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                  Ask NAGAE AI + CRM insights
+                </div>
+              </div>
+              <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+                ACTIVE
+              </span>
+            </div>
+
+            {/* Video Platform */}
+            <div className="bg-white border border-[#E5E5E5] p-4 flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
+              <div>
+                <div className="font-['Red_Hat_Display'] font-bold text-[13px] text-[#1A1A1A]">
+                  Video Platform
+                </div>
+                <div className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                  Training module hosting
+                </div>
+              </div>
+              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F5F5F5] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+                COMING SOON
+              </span>
+            </div>
+
+            {/* Survey Platform */}
+            <div className="bg-white border border-[#E5E5E5] p-4 flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
+              <div>
+                <div className="font-['Red_Hat_Display'] font-bold text-[13px] text-[#1A1A1A]">
+                  Survey Platform
+                </div>
+                <div className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                  Retailer feedback collection
+                </div>
+              </div>
+              <span className="px-2 py-0.5 border border-[#D4D4D4] bg-[#F5F5F5] text-[#737373] text-[8px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider">
+                COMING SOON
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 5: STATS FOOTER BAR (4 Metrics) */}
+        <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-[#E5E5E5] text-center">
+          <div>
+            <div className="font-['Instrument_Serif'] italic text-[48px] text-[#1A1A1A] leading-none mb-1">
+              500+
+            </div>
+            <div className="font-['Red_Hat_Display'] text-[10px] uppercase tracking-[0.2em] text-[#737373] font-semibold">
+              PRODUCTS CAPACITY
+            </div>
+          </div>
+
+          <div>
+            <div className="font-['Instrument_Serif'] italic text-[48px] text-[#1A1A1A] leading-none mb-1">
+              150+
+            </div>
+            <div className="font-['Red_Hat_Display'] text-[10px] uppercase tracking-[0.2em] text-[#737373] font-semibold">
+              RETAILER ACCOUNTS
+            </div>
+          </div>
+
+          <div>
+            <div className="font-['Instrument_Serif'] italic text-[48px] text-[#1A1A1A] leading-none mb-1">
+              2 DBs
+            </div>
+            <div className="font-['Red_Hat_Display'] text-[10px] uppercase tracking-[0.2em] text-[#737373] font-semibold">
+              ISOLATED SYSTEMS
+            </div>
+          </div>
+
+          <div>
+            <div className="font-['Instrument_Serif'] italic text-[48px] text-[#1A1A1A] leading-none mb-1">
+              &infin;
+            </div>
+            <div className="font-['Red_Hat_Display'] text-[10px] uppercase tracking-[0.2em] text-[#737373] font-semibold">
+              SCALABLE VIA API
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
 }
 
-// ─── ROOT APP WITH SHARED SYNCHRONIZED STATE ──────────────────────────────────
 
 export default function App() {
   const [mode, setMode] = useState<null | "stylist" | "admin" | "crm" | "arch">(null);
