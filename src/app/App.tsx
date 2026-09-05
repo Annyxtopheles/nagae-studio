@@ -5,7 +5,7 @@ import {
   MessageSquare, Mic, ThumbsUp, ThumbsDown, Play, Pause, CheckCircle, Circle,
   BarChart2, Users, Settings, Package, Megaphone, PlusCircle, Edit2,
   Trash2, Upload, Download, X, Check, AlertCircle, TrendingUp, Activity,
-  Zap, Gift, LogIn, Lock, Mail, Eye, EyeOff, Send, Clock, Tag,
+  Zap, Gift, LogIn, LogOut, Lock, Mail, Eye, EyeOff, Send, Clock, Tag,
   Layers, Info, ShoppingBag, LayoutDashboard, RefreshCw, Copy, ExternalLink, Calendar,
   Database, Smartphone, LayoutGrid, ArrowRight
 } from "lucide-react";
@@ -365,91 +365,99 @@ function StylistLogin({ onLogin, onToast }: { onLogin: () => void; onToast: (msg
   };
 
   return (
-    <div className="flex-1 bg-[#FFFFFF] flex flex-col justify-between p-8 overflow-y-auto">
-      <div className="pt-8 text-center">
-        <DisplayText size="large" className="text-[38px]">NAGAE Studio</DisplayText>
-        <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] uppercase tracking-[3px] mt-2">Retailer & Stylist Portal</p>
+    <div className="flex-1 bg-[#E2F0FC] flex flex-col justify-between p-8 overflow-y-auto">
+      <div className="pt-10 text-center">
+        <DisplayText size="large" className="text-[38px] text-[#1A1A1A]">NAGAE Studio</DisplayText>
+        <p className="font-['Red_Hat_Display'] text-[11px] text-[#425E77] uppercase tracking-[3px] mt-2 font-medium">Retailer Portal</p>
       </div>
 
-      <div className="flex flex-col gap-5 max-w-sm mx-auto w-full my-8">
+      <div className="flex flex-col gap-5 max-w-sm mx-auto w-full my-6">
         <div className="flex flex-col gap-2">
-          <Label className="text-[#1A1A1A]">Retailer Email</Label>
-          <div className="bg-white border border-[#E5E5E5] h-12 flex items-center px-4 focus-within:border-[#1A1A1A] transition-colors">
-            <Mail size={16} className="text-[#737373] mr-2 shrink-0" />
+          <Label className="text-[#364E65] text-[11px] uppercase tracking-wider font-semibold">Email</Label>
+          <div className="bg-[#FFFFFF] border border-[#B8D5ED] h-12 flex items-center px-4 focus-within:border-[#1A1A1A] transition-colors shadow-sm">
+            <Mail size={16} className="text-[#62819B] mr-2 shrink-0" />
             <input
-              className="flex-1 bg-transparent text-[14px] font-['Inter'] text-[#1A1A1A] outline-none placeholder:text-[#737373]"
+              className="flex-1 bg-transparent text-[14px] font-['Inter'] text-[#1A1A1A] outline-none placeholder:text-[#8AA4B8]"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="stylist@boutique.com"
+              placeholder="stylist@store.com"
             />
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label className="text-[#1A1A1A]">Password</Label>
-          <div className="bg-white border border-[#E5E5E5] h-12 flex items-center px-4 focus-within:border-[#1A1A1A] transition-colors">
-            <Lock size={16} className="text-[#737373] mr-2 shrink-0" />
+          <Label className="text-[#364E65] text-[11px] uppercase tracking-wider font-semibold">Password</Label>
+          <div className="bg-[#FFFFFF] border border-[#B8D5ED] h-12 flex items-center px-4 focus-within:border-[#1A1A1A] transition-colors shadow-sm">
+            <Lock size={16} className="text-[#62819B] mr-2 shrink-0" />
             <input
-              className="flex-1 bg-transparent text-[14px] font-['Inter'] text-[#1A1A1A] outline-none placeholder:text-[#737373]"
+              className="flex-1 bg-transparent text-[14px] font-['Inter'] text-[#1A1A1A] outline-none placeholder:text-[#8AA4B8]"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#737373] hover:text-[#1A1A1A]">
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#62819B] hover:text-[#1A1A1A] cursor-pointer">
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-[12px]">
+        <div className="flex items-center justify-between text-[12px] pt-1">
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <div
               onClick={() => setRememberMe(!rememberMe)}
-              className={`w-4 h-4 border flex items-center justify-center transition-colors ${rememberMe ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5]"}`}
+              className={`w-4 h-4 border flex items-center justify-center transition-colors ${rememberMe ? "bg-[#1A1A1A] border-[#1A1A1A]" : "bg-white border-[#B8D5ED]"}`}
             >
               {rememberMe && <Check size={11} className="text-[#FFFFFF]" />}
             </div>
-            <span className="font-['Red_Hat_Display'] text-[#737373]">Remember me</span>
+            <span className="font-['Red_Hat_Display'] text-[#364E65]">Remember me</span>
           </label>
-          <button type="button" onClick={() => setForgotModal(true)} className="font-['Red_Hat_Display'] font-medium text-[12px] text-[#1A1A1A] underline cursor-pointer">
+          <button type="button" onClick={() => setForgotModal(true)} className="font-['Red_Hat_Display'] font-medium text-[12px] text-[#1A1A1A] underline cursor-pointer hover:text-black">
             Forgot password?
           </button>
         </div>
 
-        <PrimaryBtn onClick={onLogin} className="w-full mt-2">
-          <LogIn size={15} className="mr-2" />Sign In to Portal
-        </PrimaryBtn>
+        {/* Annotated Light Pink Button with high-contrast bold black text */}
+        <button
+          type="button"
+          onClick={onLogin}
+          className="w-full h-12 bg-[#F2B8C6] hover:bg-[#EAAAB9] active:scale-[0.99] text-[#1A1A1A] font-['Red_Hat_Display'] font-bold text-[13px] uppercase tracking-[2px] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm border border-[#EAAAB9] mt-3"
+        >
+          <LogIn size={15} className="text-[#1A1A1A]" />
+          Sign In
+        </button>
       </div>
 
-      <div className="text-center pb-4">
-        <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] uppercase tracking-wider">© 2026 NAGAE Studio</p>
+      <div className="text-center pb-6">
+        <p className="font-['Red_Hat_Display'] text-[11px] text-[#55718B] uppercase tracking-wider">© 2026 NAGAE Studio</p>
       </div>
 
       {/* Forgot Password Modal */}
       {forgotModal && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-[#E5E5E5] max-w-sm w-full p-6 shadow-2xl">
+          <div className="bg-[#FFFFFF] border border-[#DEE7F0] max-w-sm w-full p-6 shadow-2xl">
             <div className="flex justify-between items-start mb-4">
               <CardTitle className="text-[20px]">Reset Password</CardTitle>
-              <button onClick={() => setForgotModal(false)} className="text-[#737373] hover:text-[#1A1A1A]"><X size={18} /></button>
+              <button onClick={() => setForgotModal(false)} className="text-[#737373] hover:text-[#1A1A1A] cursor-pointer"><X size={18} /></button>
             </div>
             <p className="font-['Red_Hat_Display'] text-[#737373] text-[13px] mb-4">Enter your verified store email and we will send you an authentication link.</p>
             <form onSubmit={handleForgotSubmit} className="flex flex-col gap-4">
-              <div className="border border-[#E5E5E5] h-11 flex items-center px-3 focus-within:border-[#1A1A1A]">
-                <Mail size={15} className="text-[#737373] mr-2" />
+              <div className="bg-white border border-[#B8D5ED] h-11 flex items-center px-3 focus-within:border-[#1A1A1A]">
+                <Mail size={15} className="text-[#62819B] mr-2" />
                 <input
                   required
                   type="email"
                   placeholder="name@store.com"
-                  className="w-full bg-transparent text-[13px] outline-none"
+                  className="w-full bg-transparent text-[13px] outline-none text-[#1A1A1A]"
                   value={resetEmail}
                   onChange={e => setResetEmail(e.target.value)}
                 />
               </div>
               <div className="flex gap-2">
-                <PrimaryBtn className="flex-1 h-10 text-[11px]">Send Link</PrimaryBtn>
+                <button type="submit" className="flex-1 h-10 bg-[#F2B8C6] hover:bg-[#EAAAB9] text-[#1A1A1A] font-['Red_Hat_Display'] font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer">
+                  Send Link
+                </button>
                 <SecondaryBtn onClick={() => setForgotModal(false)} className="flex-1 h-10 text-[11px]">Cancel</SecondaryBtn>
               </div>
             </form>
@@ -1527,12 +1535,13 @@ function QuizScreen({
 }
 
 function ProfilePoints({
-  userPoints, onNavigate, onToast, onDeductPoints
+  userPoints, onNavigate, onToast, onDeductPoints, onLogout
 }: {
   userPoints: number;
   onNavigate: (s: string) => void;
   onToast: (msg: string) => void;
   onDeductPoints: (pts: number) => void;
+  onLogout: () => void;
 }) {
   const [settingsModal, setSettingsModal] = useState(false);
   const [badgesModal, setBadgesModal] = useState(false);
@@ -1658,6 +1667,18 @@ function ProfilePoints({
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Quick Sign Out Action */}
+        <div className="px-5 py-5 bg-white border-t border-[#E5E5E5]">
+          <button
+            type="button"
+            onClick={onLogout}
+            className="w-full h-11 border border-[#B8D5ED] bg-[#F4F8FC] hover:bg-[#E2F0FC] text-[#1A1A1A] font-['Red_Hat_Display'] font-semibold text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer"
+          >
+            <LogOut size={14} className="text-[#1A1A1A]" />
+            Sign Out of Stylist Portal
+          </button>
         </div>
       </div>
 
@@ -1976,7 +1997,7 @@ function StylistApp({
   onDeductPoints: (pts: number) => void;
   onToast: (msg: string) => void;
 }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [screen, setScreen] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState<typeof INITIAL_PRODUCTS[0] | null>(null);
   const [selectedModule, setSelectedModule] = useState<typeof INITIAL_TRAINING[0] | null>(null);
@@ -2096,6 +2117,10 @@ function StylistApp({
             onNavigate={navigateTo}
             onToast={onToast}
             onDeductPoints={onDeductPoints}
+            onLogout={() => {
+              setIsLoggedIn(false);
+              onToast("Signed out of Retailer Portal");
+            }}
           />
         ) : screen === "leaderboard" ? (
           <LeaderboardScreen onBack={() => navigateTo("profile")} />
