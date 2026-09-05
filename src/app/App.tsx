@@ -232,7 +232,7 @@ function PrimaryBtn({ children, onClick, className = "", disabled = false }: { c
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center justify-center px-6 h-12 bg-[#1A1A1A] text-[#FFFFFF] text-[13px] font-semibold tracking-[1.4px] uppercase transition-all hover:bg-[#333333] active:bg-[#000000] disabled:bg-[#E5E5E5] disabled:text-[#737373] disabled:cursor-not-allowed cursor-pointer ${className}`}
+      className={`flex items-center justify-center px-6 h-12 bg-[#F2B8C6] hover:bg-[#EAAAB9] active:scale-[0.99] text-[#1A1A1A] text-[13px] font-['Red_Hat_Display'] font-bold tracking-[1.4px] uppercase transition-all shadow-sm border border-[#EAAAB9]/60 disabled:bg-[#DEE7F0] disabled:text-[#737373] disabled:border-transparent disabled:cursor-not-allowed cursor-pointer ${className}`}
     >
       {children}
     </button>
@@ -244,7 +244,7 @@ function SecondaryBtn({ children, onClick, className = "", disabled = false }: {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center justify-center px-6 h-12 border border-[#1A1A1A] text-[#1A1A1A] text-[13px] font-semibold tracking-[1.4px] uppercase bg-transparent transition-all hover:bg-[#1A1A1A] hover:text-[#FFFFFF] active:bg-[#333333] disabled:border-[#E5E5E5] disabled:text-[#737373] disabled:cursor-not-allowed cursor-pointer ${className}`}
+      className={`flex items-center justify-center px-6 h-12 border border-[#B8D5ED] bg-white text-[#1A1A1A] hover:bg-[#F4F8FC] hover:border-[#1A1A1A] text-[13px] font-['Red_Hat_Display'] font-semibold tracking-[1.4px] uppercase transition-all active:scale-[0.99] disabled:border-[#DEE7F0] disabled:text-[#737373] disabled:cursor-not-allowed cursor-pointer ${className}`}
     >
       {children}
     </button>
@@ -286,10 +286,10 @@ function UILabel({ children, className = "" }: { children: React.ReactNode; clas
 
 function Badge({ label, variant = "default" }: { label: string; variant?: "default" | "new" | "custom" | "bestseller" }) {
   const styles: Record<string, string> = {
-    default: "bg-[#F4F8FC] text-[#1A1A1A]",
-    new: "bg-[#F4F8FC] text-[#1A1A1A]",
-    custom: "bg-[#FFFFFF] border border-[#E5E5E5] text-[#1A1A1A]",
-    bestseller: "bg-[#1A1A1A] text-[#FFFFFF]",
+    default: "bg-[#E2F0FC] text-[#2C4860] border border-[#CADEEF]",
+    new: "bg-[#E2F0FC] text-[#2C4860] border border-[#CADEEF]",
+    custom: "bg-[#FFFFFF] border border-[#CADEEF] text-[#1A1A1A]",
+    bestseller: "bg-[#F2B8C6] text-[#1A1A1A] border border-[#EAAAB9] font-bold",
   };
   return (
     <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider ${styles[variant]}`}>
@@ -513,14 +513,14 @@ function HomeDashboard({
         {/* Promotion Banner */}
         <div
           onClick={() => onNavigate("catalog")}
-          className="bg-[#1A1A1A] p-4 flex items-center gap-3 cursor-pointer hover:bg-[#333333] transition-colors"
+          className="bg-[#F2B8C6] border border-[#EAAAB9] p-4 flex items-center gap-3 cursor-pointer hover:bg-[#EAAAB9] transition-all shadow-sm"
         >
           <div className="text-2xl">💰</div>
           <div className="flex-1">
-            <p className="font-['Red_Hat_Display'] font-bold text-[#FFFFFF] text-[13px]">Flash Sale Active</p>
-            <p className="font-['Red_Hat_Display'] text-[#FFFFFF]/70 text-[12px]">Sell Sloan this week — earn $50 stylist commission</p>
+            <p className="font-['Red_Hat_Display'] font-bold text-[#1A1A1A] text-[13px]">Flash Sale Active</p>
+            <p className="font-['Red_Hat_Display'] text-[#1A1A1A]/80 text-[12px]">Sell Sloan this week — earn $50 stylist commission</p>
           </div>
-          <ChevronRight size={16} className="text-[#FFFFFF]/70" />
+          <ChevronRight size={16} className="text-[#1A1A1A]" />
         </div>
 
         {/* Quick Access Tiles */}
@@ -529,7 +529,7 @@ function HomeDashboard({
           <div className="grid grid-cols-2 gap-3">
             {[
               { icon: Search, label: "Search Products", screen: "catalog", color: "bg-[#F4F8FC]", light: false },
-              { icon: MessageSquare, label: "Ask NAGAE AI", screen: "ai", color: "bg-[#1A1A1A]", light: true },
+              { icon: MessageSquare, label: "Ask NAGAE AI", screen: "ai", color: "bg-[#F2B8C6] border border-[#EAAAB9]", light: false },
               { icon: BookOpen, label: "Training Center", screen: "training", color: "bg-[#F4F8FC]", light: false },
               { icon: Folder, label: "Resources", screen: "resources", color: "bg-[#F4F8FC]", light: false },
             ].map(tile => (
@@ -663,7 +663,7 @@ function ProductCatalog({
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`shrink-0 px-3 py-1.5 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${activeFilter === f ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-white border border-[#E5E5E5] text-[#737373] hover:text-[#1A1A1A]"}`}
+              className={`shrink-0 px-3 py-1.5 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${activeFilter === f ? "bg-[#F2B8C6] text-[#1A1A1A] border border-[#EAAAB9] font-bold shadow-sm" : "bg-white border border-[#CADEEF] text-[#556E85] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
             >
               {f}
             </button>
@@ -1002,7 +1002,7 @@ function ProductDetail({
               </button>
               <button
                 onClick={() => { setShareModal(false); onToast("Client Lookbook PDF generated & sent via email!"); }}
-                className="w-full h-11 bg-[#1A1A1A] text-[#FFFFFF] flex items-center justify-center gap-2 font-['Red_Hat_Display'] font-semibold text-[12px] uppercase tracking-wider hover:bg-[#333333] cursor-pointer"
+                className="w-full h-11 bg-[#F2B8C6] hover:bg-[#EAAAB9] text-[#1A1A1A] flex items-center justify-center gap-2 font-['Red_Hat_Display'] font-bold text-[12px] uppercase tracking-wider border border-[#EAAAB9] shadow-sm cursor-pointer"
               >
                 <Mail size={15} />Send Lookbook to Bride
               </button>
@@ -1029,7 +1029,7 @@ function ProductDetail({
                 <select
                   value={selectedSize}
                   onChange={e => setSelectedSize(e.target.value)}
-                  className="w-full border border-[#E5E5E5] h-11 px-3 text-[13px] font-['Red_Hat_Display'] outline-none focus:border-[#1A1A1A]"
+                  className="w-full border border-[#CADEEF] bg-white h-11 px-3 text-[13px] font-['Red_Hat_Display'] outline-none focus:border-[#1A1A1A]"
                 >
                   {["Size 0", "Size 2", "Size 4", "Size 6", "Size 8", "Size 10 (Showroom Sample)", "Size 12", "Size 14", "Size 16", "Size 18 (Curve Sample)", "Size 20", "Size 22", "Size 24"].map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -1219,9 +1219,9 @@ function AskAI({ initialPrompt = "" }: { initialPrompt?: string }) {
         <button
           onClick={() => sendMessage(input)}
           disabled={!input.trim()}
-          className="w-11 h-11 bg-[#1A1A1A] disabled:bg-[#E5E5E5] flex items-center justify-center hover:bg-[#333333] transition-colors cursor-pointer"
+          className="w-11 h-11 bg-[#F2B8C6] hover:bg-[#EAAAB9] disabled:bg-[#E5E5E5] text-[#1A1A1A] flex items-center justify-center transition-all cursor-pointer border border-[#EAAAB9]/60 disabled:border-transparent shadow-sm active:scale-95"
         >
-          <Send size={16} className="text-[#FFFFFF]" />
+          <Send size={16} className="text-[#1A1A1A]" />
         </button>
       </div>
     </div>
@@ -1271,7 +1271,7 @@ function TrainingLibrary({
             <button
               key={c}
               onClick={() => setActiveCategory(c)}
-              className={`shrink-0 px-3 py-1 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border transition-colors cursor-pointer ${activeCategory === c ? "bg-[#1A1A1A] text-[#FFFFFF] border-[#1A1A1A]" : "bg-white border-[#E5E5E5] text-[#737373] hover:text-[#1A1A1A]"}`}
+              className={`shrink-0 px-3 py-1 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border transition-colors cursor-pointer ${activeCategory === c ? "bg-[#F2B8C6] text-[#1A1A1A] border border-[#EAAAB9] font-bold shadow-sm" : "bg-white border border-[#CADEEF] text-[#556E85] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
             >
               {c}
             </button>
@@ -1355,10 +1355,10 @@ function TrainingModule({
         <div className="bg-[#1A1A1A] aspect-video flex items-center justify-center relative">
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="w-16 h-16 border-2 border-[#FFFFFF] flex items-center justify-center rounded-full hover:bg-white/20 transition-all cursor-pointer"
+            className="w-16 h-16 bg-[#F2B8C6] hover:bg-[#EAAAB9] border-2 border-[#FFFFFF] text-[#1A1A1A] flex items-center justify-center rounded-full shadow-lg transition-all cursor-pointer active:scale-95"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? <Pause size={24} className="text-[#FFFFFF]" /> : <Play size={24} className="text-[#FFFFFF] ml-1" />}
+            {isPlaying ? <Pause size={24} className="text-[#1A1A1A]" /> : <Play size={24} className="text-[#1A1A1A] ml-1" />}
           </button>
           <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
             <div className="flex-1 h-1 bg-white/30 cursor-pointer overflow-hidden">
@@ -1516,7 +1516,7 @@ function QuizScreen({
             <button
               key={i}
               onClick={() => setSelected(i)}
-              className={`w-full p-4 text-left border transition-all font-['Inter'] text-[13px] cursor-pointer ${selected === i ? "border-[#1A1A1A] bg-[#1A1A1A] text-[#FFFFFF]" : "border-[#E5E5E5] text-[#1A1A1A] hover:border-[#1A1A1A] bg-white"}`}
+              className={`w-full p-4 text-left border transition-all font-['Inter'] text-[13px] cursor-pointer ${selected === i ? "border-[#EAAAB9] bg-[#F2B8C6] text-[#1A1A1A] font-semibold shadow-sm" : "border-[#CADEEF] text-[#1A1A1A] hover:border-[#B8D5ED] bg-white"}`}
             >
               <span className="font-bold mr-2.5">{String.fromCharCode(65 + i)}.</span>
               {opt}
@@ -1621,7 +1621,7 @@ function ProfilePoints({
             </p>
             <button
               onClick={() => setRewardsModal(true)}
-              className="px-3 py-1.5 bg-[#1A1A1A] text-[#FFFFFF] text-[11px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider hover:bg-[#333333] cursor-pointer"
+              className="px-3 py-1.5 bg-[#F2B8C6] hover:bg-[#EAAAB9] text-[#1A1A1A] text-[11px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider border border-[#EAAAB9] shadow-sm cursor-pointer"
             >
               <Gift size={12} className="inline mr-1" />Redeem Perks
             </button>
@@ -2445,7 +2445,7 @@ function AdminProducts({
                 <input
                   value={editProduct.name}
                   onChange={e => setEditProduct({ ...editProduct, name: e.target.value })}
-                  className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                  className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -2454,7 +2454,7 @@ function AdminProducts({
                   <input
                     value={editProduct.price}
                     onChange={e => setEditProduct({ ...editProduct, price: e.target.value })}
-                    className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                    className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                   />
                 </div>
                 <div>
@@ -2462,7 +2462,7 @@ function AdminProducts({
                   <select
                     value={editProduct.badge}
                     onChange={e => setEditProduct({ ...editProduct, badge: e.target.value })}
-                    className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                    className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                   >
                     <option value="New">New</option>
                     <option value="Bestseller">Bestseller</option>
@@ -2614,7 +2614,7 @@ function AdminTraining({
                   placeholder="e.g. Advanced Crepe Alterations"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                  className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -2635,7 +2635,7 @@ function AdminTraining({
                   <input
                     value={duration}
                     onChange={e => setDuration(e.target.value)}
-                    className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                    className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                     placeholder="15 min"
                   />
                 </div>
@@ -2646,7 +2646,7 @@ function AdminTraining({
                   type="number"
                   value={points}
                   onChange={e => setPoints(Number(e.target.value))}
-                  className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                  className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                 />
               </div>
               <div>
@@ -2682,7 +2682,7 @@ function AdminTraining({
                 <input
                   value={editModule.title}
                   onChange={e => setEditModule({ ...editModule, title: e.target.value })}
-                  className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                  className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -2691,7 +2691,7 @@ function AdminTraining({
                   <input
                     value={editModule.duration}
                     onChange={e => setEditModule({ ...editModule, duration: e.target.value })}
-                    className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                    className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                   />
                 </div>
                 <div>
@@ -2700,7 +2700,7 @@ function AdminTraining({
                     type="number"
                     value={editModule.points}
                     onChange={e => setEditModule({ ...editModule, points: Number(e.target.value) })}
-                    className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none"
+                    className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]"
                   />
                 </div>
               </div>
@@ -2965,15 +2965,15 @@ function AdminUsers({
             <form onSubmit={handleCreate} className="flex flex-col gap-3">
               <div>
                 <Label className="text-[#1A1A1A]">Full Name</Label>
-                <input required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Mia Johansson" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Mia Johansson" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Store / Boutique</Label>
-                <input value={store} onChange={e => setStore(e.target.value)} placeholder="e.g. Ivory Bridal Lounge" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input value={store} onChange={e => setStore(e.target.value)} placeholder="e.g. Ivory Bridal Lounge" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Email</Label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="mia@ivorybridal.com" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="mia@ivorybridal.com" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Role</Label>
@@ -3003,11 +3003,11 @@ function AdminUsers({
             <form onSubmit={handleSaveEdit} className="flex flex-col gap-3">
               <div>
                 <Label className="text-[#1A1A1A]">Full Name</Label>
-                <input value={editUser.name} onChange={e => setEditUser({ ...editUser, name: e.target.value })} className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input value={editUser.name} onChange={e => setEditUser({ ...editUser, name: e.target.value })} className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Store</Label>
-                <input value={editUser.store} onChange={e => setEditUser({ ...editUser, store: e.target.value })} className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input value={editUser.store} onChange={e => setEditUser({ ...editUser, store: e.target.value })} className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Role</Label>
@@ -3251,7 +3251,7 @@ function AdminPortal({
               <button
                 key={item.id}
                 onClick={() => setTab(item.id)}
-                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
+                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id ? "bg-[#F2B8C6] text-[#1A1A1A] font-bold shadow-sm border border-[#EAAAB9]/60" : "text-[#556E85] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
               >
                 <item.icon size={16} />
                 {item.label}
@@ -3503,11 +3503,11 @@ function AccountList({
             <form onSubmit={handleCreateAccount} className="flex flex-col gap-3">
               <div>
                 <Label className="text-[#1A1A1A]">Boutique Name</Label>
-                <input required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ivory Atelier" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input required value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ivory Atelier" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">City, State</Label>
-                <input value={city} onChange={e => setCity(e.target.value)} placeholder="e.g. Boston, MA" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input value={city} onChange={e => setCity(e.target.value)} placeholder="e.g. Boston, MA" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -3788,7 +3788,7 @@ function AccountDetail({
             <div className="flex flex-col gap-3">
               <div>
                 <Label className="text-[#1A1A1A]">Store Name</Label>
-                <input defaultValue={account.name} className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input defaultValue={account.name} className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Territory</Label>
@@ -3918,11 +3918,11 @@ function CRMPipeline({
             <div className="flex flex-col gap-3">
               <div>
                 <Label className="text-[#1A1A1A]">Store Name</Label>
-                <input required value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. Modern Veil Boutique" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input required value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. Modern Veil Boutique" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">City</Label>
-                <input value={newCity} onChange={e => setNewCity(e.target.value)} placeholder="e.g. Seattle, WA" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input value={newCity} onChange={e => setNewCity(e.target.value)} placeholder="e.g. Seattle, WA" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Starting Stage</Label>
@@ -4066,11 +4066,11 @@ function CRMTasks({
             <form onSubmit={handleCreate} className="flex flex-col gap-3">
               <div>
                 <Label className="text-[#1A1A1A]">Task Description</Label>
-                <input required value={taskName} onChange={e => setTaskName(e.target.value)} placeholder="e.g. Call to discuss rush gown order" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input required value={taskName} onChange={e => setTaskName(e.target.value)} placeholder="e.g. Call to discuss rush gown order" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div>
                 <Label className="text-[#1A1A1A]">Account</Label>
-                <input value={account} onChange={e => setAccount(e.target.value)} placeholder="e.g. Grace & Lace" className="w-full border border-[#E5E5E5] p-2 text-[13px] outline-none" />
+                <input value={account} onChange={e => setAccount(e.target.value)} placeholder="e.g. Grace & Lace" className="w-full border border-[#CADEEF] bg-white p-2.5 text-[13px] font-['Inter'] text-[#1A1A1A] outline-none focus:border-[#1A1A1A]" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -4212,7 +4212,7 @@ function CRMPortal() {
               <button
                 key={item.id}
                 onClick={() => { setSelectedAccount(null); setTab(item.id); }}
-                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id && !selectedAccount ? "bg-[#1A1A1A] text-[#FFFFFF]" : "text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
+                className={`flex items-center gap-3 px-3 py-2.5 text-[12px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider transition-colors cursor-pointer ${tab === item.id && !selectedAccount ? "bg-[#F2B8C6] text-[#1A1A1A] font-bold shadow-sm border border-[#EAAAB9]/60" : "text-[#556E85] hover:text-[#1A1A1A] hover:bg-[#F4F8FC]"}`}
               >
                 <item.icon size={16} />
                 {item.label}
@@ -4677,7 +4677,7 @@ export default function App() {
       {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
 
       {mode === null ? (
-        <div className="size-full overflow-y-auto bg-[#FFFFFF]">
+        <div className="size-full overflow-y-auto bg-[#EAF3FA]">
           <div className="min-h-full flex flex-col items-center justify-center p-8 gap-12">
             <div className="text-center">
               <DisplayText size="hero" className="text-[52px]">NAGAE Studio</DisplayText>
@@ -4693,8 +4693,8 @@ export default function App() {
                 className="group bg-white border border-[#E5E5E5] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] hover:bg-[#F4F8FC] transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start">
-                  <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center">
-                    <ShoppingBag size={22} className="text-[#FFFFFF]" />
+                  <div className="w-12 h-12 bg-[#F2B8C6] flex items-center justify-center border border-[#EAAAB9]">
+                    <ShoppingBag size={22} className="text-[#1A1A1A]" />
                   </div>
                   <span className="bg-[#F4F8FC] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Mobile · 393px</span>
                 </div>
@@ -4712,21 +4712,21 @@ export default function App() {
               {/* Admin Portal */}
               <button
                 onClick={() => setMode("admin")}
-                className="group bg-[#1A1A1A] border border-[#1A1A1A] p-7 flex flex-col gap-4 text-left hover:bg-[#262626] transition-all cursor-pointer"
+                className="group bg-white border border-[#CADEEF] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] hover:bg-[#F4F8FC] hover:shadow-lg transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start">
-                  <div className="w-12 h-12 bg-[#FFFFFF] flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#F2B8C6] flex items-center justify-center border border-[#EAAAB9]">
                     <LayoutDashboard size={22} className="text-[#1A1A1A]" />
                   </div>
-                  <span className="bg-[#FFFFFF]/20 px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#FFFFFF]">Desktop · 1440px</span>
+                  <span className="bg-[#F2B8C6]/30 border border-[#EAAAB9] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Desktop · 1440px</span>
                 </div>
                 <div>
-                  <CardTitle className="text-[22px] text-[#FFFFFF]">Admin Portal</CardTitle>
-                  <p className="font-['Red_Hat_Display'] text-[#FFFFFF]/70 text-[12px] mt-1">Management dashboard for NAGAE team — Products, training, gamification, analytics, users</p>
+                  <CardTitle className="text-[22px]">Admin Portal</CardTitle>
+                  <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px] mt-1">Management dashboard for NAGAE team — Products, training, gamification, analytics, users</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-1">
                   {["Products", "Training", "Analytics", "Gamification", "Broadcasts", "Retailers"].map(tag => (
-                    <span key={tag} className="bg-[#FFFFFF]/15 px-2 py-0.5 font-['Red_Hat_Display'] font-semibold text-[9px] uppercase tracking-wider text-[#FFFFFF]">{tag}</span>
+                    <span key={tag} className="bg-[#F4F8FC] px-2 py-0.5 font-['Red_Hat_Display'] font-semibold text-[9px] uppercase tracking-wider text-[#1A1A1A]">{tag}</span>
                   ))}
                 </div>
               </button>
@@ -4737,8 +4737,8 @@ export default function App() {
                 className="group bg-[#F4F8FC] border border-[#E5E5E5] p-7 flex flex-col gap-4 text-left hover:border-[#1A1A1A] transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start">
-                  <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center">
-                    <BarChart2 size={22} className="text-[#FFFFFF]" />
+                  <div className="w-12 h-12 bg-[#F2B8C6] flex items-center justify-center border border-[#EAAAB9]">
+                    <BarChart2 size={22} className="text-[#1A1A1A]" />
                   </div>
                   <span className="bg-white border border-[#E5E5E5] px-2 py-0.5 font-['Red_Hat_Display'] font-bold text-[8px] uppercase tracking-wider text-[#1A1A1A]">Sales Intelligence</span>
                 </div>
