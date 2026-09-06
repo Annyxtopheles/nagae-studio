@@ -9,7 +9,7 @@
 
 To explain this project with confidence, you don't need to know every line of code — you just need to understand **why it was built** and **what pain points it cured**.
 
-In luxury bridal fashion (like Alyssa Kristin / NAGAE Studio):
+In luxury bridal fashion (like NAGAE Studio):
 1. **The Retail Disconnect**: The brand sells gowns through 150+ independent bridal boutiques around the world. The stylists working on the sales floor don't work directly for the brand — they work for the boutiques.
 2. **The Stylist Knowledge Gap**: When a bride asks in an appointment: *"Can I get this with a cathedral train?", "Can I split sizes (size 4 top, size 8 bottom)?", or "What fabric is wrinkle-resistant for a beach wedding?"*, the stylist used to have to dig through PDFs, call headquarters, or guess.
 3. **The Executive Blind Spot**: Brand leadership had zero visibility into which gowns stylists were recommending, what questions brides were asking, or which boutique stockists were at risk of churning.
