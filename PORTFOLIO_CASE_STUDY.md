@@ -5,6 +5,18 @@
 
 ---
 
+---
+
+> ### 🏛️ Project Provenance & Portfolio Disclosure
+> **Commercial Client Engagement Note:**  
+> This platform was conceived, designed, and prototyped as a bespoke commercial engagement for an internationally acclaimed couture bridal fashion house distributing across 150+ luxury wholesale stockists globally.  
+> 
+> *In compliance with non-disclosure agreements (NDA), proprietary client trademarks, boutique account records, and confidential wholesale terms have been anonymized/pseudonymized (presented here under the studio pseudonym **NAGAE Studio**).*  
+> 
+> **Client Outcome:** The brand founder, wholesale director, and operational leadership **enthusiastically praised the final solution**, commending how seamlessly it bridged the retail showroom floor with brand headquarters. They found the dual-sided architecture exceptionally clear, accessible, and intuitive to navigate — solving a multi-year communication gap across their independent retailer network without requiring staff training.
+
+---
+
 ## 1. Why Did the Client Love It? (The Real Business Problem)
 
 To explain this project with confidence, you don't need to know every line of code — you just need to understand **why it was built** and **what pain points it cured**.
