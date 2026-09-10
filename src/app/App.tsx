@@ -7,7 +7,7 @@ import {
   Trash2, Upload, Download, X, Check, AlertCircle, TrendingUp, Activity,
   Zap, Gift, LogIn, LogOut, Lock, Mail, Eye, EyeOff, Send, Clock, Tag,
   Layers, Info, ShoppingBag, LayoutDashboard, RefreshCw, Copy, ExternalLink, Calendar,
-  Database, Smartphone, LayoutGrid, ArrowRight
+  Database, Smartphone, LayoutGrid, ArrowRight, GripVertical
 } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
@@ -469,7 +469,7 @@ function StylistLogin({ onLogin, onToast }: { onLogin: () => void; onToast: (msg
 }
 
 function HomeDashboard({
-  onNavigate, onShowResources, onSelectProduct, products, notifications, userPoints
+  onNavigate, onShowResources, onSelectProduct, products, notifications, userPoints, onOpenDrawer
 }: {
   onNavigate: (screen: string) => void;
   onShowResources?: () => void;
@@ -477,6 +477,7 @@ function HomeDashboard({
   products: typeof INITIAL_PRODUCTS;
   notifications: typeof INITIAL_NOTIFICATIONS;
   userPoints: number;
+  onOpenDrawer?: () => void;
 }) {
   const ophelia = products.find(p => p.name === "Ophelia") || products[0];
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -485,7 +486,12 @@ function HomeDashboard({
     <div className="flex-1 overflow-y-auto">
       {/* Header */}
       <div className="bg-white border-b border-[#E5E5E5] px-5 h-14 flex items-center justify-between sticky top-0 z-20">
-        <CardTitle className="text-[22px]">NAGAE Studio</CardTitle>
+        <div className="flex items-center gap-3">
+          <button onClick={onOpenDrawer} className="p-1 text-[#1A1A1A] hover:bg-[#F9EBEF] transition-colors cursor-pointer" aria-label="Open Navigation Drawer">
+            <Menu size={22} />
+          </button>
+          <CardTitle className="text-[20px]">NAGAE Studio</CardTitle>
+        </div>
         <button className="relative p-1.5 cursor-pointer" onClick={() => onNavigate("notifications")} aria-label="Notifications">
           <Bell size={20} className="text-[#1A1A1A]" />
           {unreadCount > 0 && (
@@ -876,8 +882,8 @@ function ProductDetail({
               { label: "Neckline", value: product.neckline },
             ].map(stat => (
               <div key={stat.label} className="bg-[#F9EBEF] p-3 border border-[#E5E5E5]/40">
-                <Label className="text-[#737373] text-[8px]">{stat.label}</Label>
-                <p className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[11px] mt-1 uppercase tracking-wide truncate">{stat.value}</p>
+                <Label className="text-[#737373] text-[10px]">{stat.label}</Label>
+                <p className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[12px] mt-1 uppercase tracking-wide truncate">{stat.value}</p>
               </div>
             ))}
           </div>
@@ -1263,6 +1269,7 @@ function TrainingLibrary({
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
+          {query && <button onClick={() => setQuery("")} className="cursor-pointer text-[#737373] hover:text-[#1A1A1A]"><X size={14} /></button>}
         </div>
 
         {/* Categories */}
@@ -1516,7 +1523,7 @@ function QuizScreen({
             <button
               key={i}
               onClick={() => setSelected(i)}
-              className={`w-full p-4 text-left border transition-all font-['Inter'] text-[13px] cursor-pointer ${selected === i ? "border-[#EAAAB9] bg-[#F2B8C6] text-[#1A1A1A] font-semibold shadow-sm" : "border-[#E5E5E5] text-[#1A1A1A] hover:border-[#E5E5E5] bg-white"}`}
+              className={`w-full p-4 text-left border transition-all font-['Inter'] text-[13px] cursor-pointer ${selected === i ? "border-[#EAAAB9] bg-[#F2B8C6] text-[#1A1A1A] font-semibold shadow-sm" : "border-[#E5E5E5] text-[#1A1A1A] hover:border-[#1A1A1A] hover:bg-[#F9EBEF] bg-white"}`}
             >
               <span className="font-bold mr-2.5">{String.fromCharCode(65 + i)}.</span>
               {opt}
@@ -1640,7 +1647,7 @@ function ProfilePoints({
             {INITIAL_BADGES.slice(0, 4).map(badge => (
               <div key={badge.id} className={`flex flex-col items-center gap-1 p-2 border border-[#E5E5E5] ${badge.earned ? "bg-[#F9EBEF]" : "opacity-40"}`}>
                 <span className="text-2xl">{badge.emoji}</span>
-                <UILabel className="text-[8px] text-center leading-tight text-[#1A1A1A] truncate w-full">{badge.title}</UILabel>
+                <UILabel className="text-[10px] text-center leading-tight text-[#1A1A1A] truncate w-full">{badge.title}</UILabel>
               </div>
             ))}
           </div>
@@ -1792,13 +1799,18 @@ function LeaderboardScreen({ onBack }: { onBack: () => void }) {
         <div className="w-6" />
       </div>
       <div className="flex border-b border-[#E5E5E5] bg-white">
-        {["This Week", "This Month", "All Time", "My Store"].map(p => (
+        {[
+          { id: "This Week", label: "Week" },
+          { id: "This Month", label: "Month" },
+          { id: "All Time", label: "All Time" },
+          { id: "My Store", label: "My Store" }
+        ].map(p => (
           <button
-            key={p}
-            onClick={() => setPeriod(p)}
-            className={`flex-1 py-3 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wide border-b-2 transition-colors cursor-pointer ${period === p ? "border-[#1A1A1A] text-[#1A1A1A]" : "border-transparent text-[#737373] hover:text-[#1A1A1A]"}`}
+            key={p.id}
+            onClick={() => setPeriod(p.id)}
+            className={`flex-1 py-3 text-[11px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${period === p.id ? "border-[#1A1A1A] text-[#1A1A1A] font-bold" : "border-transparent text-[#737373] hover:text-[#1A1A1A]"}`}
           >
-            {p.split(" ")[0]}
+            {p.label}
           </button>
         ))}
       </div>
@@ -1925,18 +1937,19 @@ function ResourcesLibrary({ onBack, onToast }: { onBack?: () => void; onToast: (
         <div className="border border-[#E5E5E5] h-10 flex items-center px-3 gap-2 mb-3 focus-within:border-[#1A1A1A]">
           <Search size={15} className="text-[#737373]" />
           <input
-            className="flex-1 bg-transparent text-[13px] outline-none"
+            className="flex-1 bg-transparent text-[13px] font-['Inter'] text-[#1A1A1A] outline-none placeholder:text-[#737373]"
             placeholder="Search guides, line sheets..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
+          {search && <button onClick={() => setSearch("")} className="cursor-pointer text-[#737373] hover:text-[#1A1A1A]"><X size={14} /></button>}
         </div>
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map(c => (
             <button
               key={c}
               onClick={() => setActiveCategory(c)}
-              className={`shrink-0 px-3 py-1 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border transition-colors cursor-pointer ${activeCategory === c ? "bg-[#1A1A1A] text-[#FFFFFF] border-[#1A1A1A]" : "bg-white border-[#E5E5E5] text-[#737373]"}`}
+              className={`shrink-0 px-3 py-1 text-[10px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border transition-colors cursor-pointer ${activeCategory === c ? "bg-[#F2B8C6] text-[#1A1A1A] border border-[#EAAAB9] font-bold shadow-sm" : "bg-white border-[#E5E5E5] text-[#737373] hover:text-[#1A1A1A] hover:bg-[#F9EBEF]"}`}
             >
               {c}
             </button>
@@ -1950,7 +1963,7 @@ function ResourcesLibrary({ onBack, onToast }: { onBack?: () => void; onToast: (
             <div>
               <div className="flex justify-between items-start">
                 <span className="font-['Red_Hat_Display'] text-[10px] font-bold uppercase text-[#737373]">{r.category}</span>
-                <span className="bg-[#F9EBEF] font-['Red_Hat_Display'] text-[9px] px-2 py-0.5 font-bold uppercase text-[#1A1A1A]">{r.type} · {r.size}</span>
+                <span className="bg-[#F9EBEF] font-['Red_Hat_Display'] text-[10px] px-2.5 py-1 font-bold uppercase text-[#1A1A1A]">{r.type} · {r.size}</span>
               </div>
               <CardTitle className="text-[17px] mt-1">{r.title}</CardTitle>
               <p className="font-['Inter'] text-[#737373] text-[12px] mt-1 leading-relaxed">{r.desc}</p>
@@ -2094,6 +2107,7 @@ function StylistApp({
             products={products}
             notifications={notifications}
             userPoints={userPoints}
+            onOpenDrawer={() => setDrawerOpen(true)}
           />
         ) : screen === "catalog" ? (
           <ProductCatalog
@@ -3465,7 +3479,7 @@ function AccountList({
       <div className="bg-white border border-[#E5E5E5]">
         <div className="grid grid-cols-[1.5fr_120px_130px_90px_110px_90px_60px] border-b border-[#E5E5E5] px-5 py-3 bg-[#F9EBEF]/30">
           {["Store / Boutique", "Territory", "Status", "Health", "Last Contact", "YTD Sales", ""].map(h => (
-            <p key={h} className="font-['Red_Hat_Display'] font-bold text-[#737373] text-[10px] uppercase tracking-wider">{h}</p>
+            <p key={h} className="font-['Red_Hat_Display'] font-bold text-[#737373] text-[11px] uppercase tracking-wider">{h}</p>
           ))}
         </div>
         <div className="divide-y divide-[#E5E5E5]">
@@ -3476,13 +3490,13 @@ function AccountList({
               className="grid grid-cols-[1.5fr_120px_130px_90px_110px_90px_60px] px-5 py-3.5 items-center hover:bg-[#F9EBEF]/40 transition-colors cursor-pointer group"
             >
               <div>
-                <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[16px] group-hover:underline">{a.name}</p>
-                <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px]">{a.city}</p>
+                <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[18px] group-hover:underline">{a.name}</p>
+                <p className="font-['Red_Hat_Display'] text-[#737373] text-[13px]">{a.city}</p>
               </div>
-              <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px]">{a.territory}</p>
+              <p className="font-['Red_Hat_Display'] text-[#737373] text-[13px]">{a.territory}</p>
               <div><StatusBadge status={a.status} /></div>
               <div><HealthDots score={a.health} /></div>
-              <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px]">{a.lastContact}</p>
+              <p className="font-['Red_Hat_Display'] text-[#737373] text-[13px]">{a.lastContact}</p>
               <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[15px] font-semibold">{a.ytd}</p>
               <div className="text-right">
                 <ChevronRight size={16} className="text-[#737373] group-hover:text-[#1A1A1A] inline" />
@@ -3607,20 +3621,20 @@ function AccountDetail({
                 <CardTitle className="text-[28px]">{account.name}</CardTitle>
                 <StatusBadge status={account.status} />
               </div>
-              <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px] mt-0.5">{account.city} · {account.territory} · {account.tier ? `Tier ${account.tier}` : "Pipeline"}</p>
+              <p className="font-['Red_Hat_Display'] text-[#737373] text-[14px] mt-1">{account.city} · {account.territory} · {account.tier ? `Tier ${account.tier}` : "Pipeline"}</p>
             </div>
           </div>
           <div className="flex gap-2">
-            <SecondaryBtn onClick={() => setEditModal(true)} className="h-9 px-3 text-[11px]">
-              <Edit2 size={13} className="mr-1.5" />Edit Account
+            <SecondaryBtn onClick={() => setEditModal(true)} className="h-10 px-4 text-[12px]">
+              <Edit2 size={14} className="mr-1.5" />Edit Account
             </SecondaryBtn>
-            <PrimaryBtn onClick={() => setActivityModal(true)} className="h-9 px-3 text-[11px]">
-              <Activity size={13} className="mr-1.5" />Log Activity
+            <PrimaryBtn onClick={() => setActivityModal(true)} className="h-10 px-4 text-[12px]">
+              <Activity size={14} className="mr-1.5" />Log Activity
             </PrimaryBtn>
           </div>
         </div>
 
-        <div className="flex items-center gap-6 text-[12px] font-['Red_Hat_Display'] text-[#737373]">
+        <div className="flex items-center gap-7 text-[13px] font-['Red_Hat_Display'] text-[#737373]">
           <span className="flex items-center gap-1.5"><Clock size={13} />Next Follow-up: {account.nextFollowUp}</span>
           <span className="flex items-center gap-1.5"><TrendingUp size={13} />YTD Sales: {account.ytd}</span>
           <div className="flex items-center gap-2">
@@ -3637,7 +3651,7 @@ function AccountDetail({
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`py-3 text-[11px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${tab === t ? "border-[#1A1A1A] text-[#1A1A1A]" : "border-transparent text-[#737373]"}`}
+              className={`py-3.5 text-[13px] font-['Red_Hat_Display'] font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${tab === t ? "border-[#1A1A1A] text-[#1A1A1A] font-bold" : "border-transparent text-[#737373] hover:text-[#1A1A1A]"}`}
             >
               {t}
             </button>
@@ -3648,9 +3662,9 @@ function AccountDetail({
       {/* Tab Content */}
       <div className="flex-1 overflow-y-auto p-8">
         {tab === "Overview" && (
-          <div className="grid grid-cols-2 gap-8 max-w-4xl">
-            <div className="border border-[#E5E5E5] p-5">
-              <Label className="text-[#1A1A1A] mb-3 block">Boutique Information</Label>
+          <div className="grid grid-cols-2 gap-8 max-w-5xl">
+            <div className="border border-[#E5E5E5] p-6 bg-white">
+              <Label className="text-[#1A1A1A] text-[13px] uppercase tracking-wider mb-4 block font-bold">Boutique Information</Label>
               <div className="divide-y divide-[#E5E5E5]">
                 {[
                   { l: "Store Name", v: account.name },
@@ -3659,21 +3673,23 @@ function AccountDetail({
                   { l: "Assigned Rep", v: "Sarah Mitchell (Regional Lead)" },
                   { l: "Last Showroom Order", v: account.lastOrder },
                 ].map(item => (
-                  <div key={item.l} className="flex justify-between py-2 text-[12px]">
+                  <div key={item.l} className="flex justify-between py-3.5 text-[14px]">
                     <span className="text-[#737373] font-['Red_Hat_Display']">{item.l}</span>
-                    <span className="text-[#1A1A1A] font-semibold font-['Red_Hat_Display']">{item.v}</span>
+                    <span className="text-[#1A1A1A] font-semibold font-['Red_Hat_Display'] text-[15px]">{item.v}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="border border-[#E5E5E5] p-5">
-              <Label className="text-[#1A1A1A] mb-3 block">Account Health Strategy</Label>
-              <p className="font-['Inter'] text-[#737373] text-[13px] leading-relaxed mb-4">
-                Partner boutique since 2019. Known for high customer engagement and consistent Sloan reorders.
-                Next strategic initiative is expanding their curve assortment for Spring.
-              </p>
-              <PrimaryBtn onClick={() => setActivityModal(true)} className="h-9 text-[11px] w-full">
+            <div className="border border-[#E5E5E5] p-6 bg-white flex flex-col justify-between">
+              <div>
+                <Label className="text-[#1A1A1A] text-[13px] uppercase tracking-wider mb-4 block font-bold">Account Health Strategy</Label>
+                <p className="font-['Inter'] text-[#737373] text-[15px] leading-relaxed mb-6">
+                  Partner boutique since 2019. Known for high customer engagement and consistent Sloan reorders.
+                  Next strategic initiative is expanding their curve assortment for Spring.
+                </p>
+              </div>
+              <PrimaryBtn onClick={() => setActivityModal(true)} className="h-11 text-[13px] w-full">
                 Schedule Market Visit
               </PrimaryBtn>
             </div>
@@ -3681,7 +3697,7 @@ function AccountDetail({
         )}
 
         {tab === "Commitments" && (
-          <div className="max-w-3xl">
+          <div className="max-w-5xl">
             <div className="flex justify-between items-center mb-4">
               <Label className="text-[#1A1A1A]">Team Commitments & Action Items</Label>
               <span className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">Click to toggle completion</span>
@@ -3700,10 +3716,10 @@ function AccountDetail({
                         {isDone && <Check size={11} className="text-[#FFFFFF]" />}
                       </div>
                       <div>
-                        <p className={`font-['Red_Hat_Display'] text-[13px] ${isDone ? "line-through text-[#737373]" : "text-[#1A1A1A] font-medium"}`}>
+                        <p className={`font-['Red_Hat_Display'] text-[15px] ${isDone ? "line-through text-[#737373]" : "text-[#1A1A1A] font-medium"}`}>
                           {c.commitment}
                         </p>
-                        <p className="font-['Red_Hat_Display'] text-[10px] text-[#737373]">Due: {c.due}</p>
+                        <p className="font-['Red_Hat_Display'] text-[12px] text-[#737373] mt-0.5">Due: {c.due}</p>
                       </div>
                     </div>
                     <span className={`px-2 py-0.5 text-[9px] font-['Red_Hat_Display'] font-bold uppercase ${isDone ? "bg-[#F9EBEF] text-[#1A1A1A]" : "bg-[#1A1A1A] text-[#FFFFFF]"}`}>
@@ -3717,7 +3733,7 @@ function AccountDetail({
         )}
 
         {tab === "Activity Timeline" && (
-          <div className="max-w-3xl">
+          <div className="max-w-5xl">
             <div className="flex justify-between items-center mb-4">
               <Label className="text-[#1A1A1A]">Logged Touchpoints & Notes</Label>
               <SecondaryBtn onClick={() => setActivityModal(true)} className="h-8 px-3 text-[10px]">
@@ -3728,10 +3744,10 @@ function AccountDetail({
               {activities.map(act => (
                 <div key={act.id} className="p-4">
                   <div className="flex justify-between items-start mb-1">
-                    <span className="font-['Red_Hat_Display'] font-bold text-[#1A1A1A] text-[13px]">{act.type}</span>
-                    <span className="font-['Red_Hat_Display'] text-[#737373] text-[11px]">{act.date}</span>
+                    <span className="font-['Red_Hat_Display'] font-bold text-[#1A1A1A] text-[15px]">{act.type}</span>
+                    <span className="font-['Red_Hat_Display'] text-[#737373] text-[13px]">{act.date}</span>
                   </div>
-                  <p className="font-['Inter'] text-[#737373] text-[13px] leading-relaxed">{act.notes}</p>
+                  <p className="font-['Inter'] text-[#737373] text-[14px] leading-relaxed">{act.notes}</p>
                 </div>
               ))}
             </div>
@@ -3820,6 +3836,8 @@ function CRMPipeline({
   const [newName, setNewName] = useState("");
   const [newCity, setNewCity] = useState("");
   const [newStage, setNewStage] = useState("Prospecting");
+  const [draggedAccountId, setDraggedAccountId] = useState<number | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<string | null>(null);
 
   const stageDefs = [
     { label: "Prospecting" },
@@ -3828,6 +3846,38 @@ function CRMPipeline({
     { label: "Negotiating" },
     { label: "Won" },
   ];
+
+  const handleDragStart = (e: React.DragEvent, accId: number) => {
+    e.dataTransfer.setData("text/plain", String(accId));
+    e.dataTransfer.effectAllowed = "move";
+    setDraggedAccountId(accId);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedAccountId(null);
+    setDragOverStage(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent, stageName: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverStage !== stageName) {
+      setDragOverStage(stageName);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetStage: string) => {
+    e.preventDefault();
+    const accIdStr = e.dataTransfer.getData("text/plain");
+    const accId = accIdStr ? parseInt(accIdStr, 10) : draggedAccountId;
+    if (accId) {
+      onUpdateAccountStage(accId, targetStage);
+      const acc = accounts.find(a => a.id === accId);
+      onToast(`Moved ${acc?.name || "deal"} to "${targetStage}"!`);
+    }
+    setDraggedAccountId(null);
+    setDragOverStage(null);
+  };
 
   const handleAdvance = (accId: number, currentStage: string) => {
     const idx = stageDefs.findIndex(s => s.label === currentStage);
@@ -3848,18 +3898,23 @@ function CRMPipeline({
   };
 
   return (
-    <div className="p-8 overflow-y-auto h-full">
-      <div className="flex justify-between items-start mb-6">
+    <div className="p-8 overflow-y-auto h-full flex flex-col">
+      <div className="flex justify-between items-start mb-6 shrink-0">
         <div>
-          <Label className="text-[#737373]">Sales Pipeline</Label>
-          <DisplayText size="medium" className="text-[26px]">Boutique Deal Pipeline</DisplayText>
+          <div className="flex items-center gap-3">
+            <Label className="text-[#737373]">Sales Pipeline</Label>
+            <span className="bg-[#F9EBEF] text-[#1A1A1A] border border-[#EAAAB9] text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+              Drag & Drop Enabled
+            </span>
+          </div>
+          <DisplayText size="medium" className="text-[28px]">Boutique Deal Pipeline</DisplayText>
         </div>
         <PrimaryBtn onClick={() => setAddPipelineModal(true)}>
           <PlusCircle size={14} className="mr-2" />Add to Pipeline
         </PrimaryBtn>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-6">
+      <div className="flex gap-4 overflow-x-auto pb-6 flex-1 items-stretch min-h-[520px]">
         {stageDefs.map(stage => {
           const stageAccounts = accounts.filter(a =>
             stage.label === "Won"
@@ -3867,38 +3922,73 @@ function CRMPipeline({
               : a.status === stage.label
           );
 
+          const isColumnOver = dragOverStage === stage.label;
+
           return (
-            <div key={stage.label} className="w-64 shrink-0 bg-[#FFFFFF] border border-[#E5E5E5] flex flex-col">
-              <div className="bg-[#1A1A1A] p-3 flex justify-between items-center">
-                <span className="font-['Red_Hat_Display'] font-bold text-[11px] uppercase tracking-wider text-[#FFFFFF]">{stage.label}</span>
-                <span className="bg-white/20 text-[#FFFFFF] text-[10px] font-bold px-1.5 py-0.5 rounded">{stageAccounts.length}</span>
+            <div
+              key={stage.label}
+              onDragOver={e => handleDragOver(e, stage.label)}
+              onDragLeave={() => { if (dragOverStage === stage.label) setDragOverStage(null); }}
+              onDrop={e => handleDrop(e, stage.label)}
+              className={`w-72 shrink-0 bg-[#FFFFFF] border transition-all flex flex-col ${
+                isColumnOver
+                  ? "border-[#EAAAB9] ring-2 ring-[#EAAAB9]/50 bg-[#F9EBEF]/30"
+                  : "border-[#E5E5E5]"
+              }`}
+            >
+              <div className="bg-[#1A1A1A] p-3.5 flex justify-between items-center">
+                <span className="font-['Red_Hat_Display'] font-bold text-[12px] uppercase tracking-wider text-[#FFFFFF]">{stage.label}</span>
+                <span className="bg-white/20 text-[#FFFFFF] text-[11px] font-bold px-2 py-0.5 rounded">{stageAccounts.length}</span>
               </div>
-              <div className="p-3 flex flex-col gap-2.5 flex-1 min-h-[300px]">
-                {stageAccounts.map(a => (
-                  <div key={a.id} className="bg-white border border-[#E5E5E5] p-3 hover:border-[#1A1A1A] transition-colors shadow-sm">
-                    <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[16px]">{a.name}</p>
-                    <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px]">{a.city}</p>
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E5E5E5] text-[10px]">
-                      <button
-                        onClick={() => handleBack(a.id, stage.label)}
-                        disabled={stage.label === "Prospecting"}
-                        className="text-[#737373] hover:text-[#1A1A1A] disabled:opacity-30 cursor-pointer font-bold"
-                      >
-                        ← Back
-                      </button>
-                      <button
-                        onClick={() => handleAdvance(a.id, stage.label)}
-                        disabled={stage.label === "Won"}
-                        className="text-[#1A1A1A] hover:underline disabled:opacity-30 cursor-pointer font-bold"
-                      >
-                        Advance →
-                      </button>
+              <div className="p-3.5 flex flex-col gap-3 flex-1 min-h-[400px]">
+                {stageAccounts.map(a => {
+                  const isBeingDragged = draggedAccountId === a.id;
+                  return (
+                    <div
+                      key={a.id}
+                      draggable={true}
+                      onDragStart={e => handleDragStart(e, a.id)}
+                      onDragEnd={handleDragEnd}
+                      className={`bg-white border p-4 transition-all shadow-xs select-none cursor-grab active:cursor-grabbing hover:shadow-md ${
+                        isBeingDragged
+                          ? "opacity-30 border-dashed border-[#EAAAB9] scale-[0.98]"
+                          : "border-[#E5E5E5] hover:border-[#1A1A1A]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-['Instrument_Serif'] text-[#1A1A1A] text-[19px] leading-snug">{a.name}</p>
+                          <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px] mt-0.5">{a.city}</p>
+                        </div>
+                        <GripVertical size={16} className="text-[#737373] shrink-0 opacity-40 hover:opacity-100 mt-1 cursor-grab" />
+                      </div>
+                      <div className="mt-3 pt-2.5 border-t border-[#E5E5E5] flex items-center justify-between text-[11px]">
+                        <span className="font-['Red_Hat_Display'] font-semibold text-[#1A1A1A] text-[12px]">{a.ytd}</span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleBack(a.id, stage.label)}
+                            disabled={stage.label === "Prospecting"}
+                            className="text-[#737373] hover:text-[#1A1A1A] disabled:opacity-20 cursor-pointer font-bold px-1"
+                            title="Move back one stage"
+                          >
+                            ←
+                          </button>
+                          <button
+                            onClick={() => handleAdvance(a.id, stage.label)}
+                            disabled={stage.label === "Won"}
+                            className="text-[#1A1A1A] hover:underline disabled:opacity-20 cursor-pointer font-bold px-1"
+                            title="Advance to next stage"
+                          >
+                            Advance →
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {stageAccounts.length === 0 && (
-                  <div className="border border-dashed border-[#E5E5E5] p-6 text-center text-[#737373] text-[11px] font-['Red_Hat_Display']">
-                    No active deals in this stage
+                  <div className="border border-dashed border-[#E5E5E5] p-8 text-center text-[#737373] text-[12px] font-['Red_Hat_Display'] flex-1 flex items-center justify-center">
+                    Drop deals here
                   </div>
                 )}
               </div>
@@ -4014,40 +4104,40 @@ function CRMTasks({
       </div>
 
       {view === "list" ? (
-        <div className="flex flex-col gap-2 max-w-3xl">
+        <div className="flex flex-col gap-3 max-w-5xl">
           {tasks.map(t => (
             <div
               key={t.id}
               onClick={() => onToggleTask(t.id)}
-              className={`border p-4 flex items-center gap-4 bg-white transition-all cursor-pointer select-none hover:border-[#1A1A1A] ${t.completed ? "border-[#E5E5E5] bg-[#F9EBEF]/30 opacity-60" : t.due === "Today" ? "border-[#1A1A1A]" : "border-[#E5E5E5]"}`}
+              className={`border p-5 flex items-center gap-5 bg-white transition-all cursor-pointer select-none hover:border-[#1A1A1A] hover:shadow-sm ${t.completed ? "border-[#E5E5E5] bg-[#F9EBEF]/30 opacity-60" : t.due === "Today" ? "border-[#1A1A1A] shadow-xs" : "border-[#E5E5E5]"}`}
             >
-              <div className={`w-5 h-5 border flex items-center justify-center shrink-0 ${t.completed ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5]"}`}>
-                {t.completed && <Check size={12} className="text-[#FFFFFF]" />}
+              <div className={`w-6 h-6 border flex items-center justify-center shrink-0 transition-colors ${t.completed ? "bg-[#1A1A1A] border-[#1A1A1A]" : "border-[#E5E5E5] bg-white hover:border-[#1A1A1A]"}`}>
+                {t.completed && <Check size={14} className="text-[#FFFFFF]" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`font-['Red_Hat_Display'] font-semibold text-[13px] ${t.completed ? "line-through text-[#737373]" : "text-[#1A1A1A]"}`}>{t.task}</p>
-                <p className="font-['Red_Hat_Display'] text-[#737373] text-[11px] mt-0.5">{t.account} · Assigned: {t.assigned}</p>
+                <p className={`font-['Red_Hat_Display'] font-semibold text-[16px] ${t.completed ? "line-through text-[#737373]" : "text-[#1A1A1A]"}`}>{t.task}</p>
+                <p className="font-['Red_Hat_Display'] text-[#737373] text-[13px] mt-1">{t.account} · Assigned: {t.assigned}</p>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className={`font-['Red_Hat_Display'] font-bold text-[10px] uppercase px-2 py-0.5 ${t.due === "Today" ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F9EBEF] text-[#1A1A1A]"}`}>{t.due}</span>
-                <span className="font-['Red_Hat_Display'] text-[#737373] text-[10px] uppercase px-2 py-0.5 border border-[#E5E5E5]">{t.priority}</span>
+              <div className="flex items-center gap-2.5 shrink-0">
+                <span className={`font-['Red_Hat_Display'] font-bold text-[11px] uppercase px-3 py-1 ${t.due === "Today" ? "bg-[#1A1A1A] text-[#FFFFFF]" : "bg-[#F9EBEF] text-[#1A1A1A]"}`}>{t.due}</span>
+                <span className="font-['Red_Hat_Display'] font-semibold text-[#737373] text-[11px] uppercase px-3 py-1 border border-[#E5E5E5] bg-white">{t.priority}</span>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="bg-white border border-[#E5E5E5] p-6 max-w-3xl">
-          <Label className="text-[#1A1A1A] mb-4 block">Calendar View · July 2026</Label>
-          <div className="grid grid-cols-7 gap-2">
+        <div className="bg-white border border-[#E5E5E5] p-6 max-w-5xl">
+          <Label className="text-[#1A1A1A] text-[14px] mb-4 block font-bold">Calendar View · July 2026</Label>
+          <div className="grid grid-cols-7 gap-2.5">
             {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(day => (
-              <div key={day} className="font-['Red_Hat_Display'] text-[11px] font-bold text-center text-[#737373] pb-2 uppercase">{day}</div>
+              <div key={day} className="font-['Red_Hat_Display'] text-[12px] font-bold text-center text-[#737373] pb-2 uppercase">{day}</div>
             ))}
             {Array.from({ length: 31 }, (_, i) => i + 1).map(d => {
               const hasTask = d === 1 || d === 3 || d === 5 || d === 7;
               return (
-                <div key={d} className={`h-16 border border-[#E5E5E5] p-1.5 flex flex-col justify-between ${hasTask ? "bg-[#F9EBEF]" : ""}`}>
-                  <span className="font-['Red_Hat_Display'] text-[10px] text-[#737373]">{d}</span>
-                  {hasTask && <div className="w-full bg-[#1A1A1A] text-[#FFFFFF] text-[8px] font-['Red_Hat_Display'] p-0.5 truncate">Follow-up</div>}
+                <div key={d} className={`h-20 border border-[#E5E5E5] p-2 flex flex-col justify-between ${hasTask ? "bg-[#F9EBEF]" : "bg-white"}`}>
+                  <span className="font-['Red_Hat_Display'] font-semibold text-[12px] text-[#1A1A1A]">{d}</span>
+                  {hasTask && <div className="w-full bg-[#1A1A1A] text-[#FFFFFF] text-[10px] font-['Red_Hat_Display'] font-semibold px-1 py-0.5 truncate text-center">Follow-up</div>}
                 </div>
               );
             })}
@@ -4265,14 +4355,87 @@ function CRMPortal() {
 
 // ─── ARCHITECTURE DIAGRAM ─────────────────────────────────────────────────────
 
-function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
+const ARCH_TABLE_SCHEMAS: Record<string, { desc: string; columns: string[]; indexes: string }> = {
+  PRODUCTS: {
+    desc: "Luxury bridal gown collection catalog, silhouettes, fabric specifications, and wholesale/retail price schedules.",
+    columns: ["id: UUID (PK)", "name: VARCHAR(100)", "silhouette: VARCHAR[]", "fabric: VARCHAR[]", "price_usd: NUMERIC(10,2)", "badge: VARCHAR(50)", "modifications: JSONB", "created_at: TIMESTAMPTZ"],
+    indexes: "INDEX idx_products_silhouette, INDEX idx_products_fabric"
+  },
+  USERS: {
+    desc: "Boutique stylists, wholesale buyers, and brand headquarters administrative accounts with RBAC authentication.",
+    columns: ["id: UUID (PK)", "name: VARCHAR(100)", "store_id: UUID (FK)", "email: VARCHAR(255) UNIQUE", "role: VARCHAR(50)", "points_balance: INT", "status: VARCHAR(20)"],
+    indexes: "UNIQUE INDEX idx_users_email, INDEX idx_users_store_id"
+  },
+  TRAINING: {
+    desc: "Educational modules, couture silk/crepe masterclasses, video durations, and point allocation rules.",
+    columns: ["id: INT (PK)", "category: VARCHAR(100)", "title: VARCHAR(200)", "duration: VARCHAR(20)", "points: INT", "takeaways: JSONB"],
+    indexes: "INDEX idx_training_category"
+  },
+  QUIZZES: {
+    desc: "Certification questions, multi-choice answer banks, and 80% passing thresholds for stylist mastery.",
+    columns: ["id: INT (PK)", "module_id: INT (FK)", "question: TEXT", "options: JSONB", "correct_idx: SMALLINT"],
+    indexes: "INDEX idx_quizzes_module_id"
+  },
+  BADGES: {
+    desc: "Gamified achievement milestones, unlock requirements, rarity tiers, and boutique leaderboard weights.",
+    columns: ["id: VARCHAR(50) (PK)", "title: VARCHAR(100)", "emoji: VARCHAR(10)", "rarity: VARCHAR(30)", "points_req: INT"],
+    indexes: "INDEX idx_badges_rarity"
+  },
+  NOTIFICATIONS: {
+    desc: "Broadcast announcements, promotional flash sales, commission alerts, and trunk show bulletins.",
+    columns: ["id: BIGINT (PK)", "user_id: UUID (FK)", "title: VARCHAR(255)", "type: VARCHAR(50)", "read: BOOLEAN", "created_at: TIMESTAMPTZ"],
+    indexes: "INDEX idx_notifications_user_read"
+  },
+  ANALYTICS: {
+    desc: "Stylist engagement telemetry, search queries, favorite gowns, and module completion velocity.",
+    columns: ["id: BIGSERIAL (PK)", "event_type: VARCHAR(100)", "entity_id: VARCHAR(100)", "user_id: UUID", "timestamp: TIMESTAMPTZ"],
+    indexes: "INDEX idx_analytics_event_time"
+  },
+  ACCOUNTS: {
+    desc: "Independent boutique stockists, geographical territories, annual wholesale tiers, and churn health scores.",
+    columns: ["id: INT (PK)", "name: VARCHAR(150)", "city_state: VARCHAR(100)", "territory: VARCHAR(50)", "tier: SMALLINT", "status: VARCHAR(50)", "health_score: SMALLINT", "ytd_sales: VARCHAR(20)"],
+    indexes: "INDEX idx_accounts_territory, INDEX idx_accounts_tier"
+  },
+  CONTACTS: {
+    desc: "Boutique owners, head stylists, and procurement directors with communication records.",
+    columns: ["id: UUID (PK)", "account_id: INT (FK)", "full_name: VARCHAR(100)", "title: VARCHAR(100)", "email: VARCHAR(255)", "phone: VARCHAR(30)"],
+    indexes: "INDEX idx_contacts_account_id"
+  },
+  COMMUNICATIONS: {
+    desc: "Phone calls, market booth consultations, swatch dispatch records, and buyer feedback.",
+    columns: ["id: BIGSERIAL (PK)", "account_id: INT (FK)", "channel: VARCHAR(50)", "notes: TEXT", "created_by: VARCHAR(100)", "logged_at: TIMESTAMPTZ"],
+    indexes: "INDEX idx_comms_account_date"
+  },
+  MEETINGS: {
+    desc: "New York Bridal Fashion Week showroom appointments and trunk show dates.",
+    columns: ["id: UUID (PK)", "account_id: INT (FK)", "event_name: VARCHAR(100)", "date: DATE", "location: VARCHAR(100)"],
+    indexes: "INDEX idx_meetings_date"
+  },
+  TASKS: {
+    desc: "Wholesale executive action items, follow-up deadlines, rush order verifications, and priority flags.",
+    columns: ["id: INT (PK)", "account_name: VARCHAR(150)", "description: TEXT", "due_label: VARCHAR(50)", "priority: VARCHAR(20)", "completed: BOOLEAN"],
+    indexes: "INDEX idx_tasks_due_completed"
+  },
+  SURVEYS: {
+    desc: "Retailer market fit reviews, fabric sentiment ratings, and price resistance reports.",
+    columns: ["id: BIGINT (PK)", "account_id: INT (FK)", "rating: SMALLINT", "feedback: TEXT", "submitted_at: TIMESTAMPTZ"],
+    indexes: "INDEX idx_surveys_account"
+  },
+  SALES_DATA: {
+    desc: "Gown orders, swatch kit orders, size splits, rush fees, and wholesale invoices.",
+    columns: ["id: UUID (PK)", "account_id: INT (FK)", "order_total: NUMERIC(10,2)", "gown_count: INT", "order_date: DATE", "status: VARCHAR(50)"],
+    indexes: "INDEX idx_sales_date_account"
+  }
+};
+
+function ArchitectureDiagram({ onBack, onLaunchMode }: { onBack: () => void; onLaunchMode?: (mode: "stylist" | "admin" | "crm") => void }) {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   const portalTables = ["PRODUCTS", "USERS", "TRAINING", "QUIZZES", "BADGES", "NOTIFICATIONS", "ANALYTICS"];
   const crmTables = ["ACCOUNTS", "CONTACTS", "COMMUNICATIONS", "MEETINGS", "TASKS", "SURVEYS", "SALES_DATA"];
 
   return (
-    <div className="min-h-full bg-[#FFFFFF] text-[#1A1A1A] overflow-y-auto pb-24 selection:bg-[#1A1A1A] selection:text-white">
+    <div className="h-full w-full bg-[#FFFFFF] text-[#1A1A1A] overflow-y-auto pb-24 selection:bg-[#1A1A1A] selection:text-white">
       {/* Top Navigation Bar */}
       <div className="border-b border-[#E5E5E5] px-8 py-3.5 flex items-center justify-between sticky top-0 bg-[#FFFFFF]/95 backdrop-blur-sm z-30">
         <div className="flex items-center gap-3">
@@ -4371,12 +4534,27 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
 
         {/* Dynamic Schema Inspector Popup if table clicked */}
         {activeTab && (
-          <div className="w-full mb-3 p-4 bg-[#FFFFFF] border-2 border-[#1A1A1A] text-[12px] font-['Red_Hat_Display'] flex items-center justify-between animate-in fade-in duration-150">
-            <div className="flex items-center gap-3">
-              <span className="font-mono font-bold bg-[#1A1A1A] text-white px-2 py-0.5 text-[10px]">TABLE: {activeTab}</span>
-              <span className="text-[#737373]">PostgreSQL relational table schema with indexed primary keys, foreign constraints, and audit timestamps.</span>
+          <div className="w-full mb-5 p-5 bg-[#FFFFFF] border-2 border-[#1A1A1A] shadow-md animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] mb-3">
+              <div className="flex items-center gap-3">
+                <span className="font-mono font-bold bg-[#1A1A1A] text-white px-2.5 py-1 text-[11px]">POSTGRESQL TABLE: {activeTab}</span>
+                <span className="text-[#1A1A1A] text-[13px] font-['Red_Hat_Display'] font-medium">{ARCH_TABLE_SCHEMAS[activeTab]?.desc}</span>
+              </div>
+              <button onClick={() => setActiveTab(null)} className="text-[12px] font-bold uppercase underline hover:text-[#737373] cursor-pointer">Close</button>
             </div>
-            <button onClick={() => setActiveTab(null)} className="text-[11px] font-bold uppercase underline hover:text-[#737373] cursor-pointer">Close</button>
+            <div>
+              <p className="font-['Red_Hat_Display'] text-[11px] font-bold uppercase text-[#737373] tracking-wider mb-2">Column Definitions & Constraints:</p>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {ARCH_TABLE_SCHEMAS[activeTab]?.columns.map(col => (
+                  <span key={col} className="bg-[#F9EBEF] border border-[#EAAAB9]/50 text-[#1A1A1A] font-mono text-[11px] px-2.5 py-1">
+                    {col}
+                  </span>
+                ))}
+              </div>
+              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373]">
+                <span className="font-bold">Indexes:</span> {ARCH_TABLE_SCHEMAS[activeTab]?.indexes}
+              </p>
+            </div>
           </div>
         )}
 
@@ -4396,77 +4574,86 @@ function ArchitectureDiagram({ onBack }: { onBack: () => void }) {
         {/* CONNECTOR LINE */}
         <div className="w-px h-5 bg-[#E5E5E5] my-0.5"></div>
 
-        {/* SECTION 3: FRONTEND SURFACES (3 Columns) */}
+        {/* SECTION 3: FRONTEND SURFACES (3 Columns) - Clickable Prototypes */}
         <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-7">
           {/* Surface 1: Stylist App */}
-          <div className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] transition-all group flex flex-col justify-between">
+          <div
+            onClick={() => onLaunchMode?.("stylist")}
+            className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] hover:shadow-md transition-all group flex flex-col justify-between cursor-pointer"
+          >
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-8 h-8 border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
                   <Smartphone size={16} className="text-[#1A1A1A]" />
                 </div>
-                <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
-                  LIVE
+                <span className="px-2.5 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[9px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
+                  LAUNCH PROTOTYPE →
                 </span>
               </div>
-              <h3 className="font-['Instrument_Serif'] italic text-[24px] text-[#1A1A1A] mb-1">
+              <h3 className="font-['Instrument_Serif'] italic text-[26px] text-[#1A1A1A] mb-1 group-hover:underline">
                 Stylist App
               </h3>
-              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] leading-relaxed">
-                React · Mobile-First · PWA-ready · 375px base
+              <p className="font-['Red_Hat_Display'] text-[12px] text-[#737373] leading-relaxed">
+                React · Mobile-First · PWA-ready · 393px base
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[11px] text-[#737373]">
-              <span>Retailer / In-Store</span>
-              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[12px] text-[#737373] group-hover:text-[#1A1A1A]">
+              <span className="font-medium">Retailer / In-Store Stylist App</span>
+              <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform" />
             </div>
           </div>
 
           {/* Surface 2: Admin Portal */}
-          <div className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] transition-all group flex flex-col justify-between">
+          <div
+            onClick={() => onLaunchMode?.("admin")}
+            className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] hover:shadow-md transition-all group flex flex-col justify-between cursor-pointer"
+          >
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-8 h-8 border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
                   <LayoutGrid size={16} className="text-[#1A1A1A]" />
                 </div>
-                <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
-                  LIVE
+                <span className="px-2.5 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[9px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
+                  LAUNCH PROTOTYPE →
                 </span>
               </div>
-              <h3 className="font-['Instrument_Serif'] italic text-[24px] text-[#1A1A1A] mb-1">
+              <h3 className="font-['Instrument_Serif'] italic text-[26px] text-[#1A1A1A] mb-1 group-hover:underline">
                 Admin Portal
               </h3>
-              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] leading-relaxed">
+              <p className="font-['Red_Hat_Display'] text-[12px] text-[#737373] leading-relaxed">
                 React · Desktop · 1440px · Management Interface
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[11px] text-[#737373]">
-              <span>Brand HQ Operations</span>
-              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[12px] text-[#737373] group-hover:text-[#1A1A1A]">
+              <span className="font-medium">Brand HQ Operations Dashboard</span>
+              <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform" />
             </div>
           </div>
 
           {/* Surface 3: CRM System */}
-          <div className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] transition-all group flex flex-col justify-between">
+          <div
+            onClick={() => onLaunchMode?.("crm")}
+            className="bg-white border border-[#E5E5E5] p-6 hover:border-[#1A1A1A] hover:shadow-md transition-all group flex flex-col justify-between cursor-pointer"
+          >
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-8 h-8 border border-[#E5E5E5] flex items-center justify-center group-hover:border-[#1A1A1A] transition-colors">
                   <BarChart2 size={16} className="text-[#1A1A1A]" />
                 </div>
-                <span className="px-2 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[8px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
-                  LIVE
+                <span className="px-2.5 py-0.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-[9px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider">
+                  LAUNCH PROTOTYPE →
                 </span>
               </div>
-              <h3 className="font-['Instrument_Serif'] italic text-[24px] text-[#1A1A1A] mb-1">
+              <h3 className="font-['Instrument_Serif'] italic text-[26px] text-[#1A1A1A] mb-1 group-hover:underline">
                 CRM System
               </h3>
-              <p className="font-['Red_Hat_Display'] text-[11px] text-[#737373] leading-relaxed">
+              <p className="font-['Red_Hat_Display'] text-[12px] text-[#737373] leading-relaxed">
                 React · Desktop · 1440px · Sales Intelligence
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[11px] text-[#737373]">
-              <span>Boutique Relations & Pipeline</span>
-              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            <div className="mt-6 pt-4 border-t border-[#E5E5E5]/60 flex items-center justify-between text-[12px] text-[#737373] group-hover:text-[#1A1A1A]">
+              <span className="font-medium">Boutique Relations & Pipeline</span>
+              <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform" />
             </div>
           </div>
         </div>
@@ -4793,7 +4980,7 @@ export default function App() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
             {mode === "stylist" ? (
               <div className="size-full flex items-center justify-center bg-[#FDF0F3]">
                 <div className="w-[393px] h-full max-h-[844px] shadow-2xl overflow-hidden flex flex-col relative border border-[#E5E5E5]">
@@ -4831,7 +5018,7 @@ export default function App() {
             ) : mode === "crm" ? (
               <CRMPortal />
             ) : mode === "arch" ? (
-              <ArchitectureDiagram onBack={() => setMode(null)} />
+              <ArchitectureDiagram onBack={() => setMode(null)} onLaunchMode={m => setMode(m)} />
             ) : null}
           </div>
         </div>
