@@ -11,6 +11,79 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
+// ─── PERSISTENCE & SAMPLE ORDER MODELS ─────────────────────────────────────────
+const STORAGE_PREFIX = "nagae_v2_";
+function loadSaved<T>(key: string, fallback: T): T {
+  try {
+    const item = localStorage.getItem(STORAGE_PREFIX + key);
+    return item ? JSON.parse(item) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+function saveState<T>(key: string, val: T): void {
+  try {
+    localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(val));
+  } catch {}
+}
+function clearAllDemoState(): void {
+  try {
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith(STORAGE_PREFIX)) {
+        localStorage.removeItem(k);
+      }
+    });
+  } catch {}
+}
+
+export interface SampleOrder {
+  id: string;
+  productName: string;
+  size: string;
+  timeline: string;
+  notes: string;
+  totalPrice: number;
+  date: string;
+  status: "In Production" | "Pattern Cutting" | "Shipped" | "Delivered";
+  boutique: string;
+}
+
+export const INITIAL_SAMPLE_ORDERS: SampleOrder[] = [
+  {
+    id: "SO-8921",
+    productName: "Sloan Mikado",
+    size: "Size 10 (Showroom Sample)",
+    timeline: "Priority Rush (6-8 weeks)",
+    notes: "For upcoming trunk show preview",
+    totalPrice: 3550,
+    date: "Sep 24, 2026",
+    status: "In Production",
+    boutique: "Ivory & Beau"
+  },
+  {
+    id: "SO-7412",
+    productName: "Gemma",
+    size: "Size 18 (Curve Sample)",
+    timeline: "Standard (12-14 weeks)",
+    notes: "Showroom floor addition",
+    totalPrice: 3200,
+    date: "Sep 18, 2026",
+    status: "Shipped",
+    boutique: "Bella Bridal"
+  },
+  {
+    id: "SO-6190",
+    productName: "Kira",
+    size: "Size 6",
+    timeline: "Standard (12-14 weeks)",
+    notes: "VIP Client sizing verification",
+    totalPrice: 3600,
+    date: "Sep 12, 2026",
+    status: "Delivered",
+    boutique: "Ever After Atelier"
+  }
+];
+
 // ─── CSV DOWNLOAD HELPER ──────────────────────────────────────────────────────
 function exportToCSV(filename: string, headers: string[], rows: (string | number)[][]) {
   const csvContent = [
@@ -781,7 +854,7 @@ function ProductCatalog({
 }
 
 function ProductDetail({
-  product, onBack, onAskAIWithStyle, onSelectSimilar, onToast, isLiked, onToggleLike
+  product, onBack, onAskAIWithStyle, onSelectSimilar, onToast, isLiked, onToggleLike, onPlaceSampleOrder
 }: {
   product: typeof INITIAL_PRODUCTS[0];
   onBack: () => void;
@@ -790,6 +863,7 @@ function ProductDetail({
   onToast: (msg: string) => void;
   isLiked?: boolean;
   onToggleLike?: () => void;
+  onPlaceSampleOrder?: (order: SampleOrder) => void;
 }) {
   const [activeTab, setActiveTab] = useState("Overview");
   const [selectedMods, setSelectedMods] = useState<string[]>([]);
@@ -820,8 +894,23 @@ function ProductDetail({
 
   const handleOrderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const finalPrice = totalPrice + (timeline.includes("Priority") ? 350 : 0);
+    const newOrder: SampleOrder = {
+      id: `SO-${Math.floor(1000 + Math.random() * 9000)}`,
+      productName: product.name,
+      size: selectedSize,
+      timeline,
+      notes: notes.trim() || "Showroom Display Request",
+      totalPrice: finalPrice,
+      date: "Just now",
+      status: "In Production",
+      boutique: "Grace & Lace"
+    };
+    if (onPlaceSampleOrder) {
+      onPlaceSampleOrder(newOrder);
+    }
     setOrderDrawerOpen(false);
-    onToast(`Sample order placed for ${product.name} (${selectedSize})!`);
+    onToast(`Sample order ${newOrder.id} placed for ${product.name} (${selectedSize})!`);
   };
 
   return (
@@ -1542,22 +1631,25 @@ function QuizScreen({
 }
 
 function ProfilePoints({
-  userPoints, onNavigate, onToast, onDeductPoints, onLogout
+  userPoints, onNavigate, onToast, onDeductPoints, onLogout, sampleOrders = [], darkModePref = false, onToggleDarkMode
 }: {
   userPoints: number;
   onNavigate: (s: string) => void;
   onToast: (msg: string) => void;
   onDeductPoints: (pts: number) => void;
   onLogout: () => void;
+  sampleOrders?: SampleOrder[];
+  darkModePref?: boolean;
+  onToggleDarkMode?: (val: boolean) => void;
 }) {
   const [settingsModal, setSettingsModal] = useState(false);
   const [badgesModal, setBadgesModal] = useState(false);
   const [rewardsModal, setRewardsModal] = useState(false);
+  const [ordersModal, setOrdersModal] = useState(false);
 
   // Settings state
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [smsAlerts, setSmsAlerts] = useState(false);
-  const [darkModePref, setDarkModePref] = useState(false);
 
   const rewards = [
     { id: 1, title: "Fabric Swatch Ring (All Fabrics)", cost: 400, desc: "Physical ring with 10 NAGAE silk and crepe swatches." },
@@ -1676,6 +1768,47 @@ function ProfilePoints({
           </div>
         </div>
 
+        {/* Active Sample Orders Section */}
+        <div className="px-5 py-5 border-b border-[#E5E5E5] bg-white">
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-2">
+              <Label className="text-[#1A1A1A]">My Sample Requests</Label>
+              <span className="bg-[#F9EBEF] text-[#1A1A1A] border border-[#EAAAB9] text-[10px] font-bold px-1.5 py-0.2">
+                {sampleOrders.length}
+              </span>
+            </div>
+            <button onClick={() => setOrdersModal(true)} className="font-['Red_Hat_Display'] text-[11px] text-[#1A1A1A] underline uppercase tracking-wider cursor-pointer">
+              View All
+            </button>
+          </div>
+          <div className="flex flex-col gap-2.5">
+            {sampleOrders.slice(0, 2).map(order => (
+              <div key={order.id} className="border border-[#E5E5E5] p-3 flex items-start justify-between bg-white hover:border-[#1A1A1A] transition-colors">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="font-mono text-[11px] font-bold text-[#1A1A1A]">{order.id}</p>
+                    <span className="text-[#737373]">·</span>
+                    <p className="font-['Red_Hat_Display'] font-semibold text-[13px] text-[#1A1A1A]">{order.productName}</p>
+                  </div>
+                  <p className="text-[11px] font-['Red_Hat_Display'] text-[#737373] mt-0.5">{order.size} · {order.timeline}</p>
+                </div>
+                <div className="text-right flex flex-col items-end">
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
+                    order.status === "In Production"
+                      ? "bg-[#F9EBEF] text-[#1A1A1A] border-[#EAAAB9]"
+                      : order.status === "Shipped"
+                      ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                      : "bg-[#E5E5E5] text-[#1A1A1A] border-[#CCCCCC]"
+                  }`}>
+                    {order.status}
+                  </span>
+                  <p className="font-['Red_Hat_Display'] text-[11px] font-bold text-[#1A1A1A] mt-1">${order.totalPrice.toLocaleString()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Quick Sign Out Action */}
         <div className="px-5 py-5 bg-white border-t border-[#E5E5E5]">
           <button
@@ -1747,6 +1880,46 @@ function ProfilePoints({
           </div>
         </div>
       )}
+      {/* Sample Orders Modal */}
+      {ordersModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-[#E5E5E5] max-w-md w-full p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4 pb-2 border-b border-[#E5E5E5]">
+              <div>
+                <CardTitle className="text-[20px]">Sample Requests</CardTitle>
+                <p className="font-['Red_Hat_Display'] text-[#737373] text-[12px]">{sampleOrders.length} active requests from your showroom</p>
+              </div>
+              <button onClick={() => setOrdersModal(false)}><X size={18} /></button>
+            </div>
+            <div className="flex flex-col gap-3">
+              {sampleOrders.map(order => (
+                <div key={order.id} className="border border-[#E5E5E5] p-4 flex flex-col gap-2 bg-white">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-mono text-[11px] font-bold text-[#1A1A1A]">{order.id}</p>
+                      <p className="font-['Red_Hat_Display'] font-bold text-[14px] text-[#1A1A1A]">{order.productName}</p>
+                    </div>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
+                      order.status === "In Production"
+                        ? "bg-[#F9EBEF] text-[#1A1A1A] border-[#EAAAB9]"
+                        : order.status === "Shipped"
+                        ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                        : "bg-[#E5E5E5] text-[#1A1A1A] border-[#CCCCCC]"
+                    }`}>
+                      {order.status}
+                    </span>
+                  </div>
+                  <div className="text-[12px] font-['Red_Hat_Display'] text-[#737373] flex justify-between">
+                    <span>{order.size} · {order.timeline}</span>
+                    <span className="font-bold text-[#1A1A1A]">${order.totalPrice.toLocaleString()}</span>
+                  </div>
+                  {order.notes && <p className="text-[11px] font-['Inter'] text-[#737373] italic bg-[#F9EBEF]/40 p-2">Note: {order.notes}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Settings Modal */}
       {settingsModal && (
@@ -1774,7 +1947,7 @@ function ProfilePoints({
                 </label>
                 <label className="flex items-center justify-between text-[12px] cursor-pointer">
                   <span className="font-['Red_Hat_Display'] text-[#1A1A1A]">Dark Mode Contrast</span>
-                  <input type="checkbox" checked={darkModePref} onChange={e => setDarkModePref(e.target.checked)} className="accent-[#1A1A1A]" />
+                  <input type="checkbox" checked={darkModePref} onChange={e => onToggleDarkMode ? onToggleDarkMode(e.target.checked) : null} className="accent-[#1A1A1A]" />
                 </label>
               </div>
 
@@ -1985,6 +2158,10 @@ function StylistApp({
   notifications,
   userPoints,
   savedFavorites,
+  sampleOrders = [],
+  darkModePref = false,
+  onToggleDarkMode,
+  onPlaceSampleOrder,
   onToggleFavorite,
   onAddNotification,
   onMarkNotificationRead,
@@ -2000,6 +2177,10 @@ function StylistApp({
   notifications: typeof INITIAL_NOTIFICATIONS;
   userPoints: number;
   savedFavorites: number[];
+  sampleOrders?: SampleOrder[];
+  darkModePref?: boolean;
+  onToggleDarkMode?: (val: boolean) => void;
+  onPlaceSampleOrder?: (order: SampleOrder) => void;
   onToggleFavorite: (id: number) => void;
   onAddNotification: (n: any) => void;
   onMarkNotificationRead: (id: number) => void;
@@ -2050,7 +2231,7 @@ function StylistApp({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#FFFFFF] relative overflow-hidden select-none">
+    <div className={`flex flex-col h-full relative overflow-hidden select-none transition-colors ${darkModePref ? "bg-[#141414] text-[#F5F5F5] ring-1 ring-white/10" : "bg-[#FFFFFF] text-[#1A1A1A]"}`}>
       <NavDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
@@ -2079,6 +2260,7 @@ function StylistApp({
             onToast={onToast}
             isLiked={savedFavorites.includes(selectedProduct.id)}
             onToggleLike={() => onToggleFavorite(selectedProduct.id)}
+            onPlaceSampleOrder={onPlaceSampleOrder}
           />
         ) : quizModule ? (
           <QuizScreen
@@ -2131,6 +2313,9 @@ function StylistApp({
             onNavigate={navigateTo}
             onToast={onToast}
             onDeductPoints={onDeductPoints}
+            sampleOrders={sampleOrders}
+            darkModePref={darkModePref}
+            onToggleDarkMode={onToggleDarkMode}
             onLogout={() => {
               setIsLoggedIn(false);
               onToast("Signed out of Retailer Portal");
@@ -2271,11 +2456,18 @@ function AdminProducts({
     onToast("Products catalog exported to CSV!");
   };
 
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.fabric.some(f => f.toLowerCase().includes(search.toLowerCase())) ||
-    p.silhouette.some(s => s.toLowerCase().includes(search.toLowerCase()))
-  );
+  const [filterSilhouette, setFilterSilhouette] = useState("All");
+  const [filterFabric, setFilterFabric] = useState("All");
+
+  const filtered = products.filter(p => {
+    const matchSearch =
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.fabric.some(f => f.toLowerCase().includes(search.toLowerCase())) ||
+      p.silhouette.some(s => s.toLowerCase().includes(search.toLowerCase()));
+    const matchSil = filterSilhouette === "All" || p.silhouette.includes(filterSilhouette);
+    const matchFab = filterFabric === "All" || p.fabric.includes(filterFabric);
+    return matchSearch && matchSil && matchFab;
+  });
 
   if (view === "add") {
     return (
@@ -2388,7 +2580,7 @@ function AdminProducts({
         </div>
       </div>
 
-      <div className="bg-white border border-[#E5E5E5] h-12 flex items-center px-4 gap-3 mb-4 focus-within:border-[#1A1A1A] transition-colors">
+      <div className="bg-white border border-[#E5E5E5] h-12 flex items-center px-4 gap-3 mb-3 focus-within:border-[#1A1A1A] transition-colors">
         <Search size={16} className="text-[#737373] shrink-0" />
         <input
           className="flex-1 bg-transparent text-[14px] font-['Inter'] text-[#1A1A1A] outline-none placeholder:text-[#737373]"
@@ -2397,6 +2589,38 @@ function AdminProducts({
           onChange={e => setSearch(e.target.value)}
         />
         {search && <button onClick={() => setSearch("")}><X size={14} className="text-[#737373]" /></button>}
+      </div>
+
+      {/* Silhouette & Fabric Filter Chips */}
+      <div className="flex flex-wrap items-center gap-2 mb-4 bg-white p-3 border border-[#E5E5E5]">
+        <span className="text-[10px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider text-[#737373]">Silhouette:</span>
+        {["All", "A-Line", "Fit & Flare", "Column", "Ballgown"].map(s => (
+          <button
+            key={s}
+            onClick={() => setFilterSilhouette(s)}
+            className={`px-2.5 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-colors cursor-pointer border ${
+              filterSilhouette === s
+                ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                : "bg-white text-[#737373] border-[#E5E5E5] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+            }`}
+          >
+            {s}
+          </button>
+        ))}
+        <span className="text-[10px] font-['Red_Hat_Display'] font-bold uppercase tracking-wider text-[#737373] ml-3">Fabric:</span>
+        {["All", "Mikado", "Silk Crepe", "Lace"].map(f => (
+          <button
+            key={f}
+            onClick={() => setFilterFabric(f)}
+            className={`px-2.5 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-colors cursor-pointer border ${
+              filterFabric === f
+                ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                : "bg-white text-[#737373] border-[#E5E5E5] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+            }`}
+          >
+            {f}
+          </button>
+        ))}
       </div>
 
       {/* Desktop Table */}
@@ -2777,7 +3001,73 @@ function AdminAnalytics({ onToast }: { onToast: (msg: string) => void }) {
     "1Y": { users: 512, logins: 4890, views: 31200, completions: "88%" },
   };
 
+  const chartDataMap = {
+    "7D": {
+      line: [
+        { label: "Mon", users: 18, logins: 42 },
+        { label: "Tue", users: 22, logins: 56 },
+        { label: "Wed", users: 29, logins: 74 },
+        { label: "Thu", users: 27, logins: 68 },
+        { label: "Fri", users: 34, logins: 92 },
+        { label: "Sat", users: 31, logins: 88 },
+        { label: "Sun", users: 24, logins: 65 },
+      ],
+      bar: [
+        { name: "Sloan Mikado", views: 240 },
+        { name: "Gemma", views: 185 },
+        { name: "Aria Column", views: 160 },
+        { name: "Kira", views: 130 },
+        { name: "Yuki", views: 110 },
+      ],
+    },
+    "30D": {
+      line: [
+        { label: "W1", users: 65, logins: 210 },
+        { label: "W2", users: 82, logins: 285 },
+        { label: "W3", users: 94, logins: 340 },
+        { label: "W4", users: 104, logins: 387 },
+      ],
+      bar: [
+        { name: "Sloan Mikado", views: 920 },
+        { name: "Gemma", views: 780 },
+        { name: "Aria Column", views: 650 },
+        { name: "Kira", views: 510 },
+        { name: "Yuki", views: 440 },
+      ],
+    },
+    "90D": {
+      line: [
+        { label: "Jul", users: 180, logins: 620 },
+        { label: "Aug", users: 230, logins: 890 },
+        { label: "Sep", users: 280, logins: 1140 },
+      ],
+      bar: [
+        { name: "Sloan Mikado", views: 2850 },
+        { name: "Gemma", views: 2410 },
+        { name: "Aria Column", views: 1980 },
+        { name: "Kira", views: 1650 },
+        { name: "Yuki", views: 1320 },
+      ],
+    },
+    "1Y": {
+      line: [
+        { label: "Q1", users: 140, logins: 980 },
+        { label: "Q2", users: 260, logins: 1940 },
+        { label: "Q3", users: 390, logins: 3120 },
+        { label: "Q4", users: 512, logins: 4890 },
+      ],
+      bar: [
+        { name: "Sloan Mikado", views: 11200 },
+        { name: "Gemma", views: 9400 },
+        { name: "Aria Column", views: 7600 },
+        { name: "Kira", views: 6100 },
+        { name: "Yuki", views: 5200 },
+      ],
+    },
+  };
+
   const currentMetrics = metricsMap[range];
+  const currentChart = chartDataMap[range];
 
   const handleExport = () => {
     const headers = ["Metric", "Value", "TimeRange"];
@@ -2825,10 +3115,10 @@ function AdminAnalytics({ onToast }: { onToast: (msg: string) => void }) {
 
       <div className="grid grid-cols-2 gap-6">
         <div className="bg-white border border-[#E5E5E5] p-5">
-          <Label className="text-[#1A1A1A] mb-4 block">Stylist Activity & Growth</Label>
+          <Label className="text-[#1A1A1A] mb-4 block">Stylist Activity & Growth ({range})</Label>
           <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={analyticsLineData}>
-              <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
+            <LineChart data={currentChart.line}>
+              <XAxis dataKey="label" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ border: "1px solid #E5E5E5", borderRadius: 0, fontFamily: "Red Hat Display", fontSize: 12 }} />
               <Line type="monotone" dataKey="users" stroke="#E58C9F" strokeWidth={2} dot={{ fill: "#E58C9F", r: 3 }} name="Active Stylists" />
@@ -2838,9 +3128,9 @@ function AdminAnalytics({ onToast }: { onToast: (msg: string) => void }) {
         </div>
 
         <div className="bg-white border border-[#E5E5E5] p-5">
-          <Label className="text-[#1A1A1A] mb-4 block">Most Viewed Showroom Styles</Label>
+          <Label className="text-[#1A1A1A] mb-4 block">Most Viewed Showroom Styles ({range})</Label>
           <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={productViewData} layout="vertical">
+            <BarChart data={currentChart.bar} layout="vertical">
               <XAxis type="number" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#737373" }} axisLine={false} tickLine={false} />
               <YAxis dataKey="name" type="category" tick={{ fontSize: 11, fontFamily: "Red Hat Display", fill: "#1A1A1A" }} axisLine={false} tickLine={false} width={110} />
               <Tooltip contentStyle={{ border: "1px solid #E5E5E5", borderRadius: 0, fontFamily: "Red Hat Display", fontSize: 12 }} />
@@ -3140,6 +3430,13 @@ function AdminCommunications({
 }
 
 function AdminIntelligence() {
+  const recentAiLogs = [
+    { id: 1, query: "Can Sloan Mikado train length be extended by 24 inches for cathedral service?", boutique: "Ivory & Beau (Savannah, GA)", time: "14m ago", confidence: "99.4%", matched: "Sloan Mikado", sentiment: "Resolved" },
+    { id: 2, query: "What undergarments are recommended for Gemma's illusion low back?", boutique: "Bella Bridal (Chicago, IL)", time: "1h ago", confidence: "98.2%", matched: "Gemma", sentiment: "Resolved" },
+    { id: 3, query: "Is Kira available in soft ivory instead of diamond white?", boutique: "Ever After Atelier (New York, NY)", time: "3h ago", confidence: "98.8%", matched: "Kira", sentiment: "Resolved" },
+    { id: 4, query: "Lead time cutoff for October 12 delivery with rush fee?", boutique: "The Modern Bride (Dallas, TX)", time: "6h ago", confidence: "96.5%", matched: "Rush Policy", sentiment: "Resolved" }
+  ];
+
   return (
     <div className="p-8 overflow-y-auto h-full">
       <div className="mb-6">
@@ -3163,6 +3460,37 @@ function AdminIntelligence() {
             <Bar dataKey="count" fill="#E58C9F" barSize={36} />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Live Stylist Inquiries & Telemetry */}
+      <div className="bg-white border border-[#E5E5E5]">
+        <div className="p-4 border-b border-[#E5E5E5] bg-[#F9EBEF]/30 flex justify-between items-center">
+          <div>
+            <Label className="text-[#1A1A1A]">Live Inquiries Telemetry</Label>
+            <p className="text-[12px] font-['Red_Hat_Display'] text-[#737373]">Recent real-time prompt resolutions from showroom stylists</p>
+          </div>
+          <span className="bg-[#1A1A1A] text-white text-[10px] font-bold uppercase px-2 py-0.5">Live Stream</span>
+        </div>
+        <div className="divide-y divide-[#E5E5E5]">
+          {recentAiLogs.map(log => (
+            <div key={log.id} className="p-4 flex items-start justify-between gap-4 hover:bg-[#F9EBEF]/20 transition-colors">
+              <div className="flex-1">
+                <p className="text-[13px] font-semibold text-[#1A1A1A]">"{log.query}"</p>
+                <div className="flex items-center gap-3 mt-1 text-[11px] text-[#737373]">
+                  <span>{log.boutique}</span>
+                  <span>·</span>
+                  <span>{log.time}</span>
+                  <span>·</span>
+                  <span className="bg-[#F9EBEF] text-[#1A1A1A] border border-[#EAAAB9] px-1.5 py-0.2 font-medium">Matched: {log.matched}</span>
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-[11px] font-bold text-[#1A1A1A]">{log.confidence} Conf.</span>
+                <span className="block text-[10px] uppercase font-bold text-emerald-600 mt-0.5">✓ {log.sentiment}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -3215,6 +3543,139 @@ function AdminDashboard({
   );
 }
 
+function AdminOrders({
+  sampleOrders,
+  onUpdateStatus,
+  onToast,
+}: {
+  sampleOrders: SampleOrder[];
+  onUpdateStatus: (orderId: string, nextStatus: SampleOrder["status"]) => void;
+  onToast: (msg: string) => void;
+}) {
+  const [filter, setFilter] = useState<string>("All");
+
+  const statusOrder: SampleOrder["status"][] = ["In Production", "Pattern Cutting", "Shipped", "Delivered"];
+
+  const filtered = sampleOrders.filter(o => {
+    if (filter === "All") return true;
+    return o.status === filter;
+  });
+
+  const handleAdvance = (order: SampleOrder) => {
+    const curIdx = statusOrder.indexOf(order.status);
+    if (curIdx < statusOrder.length - 1) {
+      const next = statusOrder[curIdx + 1];
+      onUpdateStatus(order.id, next);
+      onToast(`Order ${order.id} advanced to "${next}"!`);
+    }
+  };
+
+  const handleExport = () => {
+    const headers = ["Order ID", "Boutique", "Style", "Size", "Timeline", "Status", "Date", "Total Price"];
+    const rows = sampleOrders.map(o => [o.id, o.boutique, o.productName, o.size, o.timeline, o.status, o.date, `${o.totalPrice}`]);
+    exportToCSV("nagae_sample_orders.csv", headers, rows);
+    onToast("Sample orders exported to CSV!");
+  };
+
+  return (
+    <div className="p-8 overflow-y-auto h-full">
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <Label className="text-[#737373]">Showroom Samples</Label>
+          <DisplayText size="medium" className="text-[28px]">Sample Order Fulfillment ({sampleOrders.length})</DisplayText>
+        </div>
+        <div className="flex items-center gap-3">
+          <SecondaryBtn onClick={handleExport} className="h-9 px-3 text-[11px]">
+            <Download size={13} className="mr-1.5" />Export Orders
+          </SecondaryBtn>
+        </div>
+      </div>
+
+      {/* Filter pills */}
+      <div className="flex gap-2 mb-6">
+        {["All", "In Production", "Pattern Cutting", "Shipped", "Delivered"].map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1.5 text-[11px] font-['Red_Hat_Display'] font-semibold transition-colors cursor-pointer border ${
+              filter === f
+                ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                : "bg-white text-[#737373] border-[#E5E5E5] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+            }`}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+
+      {/* Orders Table */}
+      <div className="border border-[#E5E5E5] bg-white overflow-hidden">
+        <table className="w-full border-collapse text-left">
+          <thead>
+            <tr className="border-b border-[#E5E5E5] bg-[#F9EBEF]/30 text-[11px] font-['Red_Hat_Display'] font-bold uppercase text-[#737373] tracking-wider">
+              <th className="py-3 px-4">Order ID</th>
+              <th className="py-3 px-4">Boutique</th>
+              <th className="py-3 px-4">Gown Style & Size</th>
+              <th className="py-3 px-4">Production Timeline</th>
+              <th className="py-3 px-4">Est. Total</th>
+              <th className="py-3 px-4">Status</th>
+              <th className="py-3 px-4 text-right">Fulfillment Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#E5E5E5] text-[13px] font-['Red_Hat_Display']">
+            {filtered.map(order => {
+              const curIdx = statusOrder.indexOf(order.status);
+              const canAdvance = curIdx < statusOrder.length - 1;
+              const nextStatus = canAdvance ? statusOrder[curIdx + 1] : null;
+
+              return (
+                <tr key={order.id} className="hover:bg-[#F9EBEF]/20 transition-colors">
+                  <td className="py-3.5 px-4 font-mono font-bold text-[#1A1A1A]">{order.id}</td>
+                  <td className="py-3.5 px-4 font-semibold text-[#1A1A1A]">{order.boutique}</td>
+                  <td className="py-3.5 px-4">
+                    <p className="font-medium text-[#1A1A1A]">{order.productName}</p>
+                    <p className="text-[11px] text-[#737373]">{order.size}</p>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <span className="text-[12px] text-[#737373]">{order.timeline}</span>
+                    {order.notes && <p className="text-[11px] text-[#737373] italic">"{order.notes}"</p>}
+                  </td>
+                  <td className="py-3.5 px-4 font-bold text-[#1A1A1A]">${order.totalPrice.toLocaleString()}</td>
+                  <td className="py-3.5 px-4">
+                    <span className={`inline-block px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
+                      order.status === "In Production"
+                        ? "bg-[#F9EBEF] text-[#1A1A1A] border-[#EAAAB9]"
+                        : order.status === "Pattern Cutting"
+                        ? "bg-white text-[#1A1A1A] border-[#1A1A1A]"
+                        : order.status === "Shipped"
+                        ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                        : "bg-[#E5E5E5] text-[#737373] border-[#CCCCCC]"
+                    }`}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 text-right">
+                    {canAdvance ? (
+                      <button
+                        onClick={() => handleAdvance(order)}
+                        className="px-3 py-1.5 bg-[#F2B8C6] hover:bg-[#EAAAB9] text-[#1A1A1A] border border-[#EAAAB9] text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        Advance to {nextStatus}
+                      </button>
+                    ) : (
+                      <span className="text-[11px] text-[#737373] font-medium">✓ Completed</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function AdminPortal({
   products,
   onAddProduct,
@@ -3225,7 +3686,9 @@ function AdminPortal({
   onUpdateModule,
   onDeleteModule,
   onBroadcastNotification,
-  onToast
+  onToast,
+  sampleOrders = [],
+  onUpdateSampleOrderStatus,
 }: {
   products: typeof INITIAL_PRODUCTS;
   onAddProduct: (p: any) => void;
@@ -3237,6 +3700,8 @@ function AdminPortal({
   onDeleteModule: (id: number) => void;
   onBroadcastNotification: (title: string, body: string, audience: string) => void;
   onToast: (msg: string) => void;
+  sampleOrders?: SampleOrder[];
+  onUpdateSampleOrderStatus?: (id: string, st: SampleOrder["status"]) => void;
 }) {
   const [tab, setTab] = useState("dashboard");
   const [users, setUsers] = useState(INITIAL_ADMIN_USERS);
@@ -3244,6 +3709,7 @@ function AdminPortal({
   const navItems = [
     { id: "dashboard", icon: LayoutDashboard, label: "Overview" },
     { id: "products", icon: ShoppingBag, label: "Products" },
+    { id: "orders", icon: Package, label: "Sample Orders" },
     { id: "training", icon: BookOpen, label: "Training" },
     { id: "analytics", icon: BarChart2, label: "Analytics" },
     { id: "users", icon: Users, label: "Retailers" },
@@ -3281,6 +3747,13 @@ function AdminPortal({
       {/* Main content */}
       <div className="flex-1 overflow-hidden flex flex-col">
         {tab === "dashboard" && <AdminDashboard onNavigateTab={setTab} />}
+        {tab === "orders" && (
+          <AdminOrders
+            sampleOrders={sampleOrders}
+            onUpdateStatus={onUpdateSampleOrderStatus || (() => {})}
+            onToast={onToast}
+          />
+        )}
         {tab === "products" && (
           <AdminProducts
             products={products}
@@ -3936,10 +4409,21 @@ function CRMPipeline({
                   : "border-[#E5E5E5]"
               }`}
             >
-              <div className="bg-[#1A1A1A] p-3.5 flex justify-between items-center">
-                <span className="font-['Red_Hat_Display'] font-bold text-[12px] uppercase tracking-wider text-[#FFFFFF]">{stage.label}</span>
-                <span className="bg-white/20 text-[#FFFFFF] text-[11px] font-bold px-2 py-0.5 rounded">{stageAccounts.length}</span>
-              </div>
+              {(() => {
+                const stageTotalValue = stageAccounts.reduce((sum, a) => {
+                  const val = parseInt(String(a.salesYTD || "").replace(/[^0-9]/g, ""), 10) || 28000;
+                  return sum + val;
+                }, 0);
+                return (
+                  <div className="bg-[#1A1A1A] p-3.5 flex justify-between items-center">
+                    <div>
+                      <span className="font-['Red_Hat_Display'] font-bold text-[12px] uppercase tracking-wider text-[#FFFFFF]">{stage.label}</span>
+                      <p className="font-['Red_Hat_Display'] text-[#F2B8C6] text-[10px] font-semibold mt-0.5">${stageTotalValue.toLocaleString()} Pipeline</p>
+                    </div>
+                    <span className="bg-white/20 text-[#FFFFFF] text-[11px] font-bold px-2 py-0.5 rounded">{stageAccounts.length}</span>
+                  </div>
+                );
+              })()}
               <div className="p-3.5 flex flex-col gap-3 flex-1 min-h-[400px]">
                 {stageAccounts.map(a => {
                   const isBeingDragged = draggedAccountId === a.id;
@@ -4269,12 +4753,32 @@ function CRMIntegrations({ onToast }: { onToast: (msg: string) => void }) {
   );
 }
 
-function CRMPortal() {
+function CRMPortal({
+  accounts = INITIAL_CRM_ACCOUNTS,
+  onUpdateAccounts,
+  tasks = INITIAL_TASKS,
+  onUpdateTasks,
+  sampleOrders = []
+}: {
+  accounts?: typeof INITIAL_CRM_ACCOUNTS;
+  onUpdateAccounts?: (accs: typeof INITIAL_CRM_ACCOUNTS) => void;
+  tasks?: typeof INITIAL_TASKS;
+  onUpdateTasks?: (tasks: typeof INITIAL_TASKS) => void;
+  sampleOrders?: SampleOrder[];
+}) {
   const [tab, setTab] = useState("accounts");
   const [selectedAccount, setSelectedAccount] = useState<typeof INITIAL_CRM_ACCOUNTS[0] | null>(null);
-  const [accounts, setAccounts] = useState(INITIAL_CRM_ACCOUNTS);
-  const [tasks, setTasks] = useState(INITIAL_TASKS);
   const [toast, setToast] = useState<string | null>(null);
+
+  const setAccounts = (newAccs: typeof INITIAL_CRM_ACCOUNTS | ((prev: typeof INITIAL_CRM_ACCOUNTS) => typeof INITIAL_CRM_ACCOUNTS)) => {
+    const updated = typeof newAccs === "function" ? newAccs(accounts) : newAccs;
+    if (onUpdateAccounts) onUpdateAccounts(updated);
+  };
+
+  const setTasks = (newTasks: typeof INITIAL_TASKS | ((prev: typeof INITIAL_TASKS) => typeof INITIAL_TASKS)) => {
+    const updated = typeof newTasks === "function" ? newTasks(tasks) : newTasks;
+    if (onUpdateTasks) onUpdateTasks(updated);
+  };
 
   const showToast = (msg: string) => setToast(msg);
 
@@ -4803,15 +5307,53 @@ function ArchitectureDiagram({ onBack, onLaunchMode }: { onBack: () => void; onL
 
 
 export default function App() {
-  const [mode, setMode] = useState<null | "stylist" | "admin" | "crm" | "arch">(null);
+  const [mode, setMode] = useState<null | "stylist" | "admin" | "crm" | "arch">(() => loadSaved("mode", null));
 
-  // Global Synchronized State
-  const [products, setProducts] = useState(INITIAL_PRODUCTS);
-  const [trainingModules, setTrainingModules] = useState(INITIAL_TRAINING);
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
-  const [userPoints, setUserPoints] = useState(2840);
-  const [savedFavorites, setSavedFavorites] = useState<number[]>([1, 6]);
+  // Global Synchronized State (Persisted in localStorage)
+  const [products, setProducts] = useState(() => loadSaved("products", INITIAL_PRODUCTS));
+  const [trainingModules, setTrainingModules] = useState(() => loadSaved("training", INITIAL_TRAINING));
+  const [notifications, setNotifications] = useState(() => loadSaved("notifications", INITIAL_NOTIFICATIONS));
+  const [userPoints, setUserPoints] = useState(() => loadSaved("points", 2840));
+  const [savedFavorites, setSavedFavorites] = useState<number[]>(() => loadSaved("favorites", [1, 6]));
+  const [sampleOrders, setSampleOrders] = useState<SampleOrder[]>(() => loadSaved("sample_orders", INITIAL_SAMPLE_ORDERS));
+  const [crmAccounts, setCrmAccounts] = useState(() => loadSaved("crm_accounts", INITIAL_CRM_ACCOUNTS));
+  const [crmTasks, setCrmTasks] = useState(() => loadSaved("crm_tasks", INITIAL_TASKS));
+  const [darkModePref, setDarkModePref] = useState(() => loadSaved("dark_mode", false));
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Auto-sync state to localStorage
+  useEffect(() => { saveState("mode", mode); }, [mode]);
+  useEffect(() => { saveState("products", products); }, [products]);
+  useEffect(() => { saveState("training", trainingModules); }, [trainingModules]);
+  useEffect(() => { saveState("notifications", notifications); }, [notifications]);
+  useEffect(() => { saveState("points", userPoints); }, [userPoints]);
+  useEffect(() => { saveState("favorites", savedFavorites); }, [savedFavorites]);
+  useEffect(() => { saveState("sample_orders", sampleOrders); }, [sampleOrders]);
+  useEffect(() => { saveState("crm_accounts", crmAccounts); }, [crmAccounts]);
+  useEffect(() => { saveState("crm_tasks", crmTasks); }, [crmTasks]);
+  useEffect(() => { saveState("dark_mode", darkModePref); }, [darkModePref]);
+
+  const handleResetDemo = () => {
+    clearAllDemoState();
+    setProducts(INITIAL_PRODUCTS);
+    setTrainingModules(INITIAL_TRAINING);
+    setNotifications(INITIAL_NOTIFICATIONS);
+    setUserPoints(2840);
+    setSavedFavorites([1, 6]);
+    setSampleOrders(INITIAL_SAMPLE_ORDERS);
+    setCrmAccounts(INITIAL_CRM_ACCOUNTS);
+    setCrmTasks(INITIAL_TASKS);
+    setDarkModePref(false);
+    showToast("Demo data reset to initial showroom state!");
+  };
+
+  const handlePlaceSampleOrder = (newOrder: SampleOrder) => {
+    setSampleOrders(prev => [newOrder, ...prev]);
+  };
+
+  const handleUpdateSampleOrderStatus = (orderId: string, nextStatus: SampleOrder["status"]) => {
+    setSampleOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: nextStatus } : o));
+  };
 
   const showToast = (msg: string) => setToastMessage(msg);
 
@@ -4970,14 +5512,74 @@ export default function App() {
         </div>
       ) : (
         <div className="w-full flex-1 flex flex-col overflow-hidden">
-          {/* Top Bar for Navigating Back */}
-          <div className="bg-white border-b border-[#E5E5E5] h-10 flex items-center px-4 shrink-0 z-50">
+          {/* Prototype Quick Switcher Navigation Bar */}
+          <div className="bg-white border-b border-[#E5E5E5] min-h-[46px] px-4 flex items-center justify-between shrink-0 z-50 overflow-x-auto gap-3">
             <button
               onClick={() => setMode(null)}
-              className="flex items-center gap-2 font-['Red_Hat_Display'] text-[10px] text-[#737373] uppercase tracking-wider hover:text-[#1A1A1A] transition-colors cursor-pointer"
+              className="flex items-center gap-2 text-[#1A1A1A] hover:opacity-75 transition-opacity cursor-pointer shrink-0"
+              title="Return to System Hub"
             >
-              <ArrowLeft size={12} />Back to System Modes
+              <div className="w-6 h-6 bg-[#1A1A1A] text-white flex items-center justify-center font-serif text-[12px] font-bold">N</div>
+              <span className="font-['Red_Hat_Display'] text-[11px] font-bold uppercase tracking-wider text-[#1A1A1A]">NAGAE Studio</span>
             </button>
+
+            {/* Direct Mode Switcher Pills */}
+            <div className="flex items-center gap-1.5 bg-[#F9EBEF]/50 p-1 border border-[#E5E5E5] shrink-0">
+              <button
+                onClick={() => setMode(null)}
+                className="px-3 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-all cursor-pointer text-[#737373] hover:text-[#1A1A1A]"
+              >
+                Hub
+              </button>
+              <button
+                onClick={() => setMode("stylist")}
+                className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-all cursor-pointer ${
+                  mode === "stylist" ? "bg-[#1A1A1A] text-white shadow-xs" : "text-[#737373] hover:text-[#1A1A1A]"
+                }`}
+              >
+                <Smartphone size={12} />
+                Stylist App
+              </button>
+              <button
+                onClick={() => setMode("admin")}
+                className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-all cursor-pointer ${
+                  mode === "admin" ? "bg-[#1A1A1A] text-white shadow-xs" : "text-[#737373] hover:text-[#1A1A1A]"
+                }`}
+              >
+                <LayoutDashboard size={12} />
+                Admin Portal
+              </button>
+              <button
+                onClick={() => setMode("crm")}
+                className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-all cursor-pointer ${
+                  mode === "crm" ? "bg-[#1A1A1A] text-white shadow-xs" : "text-[#737373] hover:text-[#1A1A1A]"
+                }`}
+              >
+                <TrendingUp size={12} />
+                CRM Pipeline
+              </button>
+              <button
+                onClick={() => setMode("arch")}
+                className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-['Red_Hat_Display'] font-semibold transition-all cursor-pointer ${
+                  mode === "arch" ? "bg-[#1A1A1A] text-white shadow-xs" : "text-[#737373] hover:text-[#1A1A1A]"
+                }`}
+              >
+                <Layers size={12} />
+                Architecture
+              </button>
+            </div>
+
+            {/* Quick Demo Reset Action */}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleResetDemo}
+                className="flex items-center gap-1.5 px-2.5 py-1 border border-[#E5E5E5] bg-white hover:border-[#1A1A1A] text-[#737373] hover:text-[#1A1A1A] text-[11px] font-['Red_Hat_Display'] font-medium transition-colors cursor-pointer"
+                title="Reset all demo data back to default"
+              >
+                <RefreshCw size={11} />
+                Reset Demo
+              </button>
+            </div>
           </div>
 
           <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
@@ -4990,6 +5592,10 @@ export default function App() {
                     notifications={notifications}
                     userPoints={userPoints}
                     savedFavorites={savedFavorites}
+                    sampleOrders={sampleOrders}
+                    darkModePref={darkModePref}
+                    onToggleDarkMode={setDarkModePref}
+                    onPlaceSampleOrder={handlePlaceSampleOrder}
                     onToggleFavorite={handleToggleFavorite}
                     onAddNotification={handleAddNotification}
                     onMarkNotificationRead={id => setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n))}
@@ -5014,9 +5620,17 @@ export default function App() {
                 onDeleteModule={id => setTrainingModules(trainingModules.filter(x => x.id !== id))}
                 onBroadcastNotification={handleBroadcastNotification}
                 onToast={showToast}
+                sampleOrders={sampleOrders}
+                onUpdateSampleOrderStatus={handleUpdateSampleOrderStatus}
               />
             ) : mode === "crm" ? (
-              <CRMPortal />
+              <CRMPortal
+                accounts={crmAccounts}
+                onUpdateAccounts={setCrmAccounts}
+                tasks={crmTasks}
+                onUpdateTasks={setCrmTasks}
+                sampleOrders={sampleOrders}
+              />
             ) : mode === "arch" ? (
               <ArchitectureDiagram onBack={() => setMode(null)} onLaunchMode={m => setMode(m)} />
             ) : null}
