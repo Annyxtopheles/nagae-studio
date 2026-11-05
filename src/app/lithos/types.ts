@@ -58,6 +58,7 @@ export interface VinylEdition {
   subtitle: string;
   format: string; // e.g. "2xLP 180g Heavyweight Vinyl"
   colorway: string; // e.g. "Glacier Ice Clear with Volcanic Ash Marble"
+  coverArt: string; // High-resolution evocative square album artwork URL
   jacketType: string;
   editionLimit: number;
   remainingCount: number;

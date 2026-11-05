@@ -36,7 +36,7 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
     const foundExp = EXPEDITIONS.find(e => e.id === expId) || EXPEDITIONS[0];
 
     lithosAudio.play(foundExp);
-    onToast(`Auditioning Track: ${activeEdition.tracklist[idx].side} — ${activeEdition.tracklist[idx].title}`);
+    onToast(`Auditioning: ${activeEdition.tracklist[idx].side} — ${activeEdition.tracklist[idx].title}`);
   };
 
   const handleOrder = () => {
@@ -47,18 +47,18 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
   return (
     <section className="w-full bg-[#0c0c0d] border-b border-[#222226] text-[#E6E4DC] px-4 sm:px-8 lg:px-12 py-12 lg:py-16 select-none">
       <div className="max-w-7xl mx-auto">
-        {/* Label Sub-masthead */}
+        {/* Sub-masthead */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-10 border-b border-[#222226] text-xs font-mono text-[#73716B]">
           <div className="flex items-center gap-3">
             <span className="text-[#A83824] font-bold">LATEST PHYSICAL PRESSING</span>
             <span>/</span>
-            <span className="text-[#E6E4DC]">{activeEdition.catalogNumber}</span>
+            <span className="text-[#E6E4DC] font-semibold">{activeEdition.catalogNumber}</span>
             <span>/</span>
             <span>{activeEdition.releaseDate}</span>
           </div>
           <div className="mt-2 sm:mt-0 flex items-center gap-4 text-[11px]">
-            <span>PRESSING: 180G HEAVYWEIGHT VINYL</span>
-            <span className="text-[#9E9B91]">INDEPENDENT DIRECT MAILORDER</span>
+            <span>{activeEdition.format}</span>
+            <span className="text-[#9E9B91]">DIRECT MAILORDER</span>
           </div>
         </div>
 
@@ -66,36 +66,45 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Authentic Gatefold Sleeve + Sliding Vinyl Record (6 Cols) */}
           <div className="lg:col-span-6 flex flex-col items-center">
-            <div className="relative w-full max-w-[480px] h-[320px] sm:h-[390px] flex items-center justify-center p-2 sm:p-4">
-              {/* Heavyweight Tip-on Gatefold Jacket */}
-              <div className="absolute left-2 sm:left-4 w-60 sm:w-80 h-60 sm:h-80 bg-[#161619] border border-[#2e2e34] shadow-[0_25px_60px_rgba(0,0,0,0.9)] p-6 sm:p-7 flex flex-col justify-between z-10 select-none">
-                <div className="flex justify-between items-start text-[10px] font-mono text-[#73716B]">
-                  <span className="text-[#A83824] font-bold tracking-widest">{activeEdition.catalogNumber}</span>
-                  <span className="text-[#9E9B91]">{activeEdition.releaseDate}</span>
+            <div className="relative w-full max-w-[480px] h-[320px] sm:h-[400px] flex items-center justify-center p-2 sm:p-4">
+              {/* Heavyweight Tip-on Gatefold Jacket with Real Album Artwork */}
+              <div className="absolute left-2 sm:left-4 w-60 sm:w-80 h-60 sm:h-80 bg-[#141417] border border-[#2e2e34] shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-10 select-none overflow-hidden group">
+                {/* Real High-Resolution Album Artwork */}
+                <img
+                  src={activeEdition.coverArt}
+                  alt={activeEdition.title}
+                  className="w-full h-full object-cover object-center filter contrast-110 brightness-90 group-hover:scale-105 transition-transform duration-700"
+                />
+
+                {/* Tactile Cardboard & Dark Grayscale Vignette Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/60 pointer-events-none" />
+
+                {/* Debossed Foil Stamp Header */}
+                <div className="absolute top-4 left-4 right-4 flex justify-between items-start text-[10px] font-mono">
+                  <span className="bg-black/70 px-2 py-0.5 border border-[#3e3e46] text-[#A83824] font-bold tracking-widest backdrop-blur-sm">
+                    {activeEdition.catalogNumber}
+                  </span>
+                  <span className="bg-black/70 px-2 py-0.5 border border-[#3e3e46] text-[#E6E4DC] text-[9px] backdrop-blur-sm">
+                    45 RPM
+                  </span>
                 </div>
 
-                <div className="my-auto py-4">
-                  <span className="font-['Cinzel'] font-black text-xl sm:text-2xl text-[#E6E4DC] leading-tight block">
+                {/* Album Title Stamped Over Bottom of Cover */}
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="font-['Cinzel'] font-black text-lg sm:text-xl text-[#E6E4DC] leading-tight drop-shadow-md">
                     {activeEdition.title.split(":")[0]}
-                  </span>
-                  <span className="text-[11px] font-mono text-[#A83824] mt-2 block tracking-wider font-semibold">
-                    {activeEdition.format} · 45 RPM
-                  </span>
-                  <p className="text-[10px] font-mono text-[#73716B] mt-2 leading-relaxed line-clamp-2">
-                    {activeEdition.subtitle}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-[#25252b] text-[9px] font-mono text-[#73716B] flex justify-between">
-                  <span>{activeEdition.specifications?.pressingPlant?.split(",")[0] || "Pallas GmbH"}</span>
-                  <span className="text-[#E6E4DC] font-semibold">EDITION OF {activeEdition.editionLimit}</span>
+                  </h3>
+                  <div className="mt-2 pt-2 border-t border-white/20 flex justify-between items-center text-[9px] font-mono text-[#9E9B91]">
+                    <span>{activeEdition.specifications?.pressingPlant?.split(",")[0] || "Pallas GmbH"}</span>
+                    <span className="text-[#E6E4DC] font-semibold">LIMITED {activeEdition.editionLimit}</span>
+                  </div>
                 </div>
               </div>
 
               {/* Realistic Heavyweight 180g Marbled Vinyl Record sliding out */}
               <div
-                className={`absolute right-2 sm:right-4 w-60 sm:w-80 h-60 sm:h-80 rounded-full shadow-[0_0_45px_rgba(0,0,0,0.95)] flex items-center justify-center transition-all duration-700 z-0 ${
-                  isPlaying ? "animate-[spin_18s_linear_infinite]" : "hover:translate-x-4"
+                className={`absolute right-2 sm:right-4 w-60 sm:w-80 h-60 sm:h-80 rounded-full shadow-[0_0_50px_rgba(0,0,0,0.95)] flex items-center justify-center transition-all duration-700 z-0 ${
+                  isPlaying ? "animate-[spin_18s_linear_infinite]" : "hover:translate-x-6"
                 }`}
                 style={{
                   background: activeEdition.mockupTheme.marbleStyle,
@@ -128,7 +137,7 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
                 Weight: {activeEdition.weightGrams}g
               </span>
               <span className="bg-[#161619] px-2.5 py-1 border border-[#25252b] text-[#E6E4DC]">
-                {activeEdition.remainingCount} Copies in Stock
+                {activeEdition.remainingCount} in stock
               </span>
             </div>
           </div>
@@ -234,38 +243,55 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
           </div>
         </div>
 
-        {/* Catalog Selector Thumbnails */}
+        {/* Visual Album Artwork Catalog Thumbnails */}
         <div className="mt-14 pt-8 border-t border-[#222226]">
           <div className="flex justify-between items-center mb-4 text-[10px] font-mono text-[#73716B]">
-            <span className="uppercase tracking-widest">DISCOGRAPHY (SELECT RELEASE TO AUDITION):</span>
-            <span>5 PHYSICAL EDITIONS</span>
+            <span className="uppercase tracking-widest">DISCOGRAPHY // SELECT RELEASE TO AUDITION:</span>
+            <span>5 ARCHIVAL EDITIONS</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {VINYL_EDITIONS.map(edition => {
               const isSelected = activeEdition.id === edition.id;
               return (
                 <button
                   key={edition.id}
                   onClick={() => onSelectEdition(edition)}
-                  className={`p-3.5 text-left border transition-all cursor-pointer ${
+                  className={`group relative aspect-square p-2 border transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer ${
                     isSelected
-                      ? "bg-[#161619] border-[#A83824] shadow-[0_0_15px_rgba(168,56,36,0.25)]"
-                      : "bg-[#0c0c0d] border-[#222226] hover:border-[#73716B] hover:bg-[#141417]"
+                      ? "border-[#A83824] shadow-[0_0_20px_rgba(168,56,36,0.35)]"
+                      : "border-[#25252b] hover:border-[#73716B]"
                   }`}
                 >
-                  <div className="flex justify-between items-center text-[10px] font-mono mb-1">
-                    <span className={isSelected ? "text-[#A83824] font-bold" : "text-[#73716B]"}>
+                  {/* Square Album Cover Artwork */}
+                  <img
+                    src={edition.coverArt}
+                    alt={edition.title}
+                    className="absolute inset-0 w-full h-full object-cover filter brightness-75 group-hover:brightness-95 group-hover:scale-105 transition-all duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/60 pointer-events-none" />
+
+                  {/* Header Badge */}
+                  <div className="relative z-10 flex justify-between items-center text-[10px] font-mono">
+                    <span className={`px-1.5 py-0.5 text-[9px] font-bold ${
+                      isSelected ? "bg-[#A83824] text-white" : "bg-black/70 text-[#9E9B91]"
+                    }`}>
                       {edition.catalogNumber}
                     </span>
-                    <span className="text-[#E6E4DC] font-bold">${edition.priceUSD}</span>
+                    <span className="bg-black/70 px-1.5 py-0.5 text-[#E6E4DC] text-[9px] font-bold">
+                      ${edition.priceUSD}
+                    </span>
                   </div>
-                  <p className="font-['Cinzel'] font-bold text-xs text-[#E6E4DC] truncate">
-                    {edition.title.split(":")[0]}
-                  </p>
-                  <p className="text-[10px] font-mono text-[#73716B] mt-1 truncate">
-                    {edition.format}
-                  </p>
+
+                  {/* Footer Title */}
+                  <div className="relative z-10">
+                    <p className="font-['Cinzel'] font-bold text-xs text-[#E6E4DC] leading-snug drop-shadow-sm line-clamp-1">
+                      {edition.title.split(":")[0]}
+                    </p>
+                    <p className="text-[9px] font-mono text-[#9E9B91] mt-0.5 truncate">
+                      {edition.format}
+                    </p>
+                  </div>
                 </button>
               );
             })}

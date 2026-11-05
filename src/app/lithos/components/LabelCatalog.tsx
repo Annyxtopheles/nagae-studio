@@ -99,36 +99,48 @@ export const LabelCatalog: React.FC<LabelCatalogProps> = ({
                   </span>
                 </div>
 
-                {/* Tactile Disc Visual Art */}
-                <div className="relative aspect-square w-full my-4 bg-[#0c0c0d] border border-[#222226] flex items-center justify-center overflow-hidden p-6">
-                  {/* Grooved Vinyl Disc Mockup */}
+                {/* Tactile Album Cover Artwork & Sliding Vinyl Mockup */}
+                <div className="relative aspect-square w-full my-4 bg-[#0c0c0d] border border-[#25252b] flex items-center justify-center overflow-hidden p-4">
+                  {/* Heavyweight Album Cover Jacket with Real Artwork */}
+                  <div className="absolute left-3 w-40 sm:w-48 h-40 sm:h-48 bg-[#161619] border border-[#2e2e34] shadow-2xl z-10 overflow-hidden">
+                    <img
+                      src={edition.coverArt}
+                      alt={edition.title}
+                      className="w-full h-full object-cover filter contrast-110 brightness-90 group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none" />
+                    <span className="absolute top-2 left-2 bg-black/75 px-1.5 py-0.5 text-[8px] font-mono text-[#A83824] font-bold border border-white/10">
+                      {edition.catalogNumber}
+                    </span>
+                  </div>
+
+                  {/* Grooved Vinyl Disc sliding out from the sleeve */}
                   <div
-                    className="w-52 h-52 sm:w-56 sm:h-56 rounded-full shadow-2xl relative flex items-center justify-center transition-transform duration-700 group-hover:rotate-45"
+                    className="absolute right-3 w-40 sm:w-48 h-40 sm:h-48 rounded-full shadow-2xl flex items-center justify-center transition-transform duration-500 group-hover:translate-x-3 group-hover:rotate-45 z-0"
                     style={{
                       background: edition.mockupTheme.marbleStyle,
-                      boxShadow: "0 0 35px rgba(0,0,0,0.85), inset 0 0 25px rgba(0,0,0,0.9)",
+                      boxShadow: "0 0 25px rgba(0,0,0,0.9)",
                     }}
                   >
                     {/* Vinyl Grooves */}
-                    <div className="absolute inset-4 rounded-full border border-black/45 pointer-events-none" />
-                    <div className="absolute inset-8 rounded-full border border-black/45 pointer-events-none" />
-                    <div className="absolute inset-14 rounded-full border border-black/55 pointer-events-none" />
+                    <div className="absolute inset-3 rounded-full border border-black/45 pointer-events-none" />
+                    <div className="absolute inset-7 rounded-full border border-black/45 pointer-events-none" />
+                    <div className="absolute inset-11 rounded-full border border-black/55 pointer-events-none" />
 
                     {/* Center Label */}
-                    <div className="w-18 h-18 rounded-full bg-[#0c0c0d] border border-[#A83824] flex flex-col items-center justify-center text-center p-1 font-mono text-[7px]">
-                      <span className="font-['Cinzel'] font-bold text-[#E6E4DC] text-[8px] leading-tight">LITHOS</span>
+                    <div className="w-14 h-14 rounded-full bg-[#0c0c0d] border border-[#A83824] flex flex-col items-center justify-center text-center p-1 font-mono text-[6px]">
+                      <span className="font-['Cinzel'] font-bold text-[#E6E4DC] text-[7px] leading-tight">LITHOS</span>
                       <span className="text-[#A83824] leading-tight">{edition.catalogNumber}</span>
-                      <span className="text-[#73716B] text-[6px]">45 RPM</span>
                     </div>
                   </div>
 
                   {/* Hover Quick-Listen Overlay Button */}
                   <button
                     onClick={(e) => handlePlayEdition(edition.catalogNumber, e)}
-                    className="absolute bottom-4 right-4 bg-[#0c0c0d]/90 hover:bg-[#A83824] text-[#E6E4DC] hover:text-white p-2.5 border border-[#2e2e34] hover:border-[#A83824] transition-all cursor-pointer opacity-90 group-hover:opacity-100"
+                    className="absolute bottom-3 right-3 z-20 bg-[#0c0c0d]/90 hover:bg-[#A83824] text-[#E6E4DC] hover:text-white p-2.5 border border-[#2e2e34] hover:border-[#A83824] transition-all cursor-pointer shadow-lg"
                     title="Audition this release"
                   >
-                    <Volume2 size={16} />
+                    <Volume2 size={15} />
                   </button>
                 </div>
 
@@ -193,23 +205,38 @@ export const LabelCatalog: React.FC<LabelCatalogProps> = ({
             <div className="bg-[#161619] border border-[#2e2e34] max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative text-[#E6E4DC]">
               <button
                 onClick={() => setSelectedEdition(null)}
-                className="absolute top-6 right-6 text-[#73716B] hover:text-[#E6E4DC] cursor-pointer"
+                className="absolute top-6 right-6 text-[#73716B] hover:text-[#E6E4DC] cursor-pointer z-10"
               >
                 <X size={20} />
               </button>
 
-              <div className="flex items-center gap-2 text-xs font-mono text-[#A83824] uppercase tracking-widest mb-2 font-semibold">
-                ARCHIVAL LINER DOSSIER // {selectedEdition.catalogNumber}
+              <div className="flex flex-col sm:flex-row gap-6 items-start mb-6">
+                <div className="w-32 h-32 sm:w-40 sm:h-40 shrink-0 border border-[#2e2e34] shadow-xl overflow-hidden bg-black">
+                  <img
+                    src={selectedEdition.coverArt}
+                    alt={selectedEdition.title}
+                    className="w-full h-full object-cover filter contrast-110"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#A83824] uppercase tracking-widest mb-1.5 font-semibold">
+                    ARCHIVAL LINER DOSSIER // {selectedEdition.catalogNumber}
+                  </div>
+
+                  <h2 className="font-['Cinzel'] font-black text-2xl sm:text-3xl text-[#E6E4DC] leading-tight">
+                    {selectedEdition.title}
+                  </h2>
+                  <p className="font-mono text-xs sm:text-sm text-[#9E9B91] mt-1.5">
+                    {selectedEdition.subtitle}
+                  </p>
+                  <div className="mt-3 inline-block bg-[#0c0c0d] px-2.5 py-1 text-[10px] font-mono border border-[#25252b] text-[#E6E4DC]">
+                    {selectedEdition.format} · EDITION OF {selectedEdition.editionLimit}
+                  </div>
+                </div>
               </div>
 
-              <h2 className="font-['Cinzel'] font-black text-2xl sm:text-3xl text-[#E6E4DC]">
-                {selectedEdition.title}
-              </h2>
-              <p className="font-mono text-xs sm:text-sm text-[#9E9B91] mt-1">
-                {selectedEdition.subtitle}
-              </p>
-
-              <blockquote className="mt-6 p-4 bg-[#0c0c0d] border-l-2 border-[#A83824] text-xs font-mono text-[#9E9B91] leading-relaxed italic">
+              <blockquote className="p-4 bg-[#0c0c0d] border-l-2 border-[#A83824] text-xs font-mono text-[#9E9B91] leading-relaxed italic">
                 "{selectedEdition.curatorNotes}"
               </blockquote>
 
