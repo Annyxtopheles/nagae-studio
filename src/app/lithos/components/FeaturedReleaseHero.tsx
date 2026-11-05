@@ -87,7 +87,7 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
                 </div>
 
                 <div className="pt-3 border-t border-[#25252b] text-[9px] font-mono text-[#73716B] flex justify-between">
-                  <span>{activeEdition.specifications.pressingPlant.split(",")[0]}</span>
+                  <span>{activeEdition.specifications?.pressingPlant?.split(",")[0] || "Pallas GmbH"}</span>
                   <span className="text-[#E6E4DC] font-semibold">EDITION OF {activeEdition.editionLimit}</span>
                 </div>
               </div>

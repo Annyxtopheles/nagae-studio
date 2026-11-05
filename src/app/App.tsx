@@ -16,7 +16,14 @@ const STORAGE_PREFIX = "lithos_archive_";
 function loadSaved<T>(key: string, fallback: T): T {
   try {
     const item = localStorage.getItem(STORAGE_PREFIX + key);
-    return item ? JSON.parse(item) : fallback;
+    if (!item) return fallback;
+    const parsed = JSON.parse(item);
+    // Ensure cart items have valid edition and price
+    if (Array.isArray(parsed)) {
+      const valid = parsed.filter(i => i && i.edition && typeof i.edition.priceUSD === "number");
+      if (valid.length > 0) return valid as unknown as T;
+    }
+    return fallback;
   } catch {
     return fallback;
   }

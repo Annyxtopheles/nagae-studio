@@ -4,7 +4,7 @@ import { FIELD_LOGS } from "../data";
 
 export const LabelDispatches: React.FC = () => {
   const [selectedLogIndex, setSelectedLogIndex] = useState(0);
-  const activeLog = FIELD_LOGS[selectedLogIndex];
+  const activeLog = FIELD_LOGS[selectedLogIndex] || FIELD_LOGS[0];
 
   return (
     <section id="dispatches" className="w-full bg-[#0c0c0d] border-b border-[#222226] text-[#E6E4DC] px-4 sm:px-8 lg:px-12 py-16 select-none">
@@ -76,22 +76,33 @@ export const LabelDispatches: React.FC = () => {
                 {activeLog.title}
               </h3>
 
+              {activeLog.investigator && (
+                <div className="text-xs font-mono text-[#A83824] mt-2">
+                  INVESTIGATOR: {activeLog.investigator}
+                </div>
+              )}
+
+              {/* Log Essay Text */}
               <div className="mt-6 space-y-4 font-mono text-xs text-[#9E9B91] leading-relaxed">
-                {activeLog.content.map((paragraph, pIdx) => (
-                  <p key={pIdx}>{paragraph}</p>
-                ))}
+                <p>{activeLog.logText}</p>
               </div>
 
-              {activeLog.fieldQuote && (
-                <blockquote className="mt-6 p-4 bg-[#0c0c0d] border-l-2 border-[#A83824] text-xs font-mono text-[#E6E4DC] italic leading-relaxed">
-                  "{activeLog.fieldQuote}"
-                </blockquote>
+              {/* Readings / Telemetry Badges */}
+              {activeLog.readings && activeLog.readings.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-[#25252b] grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono">
+                  {activeLog.readings.map((reading, rIdx) => (
+                    <div key={rIdx} className="bg-[#0c0c0d] p-2 border border-[#25252b]">
+                      <span className="text-[#73716B] block text-[9px] uppercase">{reading.label}</span>
+                      <span className="text-[#E6E4DC] font-bold mt-0.5 block">{reading.value}</span>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
             <div className="mt-8 pt-4 border-t border-[#25252b] flex justify-between items-center text-[10px] font-mono text-[#73716B]">
               <span>AUTHENTIC FIELD TRANSCRIPTION</span>
-              <span className="text-[#A83824]">LITHOS SOUND ARCHIVE</span>
+              <span className="text-[#A83824]">{activeLog.dispatchNumber || "LITHOS SOUND ARCHIVE"}</span>
             </div>
           </div>
         </div>

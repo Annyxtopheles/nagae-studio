@@ -148,7 +148,9 @@ export const LabelCatalog: React.FC<LabelCatalogProps> = ({
                     </div>
                     <div className="flex justify-between">
                       <span>PACKAGING:</span>
-                      <span className="text-[#9E9B91] truncate max-w-[170px]">{edition.jacketType.split("with")[0]}</span>
+                      <span className="text-[#9E9B91] truncate max-w-[170px]">
+                        {edition.jacketType ? edition.jacketType.split("with")[0] : "Gatefold Jacket"}
+                      </span>
                     </div>
                   </div>
                 </div>
