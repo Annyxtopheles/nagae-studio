@@ -16,51 +16,36 @@ The web platform is designed with a **brutalist geological editorial aesthetic**
 
 ---
 
-## 🔬 Core Experience Modules
+## 🔬 Core Label Architecture
 
-### 01 // Featured Physical Release & Label Hero
-- **Physical Vinyl Package Showcase**: High-craft presentation of the current flagship 180g mineral-marbled vinyl pressing, including the gatefold sleeve jacket, direct metal mastering specs, and a sliding, rotating vinyl disc with physical concentric groove reflections.
-- **Direct Audio Auditioning**: Seamless client-side auditioning of Side A / Side B tracks with track-specific depth coordinates, peak frequency readouts, and instant physical preorder reservations.
-- **Archival Edition Selector**: Instant switching between all 5 catalog releases (`LITH-001` through `LITH-005`) right at the top of the archive.
-- **Persistent Bottom Audio Player**: Continuous streaming player bar docked across the bottom with time-domain oscilloscope, volume attenuation, and track skipping across the entire label catalog.
+### 01 // Label Masthead & Navigation (`LabelHeader`)
+- Austere, understated record label masthead (`LITHOS RECORDINGS · EST. 2024`).
+- Direct navigation: `FEATURED` · `CATALOG` · `DISPATCHES` · `ABOUT` · `CART`.
+- Micro playback status pill with immediate play/pause audition trigger.
 
-### 02 // Interactive Field Recording Deck & Spectrogram Synthesizer
-- **Client-Side Web Audio API Synthesizer**: Zero external audio samples. Generates realistic infrasound sub-bass fundamental drones (18Hz–55Hz), harmonic overtone ratios, filtered brownian/seismic noise, and tectonic LFO swells directly in the browser.
-- **Dual Visualizer Canvas**:
-  - **Oscillogram (Time-Domain)**: Real-time phosphor green waveform display with sub-harmonic reflection.
-  - **Waterfall Spectrogram (0Hz–250Hz)**: Continuous scrolling frequency waterfall mapping infrasound energy into heat-color strata gradients.
-- **Tactile Modulation Controls**:
-  - Strata Low-Pass Filter cutoff slider (20Hz–240Hz).
-  - Preamp Sensitivity gain slider (-196 dB to -140 dB).
-  - Infrasound Sub-Bass Boost (+9.0 dB @ 45Hz shelf).
-  - Stereo Field Width (Binaural Center, Port, Starboard).
-- **Sensor Telemetry Panel**: Downhole temperature (°C), hydrostatic pressure head (Bar), sensor serial ID, and field log excerpts.
+### 02 // Flagship Physical Release Showcase (`FeaturedReleaseHero`)
+- **Authentic Heavyweight Vinyl Presentation**: 180-gram mineral-marbled vinyl pressing sliding smoothly from a 350gsm tip-on gatefold jacket, rotating in real-time with realistic groove reflections.
+- **Direct Track Auditioning**: Immediate client-side track playback with Side A / Side B selection, durations, and recording depth markers.
+- **Mailorder Integration**: Clear physical price, stock status, and one-click cart reservation.
+- **Discography Quick-Selector**: Instant tab switching across all 5 physical catalog releases.
 
-### 03 // Transducer Rig & Hardware Schematics
-- **Interactive Exploded Technical SVG Blueprints**:
-  1. *Mark-IV Lithophone Borehole Geophone* (-4,500m titanium hull, quartz cantilever suspension, SmCo flux coils).
-  2. *Titan-11K Abyssal Trench Hydrophone* (-12,000m hadal PZT piezoceramic ring, polyurethane acoustic window dome, Inconel 718 pressure-compensated bellows).
-  3. *Nagra-Terra Infrasound Analog Field Modulator* (Duralumin chassis, Swiss coreless dual-capstan drive, FM sub-carrier modulator card).
-- **Interactive Sub-Assembly Inspection**: Clickable hotspot markers revealing component metallurgy, mechanical function, depth tolerance, and laboratory calibration specs.
+### 03 // Complete Archival Catalog Grid (`LabelCatalog`)
+- **Format Filtering**: Filter by `ALL FORMATS`, `180G VINYL`, or `ANALOG TAPE`.
+- **Dossier Inspector Modal**: Full-screen archival view featuring lacquer mastering plant credits (Pallas GmbH, Bernie Grundman, Abbey Road), complete tracklists, packaging specifications, and mailorder ordering.
+- **Physical Disc Mockups**: Real-time rotating marbled vinyl discs and analog tape reel visuals.
 
-### 04 // Physical Editions & Pressing Vault
-- **Brutalist Catalog of 180g Vinyl & Analog Tapes**:
-  - `LITH-001`: *Meltwater Crypts: Sub-Glacial Resonance of Vatnajökull* (2xLP 180g Glacier-Ice clear with volcanic ash marble vinyl).
-  - `LITH-002`: *Magma Chamber Harmonics: Kīlauea Infrasound* (LP 180g Obsidian black with molten vermilion splatter vinyl).
-  - `LITH-003`: *Abyssal Mariana: Tectonic Subduction 10,920m* (2xLP 180g Pressure-cast trench-navy vinyl in vacuum-sealed Mylar).
-  - `LITH-004`: *Halite Echoes: Cavern Impulse Responses* (Master Reel-to-Reel 1/4" Tape 15 IPS on aluminum NAB reel in birch crate).
-  - `LITH-005`: *Faultline Shear: San Andreas Borehole Transductions* (LP 180g Desert granite stone-dust vinyl with 3-meter letterpress seismogram).
-- **Interactive Edition Inspector Modal**: Detailed jacket specs, track-by-track breakdown with frequency peaks and depth markings, curator notes, and lacquer cut mastering details.
-- **Slide-Out Physical Vault Cart Drawer**: Calculates freight mass in grams, shipping via DHL Geological Secure Cold-Chain, and simulated reservation checkout.
+### 04 // Label Dispatches & Recording Manifesto (`LabelDispatches`)
+- **Expedition Dispatches**: Literary field diary entries from Grímsvötn, Halemaʻumaʻu, Challenger Deep, Wieliczka Salt Mine, and San Andreas Fault.
+- **The Lithos Manifesto**: Foundational statements on the planetary acoustic organ, the mechanical permanence of lacquer discs vs ephemeral streaming, and passive listening ethics.
 
-### 05 // Philosophical Manifesto & Field Log Dispatches
-- **The Lithos Manifesto**: Four foundational pillars on the planetary infrasonic organ, the physical permanence of mineral vinyl, passive non-invasive listening ethics, and universal scientific open access.
-- **Chronological Field Diary**: Interactive dispatch archive from Reykjanes Ridge, Kīlauea, Challenger Deep, Wieliczka Salt Mine, and Parkfield SAFOD.
+### 05 // Independent Mailorder & Label Footer (`LabelFooter`)
+- Hand-packed mailorder fulfillment terms (heavy-duty unbleached cardboard mailers, vinyl shipped outside jacket to prevent seam splits).
+- Independent distribution network (Boomkat, Forced Exposure, Norman Records).
+- Strict physical-only demo submission policy (cassette tapes and analog reels by postal mail).
+- Postal announcement dispatch subscription.
 
-### 06 // Global Colophon & Station Network
-- Global listening stations network telemetry grid (uptime, coordinates, continuous 192kHz/32-bit streaming status).
-- Seismic Dispatch Bulletin subscription form.
-- Creative Commons BY-NC 4.0 Open Access research licensing statement.
+### 06 // Persistent Audio Player Bar (`PersistentPlayer`)
+- Unobtrusive bottom player docked across the viewport with real-time waveform oscillogram, volume slider, track transport, and quick mailorder cart access.
 
 ---
 

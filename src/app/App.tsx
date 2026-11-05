@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { HeaderHUD } from "./lithos/components/HeaderHUD";
+import { LabelHeader } from "./lithos/components/LabelHeader";
 import { FeaturedReleaseHero } from "./lithos/components/FeaturedReleaseHero";
-import { PressingVault } from "./lithos/components/PressingVault";
-import { SpectrogramDeck } from "./lithos/components/SpectrogramDeck";
-import { HardwareSchematics } from "./lithos/components/HardwareSchematics";
-import { FieldLogsManifesto } from "./lithos/components/FieldLogsManifesto";
+import { LabelCatalog } from "./lithos/components/LabelCatalog";
+import { LabelDispatches } from "./lithos/components/LabelDispatches";
+import { LabelFooter } from "./lithos/components/LabelFooter";
 import { VaultDrawer } from "./lithos/components/VaultDrawer";
 import { PersistentPlayer } from "./lithos/components/PersistentPlayer";
-import { ColophonFooter } from "./lithos/components/ColophonFooter";
 import { EXPEDITIONS, VINYL_EDITIONS } from "./lithos/data";
 import { Expedition, VinylEdition, CartItem } from "./lithos/types";
 import { lithosAudio } from "./lithos/audioEngine";
-import { CheckCircle, X, ShieldAlert } from "lucide-react";
+import { X, ShieldAlert } from "lucide-react";
 
 const STORAGE_PREFIX = "lithos_archive_";
 
@@ -83,7 +81,6 @@ export default function App() {
 
   const handleSelectExpedition = (exp: Expedition) => {
     setActiveExpedition(exp);
-    // Sync active edition
     const foundEd = VINYL_EDITIONS.find(ed => {
       const num = exp.code.replace("EXP-", "LITH-");
       return ed.catalogNumber === num;
@@ -98,7 +95,6 @@ export default function App() {
 
   const handleSelectEdition = (edition: VinylEdition) => {
     setActiveEdition(edition);
-    // Sync active expedition
     const mapCatToExp: Record<string, string> = {
       "LITH-001": "exp-01",
       "LITH-002": "exp-02",
@@ -144,7 +140,7 @@ export default function App() {
 
   const handleRemoveFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.edition.id !== id));
-    showToast("Edition removed from physical vault cart.");
+    showToast("Item removed from mailorder cart.");
   };
 
   const handleClearCart = () => {
@@ -159,24 +155,24 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0A0A0B] text-[#ECEAE4] flex flex-col font-mono selection:bg-[#D94E28] selection:text-[#ECEAE4] pb-16">
+    <div className="min-h-screen w-full bg-[#0c0c0d] text-[#E6E4DC] flex flex-col font-mono selection:bg-[#A83824] selection:text-[#E6E4DC] pb-16">
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed bottom-16 right-6 z-[100] bg-[#141416] text-[#ECEAE4] px-5 py-4 border border-[#D94E28] shadow-[0_0_25px_rgba(217,78,40,0.35)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <ShieldAlert size={16} className="text-[#D94E28] shrink-0" />
+        <div className="fixed bottom-16 right-6 z-[100] bg-[#161619] text-[#E6E4DC] px-5 py-3.5 border border-[#A83824] shadow-[0_0_20px_rgba(168,56,36,0.3)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <ShieldAlert size={15} className="text-[#A83824] shrink-0" />
           <span className="font-mono text-xs tracking-wide">{toastMessage}</span>
           <button
             onClick={() => setToastMessage(null)}
-            className="ml-3 text-[#8F8E8A] hover:text-white cursor-pointer"
+            className="ml-3 text-[#73716B] hover:text-[#E6E4DC] cursor-pointer"
           >
             <X size={14} />
           </button>
         </div>
       )}
 
-      {/* Global Navigation HUD */}
-      <HeaderHUD
-        activeExpedition={activeExpedition}
+      {/* Record Label Masthead & Navigation */}
+      <LabelHeader
+        activeEdition={activeEdition}
         isPlaying={isPlaying}
         onTogglePlay={handleTogglePlay}
         cartCount={cart.reduce((s, i) => s + i.quantity, 0)}
@@ -184,9 +180,9 @@ export default function App() {
         onScrollToSection={scrollToSection}
       />
 
-      {/* Main Content Sections */}
+      {/* Main Label Sections */}
       <main className="flex-1 w-full flex flex-col">
-        {/* Section 01: Featured Physical Release Hero */}
+        {/* Section 01: Featured Physical Release Showcase */}
         <div id="hero">
           <FeaturedReleaseHero
             activeEdition={activeEdition}
@@ -198,33 +194,22 @@ export default function App() {
           />
         </div>
 
-        {/* Section 02: Physical Editions & Pressing Vault */}
-        <PressingVault
+        {/* Section 02: Complete Archival Catalog Grid */}
+        <LabelCatalog
           onAddToCart={handleAddToCart}
           onCueExpedition={(exp) => {
             handleSelectExpedition(exp);
-            scrollToSection("synthesizer");
+            scrollToSection("hero");
           }}
           onToast={showToast}
         />
 
-        {/* Section 03: Interactive Field Recording Deck & Spectrogram Synthesizer */}
-        <SpectrogramDeck
-          activeExpedition={activeExpedition}
-          onSelectExpedition={handleSelectExpedition}
-          isPlaying={isPlaying}
-          onTogglePlay={handleTogglePlay}
-        />
-
-        {/* Section 04: Sensor Rig & Transducer Hardware Schematics */}
-        <HardwareSchematics />
-
-        {/* Section 05: Field Log Dispatches & Collective Manifesto */}
-        <FieldLogsManifesto />
+        {/* Section 03: Label Dispatches & Recording Manifesto */}
+        <LabelDispatches />
       </main>
 
-      {/* Colophon & Network Status Footer */}
-      <ColophonFooter
+      {/* Authentic Record Label Footer */}
+      <LabelFooter
         onToast={showToast}
         onScrollToTop={() => scrollToSection("hero")}
       />
@@ -239,7 +224,7 @@ export default function App() {
         onToast={showToast}
       />
 
-      {/* Slide-out Physical Vault Drawer */}
+      {/* Mailorder Cart Drawer */}
       <VaultDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
