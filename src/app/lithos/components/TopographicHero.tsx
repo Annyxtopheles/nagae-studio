@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Compass, MapPin, Activity, ArrowDownRight, Radio, Volume2, ShieldAlert } from "lucide-react";
+import { Compass, ArrowDownRight, Radio, Volume2, ShieldAlert, Activity, Play, Pause, Layers } from "lucide-react";
 import { Expedition } from "../types";
 import { EXPEDITIONS } from "../data";
+import { lithosAudio } from "../audioEngine";
 
 interface TopographicHeroProps {
   activeExpedition: Expedition;
@@ -14,201 +15,271 @@ export const TopographicHero: React.FC<TopographicHeroProps> = ({
   onSelectExpedition,
   onLaunchSynthesizer,
 }) => {
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const [computedCoords, setComputedCoords] = useState({
-    lat: "64.1466° N",
-    lng: "21.9426° W",
-    depth: -1420,
-    strata: "REYKJANES BASALTIC RIFT",
-    hydroDb: "-192 dB re 1V/µPa",
-  });
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const seismographCanvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    setMousePos({ x, y });
-
-    // Procedurally map cursor position to realistic subterranean depth and geographic coordinates
-    const baseLat = 64.1466 + (y - 0.5) * 8.4;
-    const baseLng = 21.9426 + (x - 0.5) * 12.8;
-    const calcDepth = Math.round(-300 - Math.pow(x, 1.8) * 9800);
-    const calcHydro = -170 - Math.round(y * 28);
-
-    let strataName = "OCEANIC BASALTIC CRUST (LAYER 2A)";
-    if (calcDepth < -5000) strataName = "MOHOROVIČIĆ DISCONTINUITY";
-    if (calcDepth < -9000) strataName = "HADAL SERPENTINIZED PERIDOTITE";
-
-    setComputedCoords({
-      lat: `${baseLat.toFixed(4)}° ${baseLat >= 0 ? "N" : "S"}`,
-      lng: `${Math.abs(baseLng).toFixed(4)}° ${baseLng >= 0 ? "E" : "W"}`,
-      depth: calcDepth,
-      strata: strataName,
-      hydroDb: `${calcHydro} dB re 1V/µPa`,
+  // Sync local playing state with audio engine
+  useEffect(() => {
+    const unsub = lithosAudio.subscribe((playing) => {
+      setIsPlaying(playing);
     });
+    return () => unsub();
+  }, []);
+
+  // Continuous, 100% reliable 2D Seismograph Drum Canvas Animation
+  useEffect(() => {
+    const canvas = seismographCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let offset = 0;
+    const history: number[] = new Array(120).fill(0);
+
+    const draw = () => {
+      offset += 0.05;
+      const width = canvas.width;
+      const height = canvas.height;
+      const midY = height / 2;
+
+      // Dark strata background
+      ctx.fillStyle = "#0D0D0F";
+      ctx.fillRect(0, 0, width, height);
+
+      // Fine horizontal seismograph baseline & grid lines
+      ctx.strokeStyle = "rgba(39, 39, 45, 0.6)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, midY);
+      ctx.lineTo(width, midY);
+      ctx.moveTo(0, midY - 20);
+      ctx.lineTo(width, midY - 20);
+      ctx.moveTo(0, midY + 20);
+      ctx.lineTo(width, midY + 20);
+      ctx.stroke();
+
+      // Compute next tremor amplitude based on expedition characteristics & playing state
+      const tremorBase = isPlaying ? 16 : 5;
+      const freqMultiplier = activeExpedition.baseFrequency * 0.05;
+      const nextVal =
+        Math.sin(offset * freqMultiplier) * tremorBase +
+        Math.sin(offset * 0.3) * (tremorBase * 0.4) +
+        (Math.random() - 0.5) * (isPlaying ? 8 : 2);
+
+      history.push(nextVal);
+      if (history.length > 120) history.shift();
+
+      // Draw seismograph trace line
+      ctx.lineWidth = 1.75;
+      ctx.strokeStyle = isPlaying ? "#38EF7D" : "#D94E28";
+      ctx.shadowColor = isPlaying ? "#38EF7D" : "#D94E28";
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+
+      const step = width / (history.length - 1);
+      for (let i = 0; i < history.length; i++) {
+        const x = i * step;
+        const y = midY + history[i];
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Draw active recording needle point
+      const lastX = width - 4;
+      const lastY = midY + history[history.length - 1];
+      ctx.fillStyle = "#ECEAE4";
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      animationFrameRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [activeExpedition, isPlaying]);
+
+  const handleAuditionClick = () => {
+    lithosAudio.togglePlay(activeExpedition);
   };
 
   return (
-    <section
-      id="hero"
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      className="relative w-full min-h-[92vh] flex flex-col justify-between bg-[#0A0A0B] border-b border-[#27272D] overflow-hidden px-4 lg:px-12 py-8 select-none"
-    >
-      {/* Background Geo-Grid Overlay */}
-      <div className="absolute inset-0 geo-grid-pattern opacity-30 pointer-events-none" />
-
-      {/* Radar Sweep Effect */}
-      <div className="radar-sweep" />
-
-      {/* Interactive Morphing Topographic & Bathymetric SVG Map */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none overflow-hidden">
-        <svg
-          viewBox="0 0 1200 800"
-          className="w-full h-full max-w-none transform transition-transform duration-300 ease-out"
-          style={{
-            transform: `scale(1.1) translate(${(mousePos.x - 0.5) * 40}px, ${(mousePos.y - 0.5) * 30}px)`,
-          }}
-        >
-          <defs>
-            <linearGradient id="strataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#D94E28" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#38EF7D" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#27272D" stopOpacity="0.2" />
-            </linearGradient>
-            <radialGradient id="epicenterGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#D94E28" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#0A0A0B" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-
-          {/* Isobar / Bathymetric Contour Lines Morphing with Cursor */}
-          {[120, 190, 260, 330, 400, 470, 540, 610, 680].map((radius, idx) => {
-            const distortX = (mousePos.x - 0.5) * (idx + 1) * 35;
-            const distortY = (mousePos.y - 0.5) * (idx + 1) * 25;
-            return (
-              <g key={radius}>
-                <ellipse
-                  cx={600 + distortX}
-                  cy={400 + distortY}
-                  rx={radius + Math.sin(idx * 1.2) * 40}
-                  ry={radius * 0.55 + Math.cos(idx * 1.5) * 25}
-                  fill="none"
-                  stroke={idx === 3 ? "#D94E28" : "#27272D"}
-                  strokeWidth={idx === 3 ? "1.5" : "1"}
-                  strokeDasharray={idx % 2 === 0 ? "6 4" : undefined}
-                  className="transition-all duration-500 ease-out"
-                />
-                <text
-                  x={600 + distortX + radius - 40}
-                  y={400 + distortY}
-                  fill="#8F8E8A"
-                  fontSize="9"
-                  fontFamily="Space Mono"
-                  className="opacity-70"
-                >
-                  -{idx * 1200 + 400}m
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Faultline Fracture Path */}
-          <path
-            d={`M 150 650 Q 400 ${450 + (mousePos.y - 0.5) * 60} 600 400 T 1050 150`}
-            fill="none"
-            stroke="#D94E28"
-            strokeWidth="1.5"
-            strokeDasharray="4 6"
-          />
-
-          {/* Epicenter Marker with Pulsing Sonar Ring */}
-          <circle cx="600" cy="400" r="140" fill="url(#epicenterGlow)" />
-          <circle cx="600" cy="400" r="8" fill="#D94E28" className="animate-ping" />
-          <circle cx="600" cy="400" r="4" fill="#ECEAE4" />
-        </svg>
-      </div>
-
-      {/* Top Coordinate & Sensor HUD Overlay */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-[#27272D]/80 pb-6 text-[11px] font-mono">
-        <div>
-          <span className="text-[#8F8E8A] block text-[9px] uppercase tracking-widest">SUBTERRA GRID SENSORS</span>
-          <span className="text-[#ECEAE4] font-bold flex items-center gap-1.5 mt-0.5">
-            <Compass size={13} className="text-[#38EF7D]" />
-            {computedCoords.lat} // {computedCoords.lng}
-          </span>
-          <span className="text-[#8F8E8A] text-[10px] block mt-0.5">
-            DATUM: WGS-84 BATHYMETRIC ELLIPSOID
-          </span>
+    <section id="hero" className="w-full bg-[#0A0A0B] border-b border-[#27272D] px-4 lg:px-12 py-8 select-none">
+      {/* 1. Precision Technical Telemetry Header Strip */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-[#27272D] pb-5 text-xs font-mono">
+        <div className="flex items-center gap-3">
+          <Compass size={15} className="text-[#38EF7D] shrink-0" />
+          <div>
+            <span className="text-[#8F8E8A] block text-[9px] uppercase tracking-widest">STATION COORDINATES</span>
+            <span className="text-[#ECEAE4] font-bold">{activeExpedition.coordinates}</span>
+          </div>
         </div>
 
-        <div>
-          <span className="text-[#8F8E8A] block text-[9px] uppercase tracking-widest">CRUSTAL STRATA DEPTH</span>
-          <span className="text-[#D94E28] font-bold flex items-center gap-1.5 mt-0.5">
-            <ArrowDownRight size={13} className="text-[#D94E28]" />
-            {computedCoords.depth.toLocaleString()} METERS BELOW SEA LEVEL
-          </span>
-          <span className="text-[#ECEAE4] text-[10px] block mt-0.5 truncate">
-            {computedCoords.strata}
-          </span>
+        <div className="flex items-center gap-3">
+          <ArrowDownRight size={15} className="text-[#D94E28] shrink-0" />
+          <div>
+            <span className="text-[#8F8E8A] block text-[9px] uppercase tracking-widest">RECORDING DEPTH</span>
+            <span className="text-[#D94E28] font-bold">{activeExpedition.depthMeters.toLocaleString()} METERS BSL</span>
+          </div>
         </div>
 
-        <div className="md:text-right">
-          <span className="text-[#8F8E8A] block text-[9px] uppercase tracking-widest">HYDROPHONE SENSITIVITY</span>
-          <span className="text-[#38EF7D] font-bold flex md:justify-end items-center gap-1.5 mt-0.5">
-            <Radio size={13} className="text-[#38EF7D]" />
-            {computedCoords.hydroDb}
-          </span>
-          <span className="text-[#FFB800] text-[10px] block mt-0.5">
-            BANDWIDTH: 0.05 Hz - 192 kHz (UNFILTERED)
-          </span>
+        <div className="flex items-center gap-3 md:justify-end">
+          <Radio size={15} className="text-[#38EF7D] shrink-0" />
+          <div className="md:text-right">
+            <span className="text-[#8F8E8A] block text-[9px] uppercase tracking-widest">TRANSDUCER FREQUENCY</span>
+            <span className="text-[#38EF7D] font-bold">{activeExpedition.frequencyBand}</span>
+          </div>
         </div>
       </div>
 
-      {/* Monumental Hero Headline & Typography */}
-      <div className="relative z-10 my-auto py-12 max-w-5xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#141416] border border-[#D94E28]/60 text-[#D94E28] text-[10px] font-mono tracking-widest uppercase mb-6">
-          <ShieldAlert size={12} className="text-[#D94E28]" />
-          UNFILTERED SEISMOLOGICAL & INFRASONIC ARCHIVE
+      {/* 2. Main High-Craft Split Stage */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 py-10 lg:py-14 items-center">
+        {/* Left Column: Monumental Brand Narrative (7 Cols) */}
+        <div className="lg:col-span-7 flex flex-col items-start">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#141416] border border-[#27272D] text-[#D94E28] text-[10px] font-mono tracking-widest uppercase mb-4">
+            <ShieldAlert size={12} className="text-[#D94E28]" />
+            GEOPHYSICAL FIELD ARCHIVE // EST. 2024
+          </div>
+
+          <h1 className="font-['Cinzel'] font-black text-6xl sm:text-7xl lg:text-8xl tracking-tight text-[#ECEAE4] uppercase leading-none">
+            LITHOS
+          </h1>
+
+          <p className="font-['Cinzel'] text-sm sm:text-base text-[#D94E28] tracking-widest uppercase font-bold mt-3">
+            Subterra Acoustic & Seismological Field Archive
+          </p>
+
+          <p className="font-mono text-xs sm:text-sm text-[#8F8E8A] mt-5 max-w-xl leading-relaxed">
+            Documenting Earth's sub-audible infrasound through passive deep-borehole geophones, sub-glacial hydrophone arrays, and volcanic cavity transducers. Inscribed onto heavyweight 180g mineral-marbled vinyl and 1/4" analog master tapes.
+          </p>
+
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-4 mt-8">
+            <button
+              onClick={onLaunchSynthesizer}
+              className="flex items-center gap-2.5 bg-[#D94E28] hover:bg-[#B83E1D] text-white font-mono text-xs font-bold uppercase tracking-wider px-6 py-3.5 transition-colors cursor-pointer shadow-lg"
+            >
+              <Volume2 size={15} />
+              LAUNCH FIELD AUDIO SYNTHESIZER
+            </button>
+
+            <a
+              href="#vault"
+              className="flex items-center gap-2 bg-[#141416] hover:bg-[#27272D] text-[#ECEAE4] border border-[#27272D] hover:border-[#D94E28] font-mono text-xs uppercase tracking-wider px-6 py-3.5 transition-colors cursor-pointer"
+            >
+              EXPLORE 180G VINYL PRESSINGS
+            </a>
+          </div>
+
+          {/* Metrics Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10 pt-6 border-t border-[#27272D] w-full text-xs font-mono">
+            <div>
+              <span className="text-[#8F8E8A] text-[9px] block">GLOBAL STATIONS</span>
+              <span className="text-[#ECEAE4] font-bold text-sm">05 ACTIVE</span>
+            </div>
+            <div>
+              <span className="text-[#8F8E8A] text-[9px] block">SAMPLING MATRIX</span>
+              <span className="text-[#38EF7D] font-bold text-sm">192 kHz / 32b</span>
+            </div>
+            <div>
+              <span className="text-[#8F8E8A] text-[9px] block">MAXIMUM DEPTH</span>
+              <span className="text-[#D94E28] font-bold text-sm">-10,920m BSL</span>
+            </div>
+            <div>
+              <span className="text-[#8F8E8A] text-[9px] block">BANDWIDTH</span>
+              <span className="text-[#ECEAE4] font-bold text-sm">0.05Hz - 240Hz</span>
+            </div>
+          </div>
         </div>
 
-        <h1 className="font-['Cinzel'] font-black text-6xl sm:text-7xl lg:text-9xl tracking-tight text-[#ECEAE4] uppercase leading-[0.9]">
-          LI<span className="text-[#D94E28]">TH</span>OS
-        </h1>
+        {/* Right Column: Active Station Dossier & Real Seismograph Canvas (5 Cols) */}
+        <div className="lg:col-span-5 bg-[#141416] border border-[#27272D] p-5 shadow-2xl flex flex-col gap-4">
+          {/* Station Photo Window */}
+          <div className="relative aspect-[16/10] w-full bg-[#0A0A0B] border border-[#27272D] overflow-hidden group">
+            <img
+              src={activeExpedition.imageUrl}
+              alt={activeExpedition.title}
+              className="w-full h-full object-cover grayscale contrast-125 group-hover:scale-105 transition-transform duration-700 opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent opacity-90" />
 
-        <p className="font-mono text-sm sm:text-base lg:text-lg text-[#8F8E8A] tracking-wider uppercase mt-4 max-w-2xl leading-relaxed">
-          Subterra Acoustic & Seismological Field Archive. Physical vinyl and analog tape editions capturing deep-earth resonance: tectonic faultline friction, sub-glacial conduit harmonics, and volcanic infrasound.
-        </p>
+            {/* Overlaid Badges */}
+            <div className="absolute top-3 left-3 bg-[#0A0A0B]/90 border border-[#27272D] px-2.5 py-1 text-[10px] font-mono text-[#38EF7D] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#38EF7D] animate-ping" />
+              LIVE TELEMETRY // {activeExpedition.code}
+            </div>
 
-        {/* Hero Actions */}
-        <div className="flex flex-wrap items-center gap-4 mt-8 pt-4">
-          <button
-            onClick={onLaunchSynthesizer}
-            className="flex items-center gap-3 bg-[#D94E28] hover:bg-[#B83E1D] text-white font-mono text-[12px] font-bold uppercase tracking-widest px-6 py-4 transition-all shadow-[0_0_24px_rgba(217,78,40,0.35)] cursor-pointer"
-          >
-            <Volume2 size={16} />
-            LAUNCH FIELD AUDIO SYNTHESIZER
-          </button>
+            <div className="absolute top-3 right-3 bg-[#0A0A0B]/90 border border-[#27272D] px-2 py-1 text-[10px] font-mono text-[#D94E28] font-bold">
+              {activeExpedition.depthMeters}m DEPTH
+            </div>
 
-          <a
-            href="#vault"
-            className="flex items-center gap-2 bg-[#141416] hover:bg-[#27272D] text-[#ECEAE4] border border-[#27272D] hover:border-[#D94E28] font-mono text-[12px] uppercase tracking-wider px-6 py-4 transition-all cursor-pointer"
-          >
-            EXPLORE 180G VINYL & TAPE EDITIONS
-          </a>
+            <div className="absolute bottom-3 left-3 right-3">
+              <p className="font-['Cinzel'] font-bold text-base text-[#ECEAE4] truncate">
+                {activeExpedition.title}
+              </p>
+              <p className="text-[10px] font-mono text-[#8F8E8A] mt-0.5 truncate">
+                {activeExpedition.location}
+              </p>
+            </div>
+          </div>
+
+          {/* Continuous Seismograph Drum Waveform */}
+          <div className="bg-[#0A0A0B] border border-[#27272D] p-3 flex flex-col gap-2">
+            <div className="flex justify-between items-center text-[10px] font-mono">
+              <span className="text-[#8F8E8A] flex items-center gap-1.5">
+                <Activity size={12} className={isPlaying ? "text-[#38EF7D]" : "text-[#D94E28]"} />
+                REAL-TIME CRUSTAL SEISMOGRAPH DRUM
+              </span>
+              <span className={isPlaying ? "text-[#38EF7D] font-bold" : "text-[#8F8E8A]"}>
+                {isPlaying ? "RECEIVING SIGNAL" : "MONITORING"}
+              </span>
+            </div>
+
+            <canvas
+              ref={seismographCanvasRef}
+              width={400}
+              height={70}
+              className="w-full h-[70px] block"
+            />
+          </div>
+
+          {/* Audition Bar */}
+          <div className="flex items-center justify-between gap-3 pt-1">
+            <button
+              onClick={handleAuditionClick}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 font-mono text-xs font-bold uppercase transition-colors cursor-pointer border ${
+                isPlaying
+                  ? "bg-[#D94E28] text-white border-[#D94E28]"
+                  : "bg-[#27272D] hover:bg-[#35353D] text-[#ECEAE4] border-[#35353D]"
+              }`}
+            >
+              {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+              {isPlaying ? "PAUSE RECORDING" : "AUDITION SEISMIC AUDIO"}
+            </button>
+
+            <span className="text-[11px] font-mono text-[#8F8E8A] whitespace-nowrap">
+              {activeExpedition.sampleRate.split("/")[0].trim()}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Subterranean Expeditions Selector Strip */}
-      <div className="relative z-10 pt-6 border-t border-[#27272D]/80">
-        <div className="flex items-center justify-between mb-3 text-[10px] font-mono text-[#8F8E8A]">
-          <span className="uppercase tracking-widest">ACTIVE FIELD EXPEDITION SITES (SELECT TO FOCUS TELEMETRY):</span>
-          <span className="hidden sm:inline">5 HARMONIC REGISTERS AVAILABLE</span>
+      {/* 3. Expedition Switcher Bar */}
+      <div className="border-t border-[#27272D] pt-6">
+        <div className="flex justify-between items-center mb-3 text-[10px] font-mono text-[#8F8E8A]">
+          <span className="uppercase tracking-widest">ACTIVE FIELD STATIONS (SELECT TO SWITCH DOSSIER):</span>
+          <span>5 GEOLOGICAL REGISTERS</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {EXPEDITIONS.map(exp => {
             const isSelected = activeExpedition.id === exp.id;
             return (
@@ -217,22 +288,22 @@ export const TopographicHero: React.FC<TopographicHeroProps> = ({
                 onClick={() => onSelectExpedition(exp)}
                 className={`p-3 text-left border transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-[#141416] border-[#D94E28] shadow-[0_0_15px_rgba(217,78,40,0.2)]"
-                    : "bg-[#0A0A0B]/80 border-[#27272D] hover:border-[#8F8E8A] hover:bg-[#141416]"
+                    ? "bg-[#141416] border-[#D94E28] shadow-[0_0_12px_rgba(217,78,40,0.25)]"
+                    : "bg-[#0A0A0B] border-[#27272D] hover:border-[#8F8E8A] hover:bg-[#141416]"
                 }`}
               >
-                <div className="flex items-center justify-between mb-1 text-[10px] font-mono">
+                <div className="flex justify-between items-center text-[10px] font-mono mb-1">
                   <span className={isSelected ? "text-[#D94E28] font-bold" : "text-[#8F8E8A]"}>
                     {exp.code}
                   </span>
                   <span className="text-[#38EF7D] font-bold">{exp.depthMeters}m</span>
                 </div>
-                <div className="font-['Cinzel'] font-bold text-[13px] text-[#ECEAE4] truncate">
+                <p className="font-['Cinzel'] font-bold text-xs text-[#ECEAE4] truncate">
                   {exp.title.split(":")[0]}
-                </div>
-                <div className="text-[10px] font-mono text-[#8F8E8A] mt-1 truncate">
+                </p>
+                <p className="text-[10px] font-mono text-[#8F8E8A] mt-1 truncate">
                   {exp.region}
-                </div>
+                </p>
               </button>
             );
           })}

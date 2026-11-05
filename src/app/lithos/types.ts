@@ -17,6 +17,7 @@ export interface Expedition {
   description: string;
   fieldNotes: string;
   ambientType: "cryo-resonance" | "magma-infrasound" | "abyssal-subduction" | "cavern-reverb" | "strike-slip";
+  imageUrl: string;
   baseFrequency: number; // Hz for synthesizer
   harmonicRatios: number[];
   noiseFloor: number;
