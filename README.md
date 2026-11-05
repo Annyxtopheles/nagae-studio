@@ -18,10 +18,11 @@ The web platform is designed with a **brutalist geological editorial aesthetic**
 
 ## 🔬 Core Experience Modules
 
-### 01 // Seismic & Topographic Hero
-- **Interactive Bathymetric / Topographic Contour Map**: Responsive SVG isobar field that morphs dynamically with cursor position and scroll depth.
-- **Subterra Coordinates HUD**: Real-time cursor telemetry computing simulated latitude/longitude, depth in meters below sea level (-300m to -10,920m), geological strata formation (*Basaltic Crust*, *Mohorovičić Discontinuity*, *Hadal Serpentinized Peridotite*), and hydrophone sensitivity dB re 1V/µPa.
-- **Expedition Quick-Focus Switcher**: One-click epicenter lock across the 5 global listening stations.
+### 01 // Featured Physical Release & Label Hero
+- **Physical Vinyl Package Showcase**: High-craft presentation of the current flagship 180g mineral-marbled vinyl pressing, including the gatefold sleeve jacket, direct metal mastering specs, and a sliding, rotating vinyl disc with physical concentric groove reflections.
+- **Direct Audio Auditioning**: Seamless client-side auditioning of Side A / Side B tracks with track-specific depth coordinates, peak frequency readouts, and instant physical preorder reservations.
+- **Archival Edition Selector**: Instant switching between all 5 catalog releases (`LITH-001` through `LITH-005`) right at the top of the archive.
+- **Persistent Bottom Audio Player**: Continuous streaming player bar docked across the bottom with time-domain oscilloscope, volume attenuation, and track skipping across the entire label catalog.
 
 ### 02 // Interactive Field Recording Deck & Spectrogram Synthesizer
 - **Client-Side Web Audio API Synthesizer**: Zero external audio samples. Generates realistic infrasound sub-bass fundamental drones (18Hz–55Hz), harmonic overtone ratios, filtered brownian/seismic noise, and tectonic LFO swells directly in the browser.

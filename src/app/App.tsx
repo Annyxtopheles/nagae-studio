@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { HeaderHUD } from "./lithos/components/HeaderHUD";
-import { TopographicHero } from "./lithos/components/TopographicHero";
+import { FeaturedReleaseHero } from "./lithos/components/FeaturedReleaseHero";
+import { PressingVault } from "./lithos/components/PressingVault";
 import { SpectrogramDeck } from "./lithos/components/SpectrogramDeck";
 import { HardwareSchematics } from "./lithos/components/HardwareSchematics";
-import { PressingVault } from "./lithos/components/PressingVault";
 import { FieldLogsManifesto } from "./lithos/components/FieldLogsManifesto";
 import { VaultDrawer } from "./lithos/components/VaultDrawer";
+import { PersistentPlayer } from "./lithos/components/PersistentPlayer";
 import { ColophonFooter } from "./lithos/components/ColophonFooter";
 import { EXPEDITIONS, VINYL_EDITIONS } from "./lithos/data";
 import { Expedition, VinylEdition, CartItem } from "./lithos/types";
@@ -30,6 +31,7 @@ function saveState<T>(key: string, val: T): void {
 }
 
 export default function App() {
+  const [activeEdition, setActiveEdition] = useState<VinylEdition>(VINYL_EDITIONS[0]);
   const [activeExpedition, setActiveExpedition] = useState<Expedition>(EXPEDITIONS[0]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>(() =>
@@ -81,8 +83,34 @@ export default function App() {
 
   const handleSelectExpedition = (exp: Expedition) => {
     setActiveExpedition(exp);
+    // Sync active edition
+    const foundEd = VINYL_EDITIONS.find(ed => {
+      const num = exp.code.replace("EXP-", "LITH-");
+      return ed.catalogNumber === num;
+    });
+    if (foundEd) {
+      setActiveEdition(foundEd);
+    }
     if (isPlaying) {
       lithosAudio.play(exp);
+    }
+  };
+
+  const handleSelectEdition = (edition: VinylEdition) => {
+    setActiveEdition(edition);
+    // Sync active expedition
+    const mapCatToExp: Record<string, string> = {
+      "LITH-001": "exp-01",
+      "LITH-002": "exp-02",
+      "LITH-003": "exp-03",
+      "LITH-004": "exp-04",
+      "LITH-005": "exp-05",
+    };
+    const expId = mapCatToExp[edition.catalogNumber] || "exp-01";
+    const foundExp = EXPEDITIONS.find(e => e.id === expId) || EXPEDITIONS[0];
+    setActiveExpedition(foundExp);
+    if (isPlaying) {
+      lithosAudio.play(foundExp);
     }
   };
 
@@ -131,10 +159,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0A0A0B] text-[#ECEAE4] flex flex-col font-mono selection:bg-[#D94E28] selection:text-[#ECEAE4]">
+    <div className="min-h-screen w-full bg-[#0A0A0B] text-[#ECEAE4] flex flex-col font-mono selection:bg-[#D94E28] selection:text-[#ECEAE4] pb-16">
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-[100] bg-[#141416] text-[#ECEAE4] px-5 py-4 border border-[#D94E28] shadow-[0_0_25px_rgba(217,78,40,0.35)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="fixed bottom-16 right-6 z-[100] bg-[#141416] text-[#ECEAE4] px-5 py-4 border border-[#D94E28] shadow-[0_0_25px_rgba(217,78,40,0.35)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
           <ShieldAlert size={16} className="text-[#D94E28] shrink-0" />
           <span className="font-mono text-xs tracking-wide">{toastMessage}</span>
           <button
@@ -158,25 +186,19 @@ export default function App() {
 
       {/* Main Content Sections */}
       <main className="flex-1 w-full flex flex-col">
-        {/* Section 01: Seismic & Topographic Hero */}
-        <TopographicHero
-          activeExpedition={activeExpedition}
-          onSelectExpedition={handleSelectExpedition}
-          onLaunchSynthesizer={() => scrollToSection("synthesizer")}
-        />
+        {/* Section 01: Featured Physical Release Hero */}
+        <div id="hero">
+          <FeaturedReleaseHero
+            activeEdition={activeEdition}
+            onSelectEdition={handleSelectEdition}
+            isPlaying={isPlaying}
+            onTogglePlay={handleTogglePlay}
+            onAddToCart={handleAddToCart}
+            onToast={showToast}
+          />
+        </div>
 
-        {/* Section 02: Interactive Field Recording Deck & Spectrogram Synthesizer */}
-        <SpectrogramDeck
-          activeExpedition={activeExpedition}
-          onSelectExpedition={handleSelectExpedition}
-          isPlaying={isPlaying}
-          onTogglePlay={handleTogglePlay}
-        />
-
-        {/* Section 03: Sensor Rig & Transducer Hardware Schematics */}
-        <HardwareSchematics />
-
-        {/* Section 04: Physical Editions & Pressing Vault */}
+        {/* Section 02: Physical Editions & Pressing Vault */}
         <PressingVault
           onAddToCart={handleAddToCart}
           onCueExpedition={(exp) => {
@@ -186,6 +208,17 @@ export default function App() {
           onToast={showToast}
         />
 
+        {/* Section 03: Interactive Field Recording Deck & Spectrogram Synthesizer */}
+        <SpectrogramDeck
+          activeExpedition={activeExpedition}
+          onSelectExpedition={handleSelectExpedition}
+          isPlaying={isPlaying}
+          onTogglePlay={handleTogglePlay}
+        />
+
+        {/* Section 04: Sensor Rig & Transducer Hardware Schematics */}
+        <HardwareSchematics />
+
         {/* Section 05: Field Log Dispatches & Collective Manifesto */}
         <FieldLogsManifesto />
       </main>
@@ -194,6 +227,16 @@ export default function App() {
       <ColophonFooter
         onToast={showToast}
         onScrollToTop={() => scrollToSection("hero")}
+      />
+
+      {/* Persistent Bottom Audio Player Bar */}
+      <PersistentPlayer
+        activeEdition={activeEdition}
+        onSelectEdition={handleSelectEdition}
+        isPlaying={isPlaying}
+        onTogglePlay={handleTogglePlay}
+        onOpenCart={() => setIsCartOpen(true)}
+        onToast={showToast}
       />
 
       {/* Slide-out Physical Vault Drawer */}

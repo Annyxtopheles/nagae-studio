@@ -56,7 +56,7 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
               LITHOS
             </span>
             <span className="hidden sm:inline-block font-mono text-[9px] uppercase tracking-[0.25em] text-[#D94E28] border-l border-[#27272D] pl-2.5">
-              Subterra Field Archive
+              Recordings · Subterra Field Archive
             </span>
           </button>
         </div>
@@ -64,10 +64,10 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
         {/* Section Anchor Links */}
         <nav className="hidden xl:flex items-center gap-1 bg-[#141416] p-1 border border-[#27272D] text-[11px] font-mono">
           {[
-            { id: "hero", label: "01 // TOPOGRAPHY" },
-            { id: "synthesizer", label: "02 // AUDIO DECK" },
-            { id: "schematics", label: "03 // TRANSDUCER RIGS" },
-            { id: "vault", label: "04 // PRESSING VAULT" },
+            { id: "hero", label: "01 // FEATURED RELEASE" },
+            { id: "vault", label: "02 // PRESSINGS VAULT" },
+            { id: "synthesizer", label: "03 // FIELD SYNTHESIZER" },
+            { id: "schematics", label: "04 // TRANSDUCER RIGS" },
             { id: "manifesto", label: "05 // MANIFESTO & LOGS" },
           ].map(sec => (
             <button
