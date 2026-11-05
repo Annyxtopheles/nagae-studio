@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, Disc, Volume2, VolumeX, SkipBack, SkipForward, ShoppingBag } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ShoppingBag } from "lucide-react";
 import { VinylEdition, Expedition } from "../types";
 import { VINYL_EDITIONS, EXPEDITIONS } from "../data";
 import { lithosAudio } from "../audioEngine";
@@ -56,7 +56,7 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
     if (isPlaying) {
       lithosAudio.play(exp);
     }
-    onToast(`Now Auditioning: [${nextEd.catalogNumber}] ${nextEd.title.split(":")[0]}`);
+    onToast(`Selected: ${nextEd.title.split(":")[0]}`);
   };
 
   const handleNextEdition = () => {
@@ -68,7 +68,7 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
     if (isPlaying) {
       lithosAudio.play(exp);
     }
-    onToast(`Now Auditioning: [${nextEd.catalogNumber}] ${nextEd.title.split(":")[0]}`);
+    onToast(`Selected: ${nextEd.title.split(":")[0]}`);
   };
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
       analyser.getByteTimeDomainData(dataArray);
 
       ctx.lineWidth = 1.5;
-      ctx.strokeStyle = "#A83824";
+      ctx.strokeStyle = "#e04528";
       ctx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;
@@ -126,81 +126,71 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
   }, [isPlaying]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0c0c0d]/95 backdrop-blur-md border-t border-[#222226] px-4 sm:px-8 py-2.5 text-[#E6E4DC] select-none shadow-[0_-4px_25px_rgba(0,0,0,0.9)]">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 font-mono">
-        {/* Left: Active Record Info & Spinning Vinyl Disc */}
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0c0c0d]/95 backdrop-blur-md border-t border-[#1f1f23] px-4 sm:px-8 py-2.5 text-[#e5e5e7] select-none shadow-[0_-4px_25px_rgba(0,0,0,0.9)] font-sans">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+        {/* Left: Active Record Info */}
         <div className="flex items-center gap-3 min-w-0">
           <div
-            className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center border border-[#25252b] shadow-md transition-transform duration-700 ${
+            className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center border border-[#2a2a30] shadow-md transition-transform duration-700 ${
               isPlaying ? "animate-[spin_4s_linear_infinite]" : ""
             }`}
             style={{ background: activeEdition.mockupTheme.marbleStyle }}
           >
-            <div className="w-3 h-3 rounded-full bg-[#0c0c0d] border border-[#A83824]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-[#0c0c0d] border border-[#e04528]" />
           </div>
 
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-[#A83824] text-[10px] font-bold">
-                {activeEdition.catalogNumber}
-              </span>
-              <span className="text-[10px] text-[#73716B] hidden sm:inline">
-                {activeEdition.format}
-              </span>
-            </div>
-            <p className="font-['Cinzel'] font-bold text-xs text-[#E6E4DC] truncate leading-tight">
+            <span className="text-[#e04528] text-xs font-semibold mr-2">
+              {activeEdition.catalogNumber}
+            </span>
+            <span className="font-semibold text-xs text-white truncate">
               {activeEdition.title.split(":")[0]}
-            </p>
-          </div>
-        </div>
-
-        {/* Center: Playback Controls & Minimalist Audio Oscillogram */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={handlePrevEdition}
-              className="w-7 h-7 flex items-center justify-center text-[#73716B] hover:text-[#E6E4DC] hover:bg-[#161619] border border-transparent hover:border-[#25252b] transition-colors cursor-pointer"
-              title="Previous Release"
-            >
-              <SkipBack size={13} />
-            </button>
-
-            <button
-              onClick={onTogglePlay}
-              className={`w-8 h-8 flex items-center justify-center font-bold transition-all cursor-pointer ${
-                isPlaying
-                  ? "bg-[#A83824] text-white shadow-[0_0_12px_rgba(168,56,36,0.4)]"
-                  : "bg-[#25252a] hover:bg-[#A83824] text-[#E6E4DC] hover:text-white"
-              }`}
-              title={isPlaying ? "Pause Stream" : "Play Release"}
-            >
-              {isPlaying ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
-            </button>
-
-            <button
-              onClick={handleNextEdition}
-              className="w-7 h-7 flex items-center justify-center text-[#73716B] hover:text-[#E6E4DC] hover:bg-[#161619] border border-transparent hover:border-[#25252b] transition-colors cursor-pointer"
-              title="Next Release"
-            >
-              <SkipForward size={13} />
-            </button>
-          </div>
-
-          {/* Minimalist Audio Oscillogram */}
-          <div className="hidden md:block w-32 h-5 bg-[#08080a] border border-[#222226] px-1 relative">
-            <canvas ref={canvasRef} width={128} height={20} className="w-full h-full" />
-            <span className="absolute bottom-0 right-1 text-[7px] text-[#73716B]">
-              {isPlaying ? "45 RPM" : "PAUSED"}
             </span>
           </div>
         </div>
 
-        {/* Right: Master Volume & Cart Drawer CTA */}
+        {/* Center: Playback Controls */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handlePrevEdition}
+            className="w-7 h-7 flex items-center justify-center text-[#8e8e93] hover:text-white rounded hover:bg-[#1c1c1f] transition-colors cursor-pointer"
+            title="Previous"
+          >
+            <SkipBack size={14} />
+          </button>
+
+          <button
+            onClick={onTogglePlay}
+            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all cursor-pointer ${
+              isPlaying
+                ? "bg-[#e04528] text-white shadow-[0_0_12px_rgba(224,69,40,0.4)]"
+                : "bg-[#25252a] hover:bg-[#e04528] text-white"
+            }`}
+            title={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
+          </button>
+
+          <button
+            onClick={handleNextEdition}
+            className="w-7 h-7 flex items-center justify-center text-[#8e8e93] hover:text-white rounded hover:bg-[#1c1c1f] transition-colors cursor-pointer"
+            title="Next"
+          >
+            <SkipForward size={14} />
+          </button>
+
+          {/* Minimalist Audio Oscillogram */}
+          <div className="hidden md:block w-28 h-4 bg-[#08080a] border border-[#222226] rounded-sm px-1 relative">
+            <canvas ref={canvasRef} width={112} height={16} className="w-full h-full" />
+          </div>
+        </div>
+
+        {/* Right: Master Volume & Cart Button */}
         <div className="flex items-center gap-4 shrink-0">
           <div className="hidden sm:flex items-center gap-2">
             <button
               onClick={handleToggleMute}
-              className="text-[#73716B] hover:text-[#E6E4DC] cursor-pointer"
+              className="text-[#8e8e93] hover:text-white cursor-pointer"
             >
               {isMuted || volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
             </button>
@@ -211,17 +201,17 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
               step="0.05"
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}
-              className="w-16 h-1 bg-[#25252b] accent-[#A83824] cursor-pointer"
-              title={`Master Volume: ${Math.round(volume * 100)}%`}
+              className="w-16 h-1 bg-[#25252b] accent-[#e04528] cursor-pointer"
+              title={`Volume: ${Math.round(volume * 100)}%`}
             />
           </div>
 
           <button
             onClick={onOpenCart}
-            className="flex items-center gap-1.5 bg-[#161619] hover:bg-[#A83824] border border-[#25252b] hover:border-[#A83824] text-[#E6E4DC] hover:text-white px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all cursor-pointer"
+            className="flex items-center gap-1.5 bg-[#1c1c1f] hover:bg-[#e04528] border border-[#2a2a30] hover:border-[#e04528] text-white px-3 py-1.5 rounded-sm text-xs font-medium transition-all cursor-pointer"
           >
             <ShoppingBag size={12} />
-            <span className="hidden sm:inline">CART</span>
+            <span>Cart</span>
           </button>
         </div>
       </div>

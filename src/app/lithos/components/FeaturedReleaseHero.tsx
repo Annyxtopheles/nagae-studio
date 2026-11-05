@@ -45,19 +45,18 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
   };
 
   return (
-    <section className="w-full bg-[#0c0c0d] border-b border-[#222226] text-[#E6E4DC] px-4 sm:px-8 lg:px-12 py-12 lg:py-16 select-none">
+    <section className="w-full bg-[#0c0c0d] border-b border-[#1f1f23] text-[#e5e5e7] px-4 sm:px-8 lg:px-12 py-12 lg:py-16 select-none font-sans">
       <div className="max-w-6xl mx-auto">
-        {/* Main Stage: Image & Vinyl Left, Clean Minimal Tracklist Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Pure Album Cover Image + Sliding Vinyl Record */}
           <div className="lg:col-span-6 flex flex-col items-center">
             <div className="relative w-full max-w-[440px] h-[320px] sm:h-[400px] flex items-center justify-center p-2">
-              {/* Heavyweight Jacket: PURE IMAGE ONLY. Zero text overlays. */}
-              <div className="absolute left-2 sm:left-4 w-64 sm:w-80 h-64 sm:h-80 bg-[#161619] border border-[#2e2e34] shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-10 select-none overflow-hidden">
+              {/* Heavyweight Jacket: Pure Image Only */}
+              <div className="absolute left-2 sm:left-4 w-64 sm:w-80 h-64 sm:h-80 bg-[#161619] border border-[#2a2a30] shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-10 select-none overflow-hidden rounded-sm">
                 <img
                   src={activeEdition.coverArt}
                   alt={activeEdition.title}
-                  className="w-full h-full object-cover object-center filter contrast-110"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
 
@@ -77,35 +76,35 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
                 <div className="absolute inset-20 rounded-full border border-black/70 pointer-events-none" />
 
                 {/* Center Label */}
-                <div className="w-24 h-24 rounded-full bg-[#0c0c0d] border border-[#A83824] flex flex-col items-center justify-center p-2 text-center text-[7px] font-mono shadow-inner">
-                  <span className="font-['Cinzel'] font-black text-[#E6E4DC] text-[9px] leading-tight tracking-wider">
+                <div className="w-24 h-24 rounded-full bg-[#0c0c0d] border border-[#e04528] flex flex-col items-center justify-center p-2 text-center text-[9px] shadow-inner">
+                  <span className="font-extrabold text-white text-xs tracking-wider">
                     LITHOS
                   </span>
-                  <span className="text-[#A83824] leading-tight font-bold">{activeEdition.catalogNumber}</span>
-                  <div className="w-2.5 h-2.5 rounded-full bg-black border border-[#E6E4DC] mt-1" />
+                  <span className="text-[#e04528] font-semibold mt-0.5">{activeEdition.catalogNumber}</span>
+                  <div className="w-2.5 h-2.5 rounded-full bg-black border border-white/80 mt-1" />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Clean, Minimal, Music & Order */}
+          {/* Right Column: Clean, Minimal Details & Player */}
           <div className="lg:col-span-6 flex flex-col justify-center">
-            <span className="text-xs font-mono text-[#A83824] tracking-widest uppercase font-semibold">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#e04528]">
               {activeEdition.catalogNumber}
             </span>
 
-            <h1 className="font-['Cinzel'] font-black text-3xl sm:text-4xl lg:text-5xl text-[#E6E4DC] leading-tight mt-1">
+            <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight mt-2">
               {activeEdition.title.split(":")[0]}
             </h1>
 
-            <div className="flex items-center gap-4 text-xs font-mono text-[#9E9B91] mt-2">
+            <div className="flex items-center gap-3 text-sm text-[#8e8e93] mt-2">
               <span>{activeEdition.format}</span>
               <span>·</span>
-              <span className="text-[#E6E4DC] font-bold">${activeEdition.priceUSD} USD</span>
+              <span className="text-white font-semibold">${activeEdition.priceUSD} USD</span>
             </div>
 
-            {/* Clean Tracklist with Direct Play Buttons */}
-            <div className="mt-8 border border-[#25252b] bg-[#161619]/40 divide-y divide-[#25252b] text-xs font-mono">
+            {/* Clean Tracklist */}
+            <div className="mt-8 border border-[#222226] bg-[#141416] rounded-sm divide-y divide-[#222226] text-sm">
               {activeEdition.tracklist.map((track, i) => {
                 const isSelected = activeTrackIndex === i;
                 return (
@@ -114,23 +113,23 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
                     onClick={() => handleTrackPlay(i)}
                     className={`w-full p-3.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? "bg-[#161619] text-[#A83824]"
-                        : "hover:bg-[#161619] text-[#9E9B91] hover:text-[#E6E4DC]"
+                        ? "bg-[#1c1c20] text-white"
+                        : "hover:bg-[#1a1a1d] text-[#a1a1a6] hover:text-white"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-6 font-bold text-[#A83824]">{track.side}</span>
-                      <span className={isSelected ? "text-[#E6E4DC] font-bold" : ""}>
+                      <span className="w-6 font-semibold text-[#e04528] text-xs">{track.side}</span>
+                      <span className={isSelected ? "font-semibold text-white" : ""}>
                         {track.title}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="text-[#73716B] text-[11px]">{track.duration}</span>
+                      <span className="text-[#636366] text-xs">{track.duration}</span>
                       {isSelected && isPlaying ? (
-                        <Pause size={14} className="text-[#A83824]" />
+                        <Pause size={14} className="text-[#e04528]" />
                       ) : (
-                        <Play size={14} className="opacity-60 group-hover:opacity-100" />
+                        <Play size={14} className="opacity-60 hover:opacity-100" />
                       )}
                     </div>
                   </button>
@@ -142,17 +141,17 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
             <div className="mt-6 flex items-center gap-4">
               <button
                 onClick={handleOrder}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#A83824] hover:bg-[#8F2F1E] text-white py-3.5 px-6 font-mono text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-lg"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#e04528] hover:bg-[#c93b20] text-white py-3.5 px-6 rounded-sm text-sm font-semibold tracking-wide transition-colors cursor-pointer shadow-lg"
               >
-                <ShoppingBag size={15} />
-                ORDER {activeEdition.format.split(" ")[0]} — ${activeEdition.priceUSD}
+                <ShoppingBag size={16} />
+                Order Vinyl — ${activeEdition.priceUSD}
               </button>
             </div>
           </div>
         </div>
 
         {/* Thumbnail Selector: Pure Artwork Only */}
-        <div className="mt-16 pt-8 border-t border-[#222226]">
+        <div className="mt-16 pt-8 border-t border-[#1f1f23]">
           <div className="grid grid-cols-5 gap-3 sm:gap-4">
             {VINYL_EDITIONS.map(edition => {
               const isSelected = activeEdition.id === edition.id;
@@ -160,14 +159,13 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
                 <button
                   key={edition.id}
                   onClick={() => onSelectEdition(edition)}
-                  className={`relative aspect-square border overflow-hidden transition-all cursor-pointer ${
+                  className={`relative aspect-square border overflow-hidden rounded-sm transition-all cursor-pointer ${
                     isSelected
-                      ? "border-[#A83824] shadow-[0_0_15px_rgba(168,56,36,0.4)] opacity-100 scale-[1.02]"
+                      ? "border-[#e04528] shadow-[0_0_15px_rgba(224,69,40,0.4)] opacity-100 scale-[1.02]"
                       : "border-[#25252b] opacity-60 hover:opacity-100"
                   }`}
                   title={edition.title}
                 >
-                  {/* Pure Album Artwork Image Only */}
                   <img
                     src={edition.coverArt}
                     alt={edition.title}

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { LabelHeader } from "./lithos/components/LabelHeader";
 import { FeaturedReleaseHero } from "./lithos/components/FeaturedReleaseHero";
 import { LabelCatalog } from "./lithos/components/LabelCatalog";
-import { LabelDispatches } from "./lithos/components/LabelDispatches";
 import { LabelFooter } from "./lithos/components/LabelFooter";
 import { VaultDrawer } from "./lithos/components/VaultDrawer";
 import { PersistentPlayer } from "./lithos/components/PersistentPlayer";
 import { EXPEDITIONS, VINYL_EDITIONS } from "./lithos/data";
 import { Expedition, VinylEdition, CartItem } from "./lithos/types";
 import { lithosAudio } from "./lithos/audioEngine";
-import { X, ShieldAlert } from "lucide-react";
+import { X, Check } from "lucide-react";
 
 const STORAGE_PREFIX = "lithos_archive_";
 
@@ -18,7 +17,6 @@ function loadSaved<T>(key: string, fallback: T): T {
     const item = localStorage.getItem(STORAGE_PREFIX + key);
     if (!item) return fallback;
     const parsed = JSON.parse(item);
-    // Ensure cart items have valid edition and price
     if (Array.isArray(parsed)) {
       const valid = parsed.filter(i => i && i.edition && typeof i.edition.priceUSD === "number");
       if (valid.length > 0) return valid as unknown as T;
@@ -60,7 +58,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // Keyboard controls (Space to toggle audio, Esc to close modals)
+  // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
@@ -147,7 +145,7 @@ export default function App() {
 
   const handleRemoveFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.edition.id !== id));
-    showToast("Item removed from mailorder cart.");
+    showToast("Item removed from cart.");
   };
 
   const handleClearCart = () => {
@@ -162,22 +160,22 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0c0c0d] text-[#E6E4DC] flex flex-col font-mono selection:bg-[#A83824] selection:text-[#E6E4DC] pb-16">
+    <div className="min-h-screen w-full bg-[#0c0c0d] text-[#e5e5e7] flex flex-col font-sans selection:bg-[#e04528] selection:text-white pb-16">
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed bottom-16 right-6 z-[100] bg-[#161619] text-[#E6E4DC] px-5 py-3.5 border border-[#A83824] shadow-[0_0_20px_rgba(168,56,36,0.3)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <ShieldAlert size={15} className="text-[#A83824] shrink-0" />
-          <span className="font-mono text-xs tracking-wide">{toastMessage}</span>
+        <div className="fixed bottom-16 right-6 z-[100] bg-[#161619] text-[#e5e5e7] px-4 py-3 rounded border border-[#2a2a30] shadow-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <Check size={15} className="text-[#e04528] shrink-0" />
+          <span className="text-xs font-medium">{toastMessage}</span>
           <button
             onClick={() => setToastMessage(null)}
-            className="ml-3 text-[#73716B] hover:text-[#E6E4DC] cursor-pointer"
+            className="ml-2 text-[#8e8e93] hover:text-white cursor-pointer"
           >
             <X size={14} />
           </button>
         </div>
       )}
 
-      {/* Record Label Masthead & Navigation */}
+      {/* Header */}
       <LabelHeader
         activeEdition={activeEdition}
         isPlaying={isPlaying}
@@ -187,9 +185,9 @@ export default function App() {
         onScrollToSection={scrollToSection}
       />
 
-      {/* Main Label Sections */}
+      {/* Main Content */}
       <main className="flex-1 w-full flex flex-col">
-        {/* Section 01: Featured Physical Release Showcase */}
+        {/* Section 01: Featured Release */}
         <div id="hero">
           <FeaturedReleaseHero
             activeEdition={activeEdition}
@@ -201,7 +199,7 @@ export default function App() {
           />
         </div>
 
-        {/* Section 02: Complete Archival Catalog Grid */}
+        {/* Section 02: Full Catalog */}
         <LabelCatalog
           onAddToCart={handleAddToCart}
           onCueExpedition={(exp) => {
@@ -210,12 +208,9 @@ export default function App() {
           }}
           onToast={showToast}
         />
-
-        {/* Section 03: Label Dispatches & Recording Manifesto */}
-        <LabelDispatches />
       </main>
 
-      {/* Authentic Record Label Footer */}
+      {/* Footer */}
       <LabelFooter
         onToast={showToast}
         onScrollToTop={() => scrollToSection("hero")}
@@ -231,7 +226,7 @@ export default function App() {
         onToast={showToast}
       />
 
-      {/* Mailorder Cart Drawer */}
+      {/* Cart Drawer */}
       <VaultDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
