@@ -2,84 +2,53 @@
 
 :root {
   --font-size: 16px;
-  --background: #FFFFFF;
-  --foreground: #1A1A1A;
-  --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
-  --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-  --primary: #F2B8C6;
-  --primary-foreground: #1A1A1A;
-  --secondary: #F9EBEF;
-  --secondary-foreground: #1A1A1A;
-  --muted: #FAF5F7;
-  --muted-foreground: #737373;
-  --accent: #FDF0F3;
-  --accent-foreground: #D47A94;
-  --cherry: #E58C9F;
-  --cherry-soft: #F9EBEF;
-  --sky: #F9EBEF;
-  --sky-light: #FAF5F7;
-  --destructive: #D47A94;
-  --destructive-foreground: #FFFFFF;
-  --border: #E5E5E5;
+  --background: #0A0A0B;
+  --foreground: #ECEAE4;
+  --card: #141416;
+  --card-foreground: #ECEAE4;
+  --popover: #141416;
+  --popover-foreground: #ECEAE4;
+  --primary: #D94E28;
+  --primary-foreground: #ECEAE4;
+  --secondary: #1F1F24;
+  --secondary-foreground: #ECEAE4;
+  --muted: #1A1A1E;
+  --muted-foreground: #8F8E8A;
+  --accent: #27272D;
+  --accent-foreground: #D94E28;
+  --rust: #D94E28;
+  --rust-hover: #B83E1D;
+  --rust-soft: rgba(217, 78, 40, 0.14);
+  --basalt: #0A0A0B;
+  --strata: #141416;
+  --strata-border: #27272D;
+  --bone: #ECEAE4;
+  --bone-muted: #8F8E8A;
+  --seismic-green: #38EF7D;
+  --seismic-amber: #FFB800;
+  --destructive: #D94E28;
+  --destructive-foreground: #ECEAE4;
+  --border: #27272D;
   --input: transparent;
-  --input-background: #FFFFFF;
-  --switch-background: #F9EBEF;
+  --input-background: #141416;
+  --switch-background: #1F1F24;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #E58C9F;
-  --chart-1: #F2B8C6;
-  --chart-2: #E58C9F;
-  --chart-3: #1A1A1A;
-  --chart-4: #E5E5E5;
-  --chart-5: #F9EBEF;
+  --ring: #D94E28;
+  --chart-1: #D94E28;
+  --chart-2: #38EF7D;
+  --chart-3: #FFB800;
+  --chart-4: #8F8E8A;
+  --chart-5: #ECEAE4;
   --radius: 0rem;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #1A1A1A;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F9EBEF;
-  --sidebar-accent-foreground: #1A1A1A;
-  --sidebar-border: #E5E5E5;
-  --sidebar-ring: #E58C9F;
-}
-
-.dark {
-  --background: #141414;
-  --foreground: #FFFFFF;
-  --card: #1C1C1C;
-  --card-foreground: #FFFFFF;
-  --popover: #1C1C1C;
-  --popover-foreground: #FFFFFF;
-  --primary: #F2B8C6;
-  --primary-foreground: #1A1A1A;
-  --secondary: #2A2326;
-  --secondary-foreground: #FFFFFF;
-  --muted: #2A2326;
-  --muted-foreground: #A3A3A3;
-  --accent: #2E222A;
-  --accent-foreground: #F9EBEF;
-  --destructive: #E58C9F;
-  --destructive-foreground: #FFFFFF;
-  --border: #2E2E2E;
-  --input: transparent;
-  --input-background: #1C1C1C;
-  --switch-background: #2E2E2E;
-  --ring: #E58C9F;
-  --chart-1: #F2B8C6;
-  --chart-2: #E58C9F;
-  --chart-3: #FFFFFF;
-  --chart-4: #2E2E2E;
-  --chart-5: #141414;
-  --sidebar: #1C1C1C;
-  --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #F2B8C6;
-  --sidebar-primary-foreground: #1A1A1A;
-  --sidebar-accent: #2A2326;
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #2E2E2E;
-  --sidebar-ring: #E58C9F;
+  --sidebar: #141416;
+  --sidebar-foreground: #ECEAE4;
+  --sidebar-primary: #D94E28;
+  --sidebar-primary-foreground: #ECEAE4;
+  --sidebar-accent: #1F1F24;
+  --sidebar-accent-foreground: #ECEAE4;
+  --sidebar-border: #27272D;
+  --sidebar-ring: #D94E28;
 }
 
 @theme inline {
@@ -101,88 +70,10 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-switch-background: var(--switch-background);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  html, body, #root {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Red Hat Display', sans-serif;
-  }
-
-  html {
-    font-size: var(--font-size);
-  }
-
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
-  }
+  --font-cinzel: 'Cinzel', serif;
+  --font-syne: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
 }
