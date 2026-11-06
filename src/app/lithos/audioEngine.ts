@@ -248,6 +248,10 @@ class LithosAudioEngine {
     }
   }
 
+  public getFilterCutoff(): number {
+    return this.filterCutoff;
+  }
+
   public toggleSubBassBoost() {
     this.subBassBoost = !this.subBassBoost;
     if (this.infrasoundBoost && this.ctx) {

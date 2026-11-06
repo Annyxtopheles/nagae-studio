@@ -23,7 +23,14 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
 }) => {
   const [volume, setVolume] = useState(0.75);
   const [isMuted, setIsMuted] = useState(false);
+  const [filterCutoff, setFilterCutoff] = useState(() => lithosAudio.getFilterCutoff());
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const handleCutoffChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value, 10);
+    setFilterCutoff(val);
+    lithosAudio.setFilterCutoff(val);
+  };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
@@ -182,6 +189,25 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
           {/* Minimalist Audio Oscillogram */}
           <div className="hidden md:block w-28 h-4 bg-lithos-basalt border border-lithos-border rounded-sm px-1 relative">
             <canvas ref={canvasRef} width={112} height={16} className="w-full h-full" aria-hidden="true" />
+          </div>
+
+          {/* Seismic Cutoff Hardware Filter (Tactile Scrubbing) */}
+          <div className="hidden md:flex items-center gap-2.5 pl-3 border-l border-lithos-border text-xs">
+            <div className="flex flex-col text-right">
+              <span className="text-[9px] uppercase tracking-wider text-lithos-muted font-medium">Cutoff</span>
+              <span className="text-[11px] text-lithos-rust font-semibold">{filterCutoff}Hz</span>
+            </div>
+            <input
+              type="range"
+              min="20"
+              max="250"
+              step="1"
+              value={filterCutoff}
+              onChange={handleCutoffChange}
+              aria-label="Seismic Cutoff Filter"
+              className="w-20 lg:w-24 h-1 bg-lithos-border accent-lithos-rust cursor-pointer rounded-full"
+              title={`Seismic Cutoff Filter: ${filterCutoff} Hz`}
+            />
           </div>
         </div>
 
