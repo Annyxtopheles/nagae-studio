@@ -160,15 +160,15 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0c0c0d] text-[#e5e5e7] flex flex-col font-sans selection:bg-[#e04528] selection:text-white pb-16">
+    <div className="min-h-screen w-full bg-lithos-basalt text-lithos-chalk flex flex-col font-sans selection:bg-lithos-rust selection:text-white pb-16">
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed bottom-16 right-6 z-[100] bg-[#161619] text-[#e5e5e7] px-4 py-3 rounded border border-[#2a2a30] shadow-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-150">
-          <Check size={15} className="text-[#e04528] shrink-0" />
+        <div className="fixed bottom-16 right-6 z-[100] bg-lithos-charcoal text-lithos-chalk px-4 py-3 rounded border border-lithos-border shadow-xl shadow-black/50 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <Check size={15} className="text-lithos-rust shrink-0" />
           <span className="text-xs font-medium">{toastMessage}</span>
           <button
             onClick={() => setToastMessage(null)}
-            className="ml-2 text-[#8e8e93] hover:text-white cursor-pointer"
+            className="ml-2 text-lithos-muted hover:text-white transition-colors duration-150 cursor-pointer"
           >
             <X size={14} />
           </button>

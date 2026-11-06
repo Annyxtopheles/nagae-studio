@@ -1,79 +1,59 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Strict Lithos Semantic Tokens */
+  --lithos-basalt: #0a0a0b;
+  --lithos-strata: #141416;
+  --lithos-charcoal: #161619;
+  --lithos-border: #222226;
+  --lithos-border-subtle: rgba(255, 255, 255, 0.08);
+  --lithos-rust: #e04528;
+  --lithos-rust-glow: rgba(224, 69, 40, 0.2);
+  --lithos-chalk: #eceae4;
+  --lithos-muted: #8e8e93;
+
+  /* Standard bindings */
   --font-size: 16px;
-  --background: #0A0A0B;
-  --foreground: #ECEAE4;
-  --card: #141416;
-  --card-foreground: #ECEAE4;
-  --popover: #141416;
-  --popover-foreground: #ECEAE4;
-  --primary: #D94E28;
-  --primary-foreground: #ECEAE4;
-  --secondary: #1F1F24;
-  --secondary-foreground: #ECEAE4;
-  --muted: #1A1A1E;
-  --muted-foreground: #8F8E8A;
-  --accent: #27272D;
-  --accent-foreground: #D94E28;
-  --rust: #D94E28;
-  --rust-hover: #B83E1D;
-  --rust-soft: rgba(217, 78, 40, 0.14);
-  --basalt: #0A0A0B;
-  --strata: #141416;
-  --strata-border: #27272D;
-  --bone: #ECEAE4;
-  --bone-muted: #8F8E8A;
-  --seismic-green: #38EF7D;
-  --seismic-amber: #FFB800;
-  --destructive: #D94E28;
-  --destructive-foreground: #ECEAE4;
-  --border: #27272D;
+  --background: var(--lithos-basalt);
+  --foreground: var(--lithos-chalk);
+  --card: var(--lithos-strata);
+  --card-foreground: var(--lithos-chalk);
+  --popover: var(--lithos-strata);
+  --popover-foreground: var(--lithos-chalk);
+  --primary: var(--lithos-rust);
+  --primary-foreground: var(--lithos-chalk);
+  --secondary: var(--lithos-charcoal);
+  --secondary-foreground: var(--lithos-chalk);
+  --muted: var(--lithos-charcoal);
+  --muted-foreground: var(--lithos-muted);
+  --accent: var(--lithos-border);
+  --accent-foreground: var(--lithos-rust);
+  --border: var(--lithos-border);
   --input: transparent;
-  --input-background: #141416;
-  --switch-background: #1F1F24;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: #D94E28;
-  --chart-1: #D94E28;
-  --chart-2: #38EF7D;
-  --chart-3: #FFB800;
-  --chart-4: #8F8E8A;
-  --chart-5: #ECEAE4;
-  --radius: 0rem;
-  --sidebar: #141416;
-  --sidebar-foreground: #ECEAE4;
-  --sidebar-primary: #D94E28;
-  --sidebar-primary-foreground: #ECEAE4;
-  --sidebar-accent: #1F1F24;
-  --sidebar-accent-foreground: #ECEAE4;
-  --sidebar-border: #27272D;
-  --sidebar-ring: #D94E28;
+  --input-background: var(--lithos-strata);
+  --ring: var(--lithos-rust);
+  --radius: 0.125rem;
 }
 
 @theme inline {
+  --color-lithos-basalt: var(--lithos-basalt);
+  --color-lithos-strata: var(--lithos-strata);
+  --color-lithos-charcoal: var(--lithos-charcoal);
+  --color-lithos-border: var(--lithos-border);
+  --color-lithos-border-subtle: var(--lithos-border-subtle);
+  --color-lithos-rust: var(--lithos-rust);
+  --color-lithos-rust-glow: var(--lithos-rust-glow);
+  --color-lithos-chalk: var(--lithos-chalk);
+  --color-lithos-muted: var(--lithos-muted);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
+  --color-border: var(--border);
   --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
 
-  --font-cinzel: 'Cinzel', serif;
-  --font-syne: 'Syne', sans-serif;
-  --font-mono: 'Space Mono', monospace;
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }

@@ -84,7 +84,7 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (!isPlaying || !analyser) {
-        ctx.strokeStyle = "#25252b";
+        ctx.strokeStyle = "#222226";
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(0, canvas.height / 2);
@@ -126,21 +126,21 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
   }, [isPlaying]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0c0c0d]/95 backdrop-blur-md border-t border-[#1f1f23] px-4 sm:px-8 py-2.5 text-[#e5e5e7] select-none shadow-[0_-4px_25px_rgba(0,0,0,0.9)] font-sans">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-lithos-basalt/95 backdrop-blur-md border-t border-lithos-border px-4 sm:px-8 py-2.5 text-lithos-chalk select-none shadow-[0_-4px_25px_rgba(0,0,0,0.9)] font-sans">
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
         {/* Left: Active Record Info */}
         <div className="flex items-center gap-3 min-w-0">
           <div
-            className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center border border-[#2a2a30] shadow-md transition-transform duration-700 ${
-              isPlaying ? "animate-[spin_4s_linear_infinite]" : ""
+            className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center border border-lithos-border shadow-md transition-transform duration-700 ${
+              isPlaying ? "motion-safe:animate-[spin_4s_linear_infinite]" : ""
             }`}
             style={{ background: activeEdition.mockupTheme.marbleStyle }}
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-[#0c0c0d] border border-[#e04528]" />
+            <div className="w-2.5 h-2.5 rounded-full bg-lithos-basalt border border-lithos-rust" />
           </div>
 
           <div className="min-w-0">
-            <span className="text-[#e04528] text-xs font-semibold mr-2">
+            <span className="text-lithos-rust text-xs font-semibold mr-2">
               {activeEdition.catalogNumber}
             </span>
             <span className="font-semibold text-xs text-white truncate">
@@ -153,7 +153,7 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={handlePrevEdition}
-            className="w-7 h-7 flex items-center justify-center text-[#8e8e93] hover:text-white rounded hover:bg-[#1c1c1f] transition-colors cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center text-lithos-muted hover:text-white rounded hover:bg-lithos-charcoal transition-colors duration-150 cursor-pointer"
             title="Previous"
           >
             <SkipBack size={14} />
@@ -161,10 +161,10 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
 
           <button
             onClick={onTogglePlay}
-            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all cursor-pointer ${
+            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold transition-colors duration-150 cursor-pointer ${
               isPlaying
-                ? "bg-[#e04528] text-white shadow-[0_0_12px_rgba(224,69,40,0.4)]"
-                : "bg-[#25252a] hover:bg-[#e04528] text-white"
+                ? "bg-lithos-rust text-white shadow-[0_0_12px_rgba(224,69,40,0.4)]"
+                : "bg-lithos-strata hover:bg-lithos-rust text-white border border-lithos-border"
             }`}
             title={isPlaying ? "Pause" : "Play"}
           >
@@ -173,15 +173,15 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
 
           <button
             onClick={handleNextEdition}
-            className="w-7 h-7 flex items-center justify-center text-[#8e8e93] hover:text-white rounded hover:bg-[#1c1c1f] transition-colors cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center text-lithos-muted hover:text-white rounded hover:bg-lithos-charcoal transition-colors duration-150 cursor-pointer"
             title="Next"
           >
             <SkipForward size={14} />
           </button>
 
           {/* Minimalist Audio Oscillogram */}
-          <div className="hidden md:block w-28 h-4 bg-[#08080a] border border-[#222226] rounded-sm px-1 relative">
-            <canvas ref={canvasRef} width={112} height={16} className="w-full h-full" />
+          <div className="hidden md:block w-28 h-4 bg-lithos-basalt border border-lithos-border rounded-sm px-1 relative">
+            <canvas ref={canvasRef} width={112} height={16} className="w-full h-full" aria-hidden="true" />
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
           <div className="hidden sm:flex items-center gap-2">
             <button
               onClick={handleToggleMute}
-              className="text-[#8e8e93] hover:text-white cursor-pointer"
+              className="text-lithos-muted hover:text-white transition-colors duration-150 cursor-pointer"
             >
               {isMuted || volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
             </button>
@@ -201,14 +201,14 @@ export const PersistentPlayer: React.FC<PersistentPlayerProps> = ({
               step="0.05"
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}
-              className="w-16 h-1 bg-[#25252b] accent-[#e04528] cursor-pointer"
+              className="w-16 h-1 bg-lithos-border accent-lithos-rust cursor-pointer"
               title={`Volume: ${Math.round(volume * 100)}%`}
             />
           </div>
 
           <button
             onClick={onOpenCart}
-            className="flex items-center gap-1.5 bg-[#1c1c1f] hover:bg-[#e04528] border border-[#2a2a30] hover:border-[#e04528] text-white px-3 py-1.5 rounded-sm text-xs font-medium transition-all cursor-pointer"
+            className="flex items-center gap-1.5 bg-lithos-charcoal hover:bg-lithos-rust border border-lithos-border hover:border-lithos-rust text-white px-3 py-1.5 rounded-sm text-xs font-medium transition-colors duration-150 cursor-pointer"
           >
             <ShoppingBag size={12} />
             <span>Cart</span>
