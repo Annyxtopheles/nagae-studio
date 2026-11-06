@@ -147,6 +147,9 @@ export const LabelCatalog: React.FC<LabelCatalogProps> = ({
           <div
             className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md overflow-y-auto flex items-center justify-center p-4 cursor-pointer"
             onClick={() => setSelectedEdition(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-release-title"
           >
             <div
               className="bg-lithos-charcoal border border-lithos-border max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative text-lithos-chalk cursor-default rounded-sm shadow-2xl"
@@ -173,7 +176,7 @@ export const LabelCatalog: React.FC<LabelCatalogProps> = ({
                   <span className="text-xs font-semibold text-lithos-rust block mb-1">
                     {selectedEdition.catalogNumber} // {selectedEdition.format}
                   </span>
-                  <h2 className="font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+                  <h2 id="modal-release-title" className="font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
                     {selectedEdition.title.split(":")[0]}
                   </h2>
                   <div className="mt-2 text-sm text-white font-semibold">

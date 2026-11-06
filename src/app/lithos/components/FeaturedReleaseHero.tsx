@@ -50,9 +50,9 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Pure Album Cover Image + Sliding Vinyl Record */}
           <div className="lg:col-span-6 flex flex-col items-center">
-            <div className="relative w-full max-w-[340px] sm:max-w-[440px] h-[320px] sm:h-[400px] flex items-center justify-center p-2">
+            <div className="group/sleeve relative w-full max-w-[320px] min-[400px]:max-w-[340px] sm:max-w-[440px] h-[300px] min-[400px]:h-[320px] sm:h-[400px] flex items-center justify-center p-2 overflow-x-clip">
               {/* Heavyweight Jacket: Pure Image Only */}
-              <div className="absolute left-2 sm:left-4 w-60 sm:w-80 h-60 sm:h-80 bg-lithos-charcoal border border-lithos-border shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-10 select-none overflow-hidden rounded-sm transition-transform duration-300 ease-out hover:-translate-x-1">
+              <div className="absolute left-2 sm:left-4 w-56 min-[400px]:w-60 sm:w-80 h-56 min-[400px]:h-60 sm:h-80 bg-lithos-charcoal border border-lithos-border shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-10 select-none overflow-hidden rounded-sm transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover/sleeve:-translate-x-1">
                 <img
                   src={activeEdition.coverArt}
                   alt={activeEdition.title}
@@ -60,28 +60,32 @@ export const FeaturedReleaseHero: React.FC<FeaturedReleaseHeroProps> = ({
                 />
               </div>
 
-              {/* Heavyweight 180g Vinyl Record sliding out */}
+              {/* Heavyweight 180g Vinyl Record sliding out with spring physics */}
               <div
-                className={`absolute right-2 sm:right-4 w-60 sm:w-80 h-60 sm:h-80 rounded-full shadow-[0_0_50px_rgba(0,0,0,0.95)] flex items-center justify-center transition-transform duration-500 ease-out z-0 ${
-                  isPlaying ? "motion-safe:animate-[spin_18s_linear_infinite]" : "hover:translate-x-3 sm:hover:translate-x-6"
-                }`}
-                style={{
-                  background: activeEdition.mockupTheme.marbleStyle,
-                }}
+                className="absolute right-2 sm:right-4 z-0 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover/sleeve:translate-x-[14px] sm:group-hover/sleeve:translate-x-6"
               >
-                {/* Vinyl Grooves Sheen */}
-                <div className="absolute inset-4 rounded-full border border-black/50 pointer-events-none" />
-                <div className="absolute inset-8 rounded-full border border-black/50 pointer-events-none" />
-                <div className="absolute inset-14 rounded-full border border-black/60 pointer-events-none" />
-                <div className="absolute inset-20 rounded-full border border-black/70 pointer-events-none" />
+                <div
+                  className={`w-56 min-[400px]:w-60 sm:w-80 h-56 min-[400px]:h-60 sm:h-80 rounded-full shadow-[0_0_50px_rgba(0,0,0,0.95)] flex items-center justify-center ${
+                    isPlaying ? "motion-safe:animate-[spin_18s_linear_infinite]" : ""
+                  }`}
+                  style={{
+                    background: activeEdition.mockupTheme.marbleStyle,
+                  }}
+                >
+                  {/* Vinyl Grooves Sheen */}
+                  <div className="absolute inset-4 rounded-full border border-black/50 pointer-events-none" />
+                  <div className="absolute inset-8 rounded-full border border-black/50 pointer-events-none" />
+                  <div className="absolute inset-14 rounded-full border border-black/60 pointer-events-none" />
+                  <div className="absolute inset-20 rounded-full border border-black/70 pointer-events-none" />
 
-                {/* Center Label */}
-                <div className="w-24 h-24 rounded-full bg-lithos-basalt border border-lithos-rust flex flex-col items-center justify-center p-2 text-center text-[9px] shadow-inner">
-                  <span className="font-extrabold text-white text-xs tracking-wider">
-                    LITHOS
-                  </span>
-                  <span className="text-lithos-rust font-semibold mt-0.5">{activeEdition.catalogNumber}</span>
-                  <div className="w-2.5 h-2.5 rounded-full bg-black border border-white/80 mt-1" />
+                  {/* Center Label */}
+                  <div className="w-20 sm:w-24 h-20 sm:h-24 rounded-full bg-lithos-basalt border border-lithos-rust flex flex-col items-center justify-center p-2 text-center text-[9px] shadow-inner">
+                    <span className="font-extrabold text-white text-[11px] sm:text-xs tracking-wider">
+                      LITHOS
+                    </span>
+                    <span className="text-lithos-rust font-semibold mt-0.5">{activeEdition.catalogNumber}</span>
+                    <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-black border border-white/80 mt-1" />
+                  </div>
                 </div>
               </div>
             </div>
