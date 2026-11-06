@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Disc, Trash2, Check, ShieldCheck } from "lucide-react";
+import { X, Disc, Trash2, Check, ShieldCheck, Copy, CheckCheck } from "lucide-react";
 import { CartItem } from "../types";
 
 interface VaultDrawerProps {
@@ -23,6 +23,8 @@ export const VaultDrawer: React.FC<VaultDrawerProps> = ({
 }) => {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [dispatchRef, setDispatchRef] = useState("LITH-2026-X883");
+  const [hasCopied, setHasCopied] = useState(false);
 
   if (!isOpen) return null;
 
@@ -32,11 +34,21 @@ export const VaultDrawer: React.FC<VaultDrawerProps> = ({
 
   const handleConfirmReservation = () => {
     setIsCheckingOut(true);
+    const generatedRef = `LITH-2026-X${Math.floor(100 + Math.random() * 900)}`;
+    setDispatchRef(generatedRef);
     setTimeout(() => {
       setIsCheckingOut(false);
       setIsConfirmed(true);
-      onToast("Order received. Confirmation email sent.");
-    }, 900);
+      onToast("Order reserved. Archival dispatch manifest logged.");
+    }, 850);
+  };
+
+  const handleCopyRef = () => {
+    navigator.clipboard.writeText(dispatchRef).then(() => {
+      setHasCopied(true);
+      onToast(`Copied reference code: ${dispatchRef}`);
+      setTimeout(() => setHasCopied(false), 2000);
+    });
   };
 
   const handleFinish = () => {
@@ -70,21 +82,81 @@ export const VaultDrawer: React.FC<VaultDrawerProps> = ({
 
           {/* Cart Contents */}
           {isConfirmed ? (
-            <div className="py-12 flex flex-col items-center text-center">
-              <div className="w-14 h-14 bg-lithos-strata border border-lithos-rust rounded-full flex items-center justify-center text-lithos-rust mb-4">
-                <Check size={24} />
+            <div className="py-2 flex flex-col items-start text-left font-sans">
+              <div className="w-full bg-lithos-basalt border border-lithos-border p-5 rounded-sm space-y-4">
+                {/* Manifest Header */}
+                <div className="flex items-center justify-between border-b border-lithos-border pb-3">
+                  <div>
+                    <span className="text-[10px] font-bold text-lithos-rust uppercase tracking-wider block">
+                      LITHOS ARCHIVE DISPATCH
+                    </span>
+                    <span className="font-bold text-xs text-white uppercase tracking-wider mt-0.5 block">
+                      ORDER RESERVED // SHIPMENT LOGGED
+                    </span>
+                  </div>
+                  <div className="w-8 h-8 bg-lithos-strata border border-lithos-rust rounded-full flex items-center justify-center text-lithos-rust shrink-0">
+                    <Check size={16} />
+                  </div>
+                </div>
+
+                {/* Reference Code Box */}
+                <div className="bg-lithos-charcoal border border-lithos-border/80 p-3 rounded-sm flex items-center justify-between">
+                  <div>
+                    <span className="text-[9px] text-lithos-muted uppercase tracking-wider block font-medium">Archive Manifest Reference</span>
+                    <span className="font-mono text-sm font-bold text-lithos-chalk tracking-wider">{dispatchRef}</span>
+                  </div>
+                  <button
+                    onClick={handleCopyRef}
+                    className="flex items-center gap-1.5 bg-lithos-strata hover:bg-lithos-rust border border-lithos-border hover:border-lithos-rust text-lithos-chalk hover:text-white px-2.5 py-1.5 rounded-sm text-xs transition-colors duration-150 cursor-pointer"
+                    title="Copy Reference Code"
+                  >
+                    {hasCopied ? <CheckCheck size={13} className="text-lithos-rust" /> : <Copy size={13} />}
+                    <span className="text-[11px] font-medium">{hasCopied ? "Copied" : "Copy Ref"}</span>
+                  </button>
+                </div>
+
+                {/* Archival Packaging Specs */}
+                <div className="text-xs space-y-2 border-t border-b border-lithos-border/70 py-3 text-lithos-muted leading-relaxed">
+                  <p className="text-white font-medium text-[11px] uppercase tracking-wider">
+                    Packaging Specification:
+                  </p>
+                  <p className="text-[11px] text-lithos-chalk bg-lithos-charcoal/70 p-2.5 rounded-sm border border-lithos-border/50 font-mono">
+                    180G VINYL PACKED IN HEAVY UNBLEACHED CARDBOARD
+                  </p>
+                  <p className="text-[11px]">
+                    All physical vinyl is shipped outside the jacket in heavy unbleached cardboard mailers to prevent seam splits in transit.
+                  </p>
+                </div>
+
+                {/* Reserved Items Manifest */}
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase tracking-wider text-lithos-muted block font-medium">
+                    Reserved Pressings ({items.reduce((s, i) => s + i.quantity, 0)})
+                  </span>
+                  <div className="divide-y divide-lithos-border/50 text-xs">
+                    {items.map(it => (
+                      <div key={it.edition.id} className="py-2 flex justify-between items-center text-[11px]">
+                        <div>
+                          <span className="text-lithos-rust font-semibold mr-2">{it.edition.catalogNumber}</span>
+                          <span className="text-white">{it.edition.title.split(":")[0]}</span>
+                          <span className="text-lithos-muted ml-2">×{it.quantity}</span>
+                        </div>
+                        <span className="text-white font-medium">${it.edition.priceUSD * it.quantity}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-lithos-border text-xs font-semibold text-white">
+                    <span>Total Reserved</span>
+                    <span className="text-lithos-rust text-sm">${totalUSD} USD</span>
+                  </div>
+                </div>
               </div>
-              <h4 className="font-bold text-xl text-white">
-                Order Confirmed
-              </h4>
-              <p className="text-xs text-lithos-muted mt-2 max-w-xs leading-relaxed">
-                Thank you for your order. We are preparing your vinyl shipment.
-              </p>
+
               <button
                 onClick={handleFinish}
-                className="mt-8 bg-lithos-rust hover:bg-lithos-rust/90 text-white text-xs font-semibold uppercase tracking-wider px-6 py-3 rounded-sm transition-colors duration-150 cursor-pointer w-full"
+                className="mt-6 bg-lithos-rust hover:bg-lithos-rust/90 text-white text-xs font-semibold uppercase tracking-wider px-6 py-3.5 rounded-sm transition-colors duration-150 cursor-pointer w-full text-center"
               >
-                Continue Browsing
+                Confirm & Clear Vault
               </button>
             </div>
           ) : items.length === 0 ? (
